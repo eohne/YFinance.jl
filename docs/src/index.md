@@ -1,5 +1,5 @@
 # YFinance.jl
-*Download price, fundamental, and option data from Yahoo Finance*
+*Download price, fundamental, and option data from Yahoo Finance*  
 This is a side project and my first package so do not expect too much. 
 ## \*\*\* LEGAL DISCLAIMER \*\*\*
 **Yahoo!, Y!Finance, and Yahoo! finance are registered trademarks of

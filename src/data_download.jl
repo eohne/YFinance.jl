@@ -7,7 +7,7 @@ end
 
 
 """
-    get_prices(symbol::AbstractString; range::AbstractString="1mo", interval::AbstractString="1d",startdt="", enddt="",prepost=false,autoadjust=true,timeout = 10)
+        get_prices(symbol::AbstractString; range::AbstractString="1mo", interval::AbstractString="1d",startdt="", enddt="",prepost=false,autoadjust=true,timeout = 10)
     
     Retrievs prices from Yahoo Finance.
 
@@ -22,7 +22,7 @@ end
       
       * `prepost` is a boolean indicating whether pre and post periods should be included. Defaults to `false`
       
-      * `autoadjust` defaults to `true`. It adjusts open, high, low, close prices, and volume by multiplying the with the ratios between the close and the adjusted close prices - only available for intervals of 1d and up. 
+      * `autoadjust` defaults to `true`. It adjusts open, high, low, close prices, and volume by multiplying by the ratio between the close and the adjusted close prices - only available for intervals of 1d and up. 
     
     # Examples
     ```julia-repl
@@ -187,7 +187,7 @@ const _QuoteSummary_Items = [
 ]
 
 """
-    get_quoteSummary(symbol::String; item=nothing)
+        get_quoteSummary(symbol::String; item=nothing)
     
     Retrievs general information from Yahoo Finance stored in a JSON3 object.
 
@@ -632,7 +632,7 @@ _Fundamental_Intervals = [
 
 
 """
-    get_Fundamental(symbol::AbstractString, item::AbstractString,interval::AbstractString, startdt, enddt)
+        get_Fundamental(symbol::AbstractString, item::AbstractString,interval::AbstractString, startdt, enddt)
     
     Retrievs financial statement information from Yahoo Finance stored in a Dictionary.
 
@@ -644,7 +644,7 @@ _Fundamental_Intervals = [
 
       * interval`::String` can be one of "annual", "quarterly", "monthly"  
 
-      * startdt` and `enddt` take the following types: `::Date`,`::DateTime`, or a `String` of the following form `yyyy-mm-dd`  
+      * `startdt` and `enddt` take the following types: `::Date`,`::DateTime`, or a `String` of the following form `yyyy-mm-dd`  
     
     # Examples
     ```julia-repl
@@ -685,7 +685,7 @@ function get_Fundamental(symbol::AbstractString, item::AbstractString,interval::
             error("Startdt and Enddt must be either a Date, a DateTime, or a string of the following format yyyy-mm-dd!")
         end
     end
-    @assert in(interval, _Fundamental_Intervals) ["Chosen interval is not supported. Choose one of: annual, quarterly, monthly"]
+    @assert in(interval, _Fundamental_Intervals) "Chosen interval is not supported. Choose one of: annual, quarterly, monthly"
     #Build Query:
     if in(item, keys(_Fundamental_Types))
         entire_statement = true
@@ -739,7 +739,7 @@ end
 # Get Options Data:
 
 """
-    get_Options(symbol::String)
+        get_Options(symbol::String)
     
     Retrievs options data from Yahoo Finance stored in a Dictionary with two items. One contains Call options the other Put options. These subitems are dictionaries themselves.
     The call and put options Dictionaries can readily be transformed to a DataFrame.
@@ -859,7 +859,7 @@ end
 
 
 """
-    get_ESG(symbol::String)
+        get_ESG(symbol::String)
     
     Retrievs ESG Scores from Yahoo Finance stored in a Dictionary with two items. One, `score`, contains the companies ESG scores and individal Overall, Environment, Social and  Goverance Scores as well as a timestamp of type `DateTime`.
     The other,  `peer_score`, contains the peer group's scores. The subdictionaries can be transformed to `DataFrames`
