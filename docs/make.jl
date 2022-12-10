@@ -1,12 +1,12 @@
 push!(LOAD_PATH,"../src/")
-using YFin
+using YFinance
 using Documenter
 makedocs(
-         sitename = "YFin.jl",
-         modules  = [YFin],
+         sitename = "YFinance.jl",
+         modules  = [YFinance],
          pages=[
                 "Home" => "index.md"
                ])
 deploydocs(;
-    repo="github.com/eohne/YFin.jl",
+    repo="github.com/eohne/YFinance.jl",
 )

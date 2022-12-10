@@ -1,11 +1,11 @@
-# YFin.jl
+# YFinance.jl
 *Download price, fundamental, and option data from Yahoo Finance*
 This is a side project and my first package so do not expect too much. 
 ## \*\*\* LEGAL DISCLAIMER \*\*\*
 **Yahoo!, Y!Finance, and Yahoo! finance are registered trademarks of
 Yahoo, Inc.**
 
-YFin.jl is not affiliated with Yahoo, Inc. in any way. The data retreived can only be used for personal use. 
+YFinance.jl is not affiliated with Yahoo, Inc. in any way. The data retreived can only be used for personal use. 
 Please see Yahoo's terms of use:
  - [Here](https://policies.yahoo.com/us/en/yahoo/terms/product-atos/apiforydn/index.htm)
  - [Here](https://legal.yahoo.com/us/en/yahoo/terms/otos/index.html)

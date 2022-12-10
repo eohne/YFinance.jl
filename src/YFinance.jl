@@ -1,4 +1,4 @@
-module YFin
+module YFinance
     
     using Dates
     using HTTP
