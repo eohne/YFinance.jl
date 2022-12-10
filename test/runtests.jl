@@ -1,7 +1,7 @@
-using YFin, Dates
+using YFinance, Dates
 using Test
 
-@testset "YFin" begin
+@testset "YFinance" begin
 
         ta = get_prices("AAPL",range="max")
         @test length(ta["timestamp"]) > 100
