@@ -1,6 +1,5 @@
 push!(LOAD_PATH,"../src/")
 using YFin
-using DataFrames
 using Documenter
 makedocs(
          sitename = "YFin.jl",
