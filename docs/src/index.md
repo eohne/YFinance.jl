@@ -1,4 +1,5 @@
 # YFinance.jl
+
 *Download price, fundamental, and option data from Yahoo Finance*  
 This is a side project and my first package so do not expect too much. 
 ## \*\*\* LEGAL DISCLAIMER \*\*\*
@@ -17,16 +18,3 @@ Please see Yahoo's terms of use:
 - Option Data
 - ESG Data
 - quoteSummary data (this is a JSON3.object that contains a multitude of different information)
-
-## Function Documentation
-````@docs
-get_prices
-
-get_quoteSummary
-
-get_Fundamental
-
-get_Options
-
-get_ESG
-````
