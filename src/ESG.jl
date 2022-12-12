@@ -23,11 +23,11 @@ julia> get_ESG("AAPL")["score"] |> DataFrame
 Row │ environmentScore  esgScore    governanceScore  socialScore  symbol  times ⋯
     │ Real?             Real?       Real?            Real?        String  DateT ⋯
 ────┼────────────────────────────────────────────────────────────────────────────
-    1 │            74          61               62           45     AAPL    2014- ⋯
-    2 │            74          60               62           45     AAPL    2014-  
-    ⋮  │        ⋮              ⋮              ⋮              ⋮         ⋮           ⋱
-    95 │       missing     missing          missing      missing     AAPL    2022-  
-    96 │             0.65       16.68             9.18         6.86  AAPL    2022-  
+  1 │            74          61               62           45     AAPL    2014- ⋯
+  2 │            74          60               62           45     AAPL    2014-  
+ ⋮  │        ⋮              ⋮              ⋮              ⋮         ⋮           ⋱
+ 95 │       missing     missing          missing      missing     AAPL    2022-  
+ 96 │             0.65       16.68             9.18         6.86  AAPL    2022-  
                                                         1 column and 92 rows omitted
 ```
 """

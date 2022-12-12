@@ -423,11 +423,11 @@ julia> get_Fundamental("AAPL", "InterestExpense","quarterly","2000-01-01","2022-
 Row │ InterestExpense  timestamp
     │ Any              DateTime
 ────┼──────────────────────────────────────
-    1 │ 672000000        2021-09-30T00:00:00 
-    2 │ 694000000        2021-12-31T00:00:00
-    3 │ 691000000        2022-03-31T00:00:00
-    4 │ 719000000        2022-06-30T00:00:00
-    5 │ 827000000        2022-09-30T00:00:00
+  1 │ 672000000        2021-09-30T00:00:00 
+  2 │ 694000000        2021-12-31T00:00:00
+  3 │ 691000000        2022-03-31T00:00:00
+  4 │ 719000000        2022-06-30T00:00:00
+  5 │ 827000000        2022-09-30T00:00:00
 ```
 """
 function get_Fundamental(symbol::AbstractString, item::AbstractString,interval::AbstractString, startdt, enddt;throw_error=false)

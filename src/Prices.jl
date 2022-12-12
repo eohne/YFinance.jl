@@ -42,8 +42,8 @@ julia> get_prices("AAPL",range="1d",interval="90m") |> DataFrame
 Row │ close    timestamp            high     low      open     ticker  vol      
     │ Float64  DateTime             Float64  Float64  Float64  String  Int64    
 ────┼───────────────────────────────────────────────────────────────────────────
-    1 │  142.28  2022-12-09T14:30:00   142.55   140.9    142.34  AAPL    10452686
-    2 │  142.19  2022-12-09T15:08:03   142.19   142.19   142.19  AAPL           0
+  1 │  142.28  2022-12-09T14:30:00   142.55   140.9    142.34  AAPL    10452686
+  2 │  142.19  2022-12-09T15:08:03   142.19   142.19   142.19  AAPL           0
 ```
 
 ## Broadcasting
@@ -77,10 +77,10 @@ julia> vcat([DataFrame(i) for i in data]...)
 Row │ close    timestamp            high     low      open     ticker  vol      
     │ Float64  DateTime             Float64  Float64  Float64  String  Int64    
 ────┼───────────────────────────────────────────────────────────────────────────
-    1 │  142.21  2022-12-09T14:30:00   142.55   140.9    142.34  AAPL    11111223
-    2 │  142.16  2022-12-09T15:12:20   142.16   142.16   142.16  AAPL           0
-    3 │  324.51  2022-12-09T14:30:00   326.3    319.52   321.45  NFLX     4407336
-    4 │  324.65  2022-12-09T15:12:20   324.65   324.65   324.65  NFLX           0
+  1 │  142.21  2022-12-09T14:30:00   142.55   140.9    142.34  AAPL    11111223
+  2 │  142.16  2022-12-09T15:12:20   142.16   142.16   142.16  AAPL           0
+  3 │  324.51  2022-12-09T14:30:00   326.3    319.52   321.45  NFLX     4407336
+  4 │  324.65  2022-12-09T15:12:20   324.65   324.65   324.65  NFLX           0
 ```
 """
 function get_prices(symbol::AbstractString; range::AbstractString="5d", interval::AbstractString="1d",startdt="", enddt="",prepost=false,autoadjust=true,timeout = 10,throw_error=false,exchange_local_time=false)

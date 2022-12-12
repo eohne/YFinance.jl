@@ -23,11 +23,11 @@ julia> get_Options("AAPL")["calls"] |> DataFrame
 Row │ ask    bid    change     contractSize  contractSymbol       currency  exp ⋯
     │ Any    Any    Any        Any           Any                  Any       Any ⋯
 ────┼────────────────────────────────────────────────────────────────────────────
-    1 │ 94.3   94.1   0          REGULAR       AAPL221209C00050000  USD       202 ⋯
-    2 │ 84.3   84.15  0          REGULAR       AAPL221209C00060000  USD       202  
-    ⋮  │   ⋮      ⋮        ⋮           ⋮                 ⋮              ⋮          ⋱  
-    64 │ 0.01   0      0          REGULAR       AAPL221209C00240000  USD       202  
-    65 │ 0      0      0          REGULAR       AAPL221209C00250000  USD       202  
+  1 │ 94.3   94.1   0          REGULAR       AAPL221209C00050000  USD       202 ⋯
+  2 │ 84.3   84.15  0          REGULAR       AAPL221209C00060000  USD       202  
+ ⋮  │   ⋮      ⋮        ⋮           ⋮                 ⋮              ⋮          ⋱  
+ 64 │ 0.01   0      0          REGULAR       AAPL221209C00240000  USD       202  
+ 65 │ 0      0      0          REGULAR       AAPL221209C00250000  USD       202  
                                                     10 columns and 61 rows omitted
 
 julia> using DataFrames
@@ -37,9 +37,9 @@ julia> vcat( [DataFrame(i) for i in values(data)]...)
 Row │ ask    bid    change     contractSize  contractSymbol       cur ⋯
     │ Any    Any    Any        Any           Any                  Any ⋯
 ────┼──────────────────────────────────────────────────────────────────
-    1 │ 94.3   94.1   0          REGULAR       AAPL221209C00050000  USD ⋯
-    2 │ 84.55  84.35  0          REGULAR       AAPL221209C00060000  USD  
-    ⋮  │   ⋮      ⋮        ⋮           ⋮                 ⋮               ⋱ 
+  1 │ 94.3   94.1   0          REGULAR       AAPL221209C00050000  USD ⋯
+  2 │ 84.55  84.35  0          REGULAR       AAPL221209C00060000  USD  
+ ⋮  │   ⋮      ⋮        ⋮           ⋮                 ⋮               ⋱ 
 123 │ 75.85  75.15  0          REGULAR       AAPL221209P00220000  USD  
 124 │ 85.85  85.15  0          REGULAR       AAPL221209P00230000  USD  
                                         11 columns and 120 rows omitted
