@@ -1,7 +1,7 @@
 name = "YFinance"
 uuid = "e4b3b0a2-f9a3-42f3-aabb-32142cceaf77"
 authors = ["Elias L Ohneberg"]
-version = "0.1.2"
+version = "0.1.3"
 
 [deps]
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
