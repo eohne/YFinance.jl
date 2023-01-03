@@ -1,4 +1,4 @@
-_Fundamental_Types = Dict(
+_Fundamental_Types = OrderedCollections.OrderedDict(
     "income_statement"=> [
         "Amortization",
         "AmortizationOfIntangiblesIncomeStatement",
@@ -393,41 +393,44 @@ _Fundamental_Intervals = [
 """
     get_Fundamental(symbol::AbstractString, item::AbstractString,interval::AbstractString, startdt, enddt)
 
-Retrievs financial statement information from Yahoo Finance stored in a Dictionary.
+Retrievs financial statement information from Yahoo Finance stored in a OrderedCollections.OrderedDict.
 
 # Arguments
 
  * smybol`::String` is a ticker (e.g. AAPL for Apple Computers, or ^GSPC for the S&P500)  
 
- * item`::String` can either be an entire financial statement or a subitem. Entire financial statements:"income_statement", "valuation", "cash_flow", "balance_sheet".  To see valid sub items grouped by financial statement type in a Dictionary call `_Fundamental_Types`  
+ * item`::String` can either be an entire financial statement or a subitem. Entire financial statements:"income_statement", "valuation", "cash_flow", "balance_sheet".  To see valid sub items grouped by financial statement type in a OrderedCollections.OrderedDict call `_Fundamental_Types`  
 
  * interval`::String` can be one of "annual", "quarterly", "monthly"  
 
  * `startdt` and `enddt` take the following types: `::Date`,`::DateTime`, or a `String` of the following form `yyyy-mm-dd`  
 
- *  throw_error`::Bool` defaults to `false`. If set to true the function errors when the ticker is not valid. Else a warning is given and an empty dictionary is returned.
+ *  throw_error`::Bool` defaults to `false`. If set to true the function errors when the ticker is not valid. Else a warning is given and an empty OrderedCollections.OrderedDict is returned.
 
 # Examples
 ```julia-repl
 julia> get_Fundamental("NFLX", "income_statement","quarterly","2000-01-01","2022-12-31")
+OrderedDict{String, Any} with 40 entries:
+  "timestamp"                       => [DateTime("2021-12-31T00:00:00"), DateTime("2022-0…  "GeneralAndAdministrativeExpense" => Any[397790000, 397928000, 409297000, 373213000]    
+  "SellingGeneralAndAdministration" => Any[1190503000, 953906000, 984257000, 941167000]   
+  "InterestIncome"                  => Any[108512000, 195645000, 220226000, 261404000]    
+  "OperatingRevenue"                => Any[7709318000, 7867767000, 7970141000, 7925589000]  "DilutedNIAvailtoComStockholders" => Any[607429000, 1597447000, 1440951000, 1398242000] 
+  "NormalizedIncome"                => Any[607429000, 1597447000, 1440951000, 1398242000] 
+  "NetIncomeCommonStockholders"     => Any[607429000, 1597447000, 1440951000, 1398242000] 
+  "BasicAverageShares"              => Any[443462000, 444146000, 444557000, 444878000]    
+  ⋮                                 => ⋮
 
-Dict{String, Any} with 39 entries:
-"NetNonOperatingInterestIncomeExpense" => Any[-94294000, -80917000, 8066000, 44771000, 88829000]
-"NetInterestIncome"                    => Any[-94294000, -80917000, 8066000, 44771000, 88829000]
-"InterestExpense"                      => Any[190429000, 189429000, 187579000, 175455000, 172575000]
-⋮                                      => ⋮
 
 julia> using DataFrames
 julia> get_Fundamental("AAPL", "InterestExpense","quarterly","2000-01-01","2022-12-31") |> DataFrame
-5×2 DataFrame
-Row │ InterestExpense  timestamp
-    │ Any              DateTime
-────┼──────────────────────────────────────
-  1 │ 672000000        2021-09-30T00:00:00 
-  2 │ 694000000        2021-12-31T00:00:00
-  3 │ 691000000        2022-03-31T00:00:00
-  4 │ 719000000        2022-06-30T00:00:00
-  5 │ 827000000        2022-09-30T00:00:00
+4×2 DataFrame
+ Row │ timestamp            InterestExpense 
+     │ DateTime             Any
+─────┼──────────────────────────────────────
+   1 │ 2021-12-31T00:00:00  694000000
+   2 │ 2022-03-31T00:00:00  691000000
+   3 │ 2022-06-30T00:00:00  719000000
+   4 │ 2022-09-30T00:00:00  827000000
 ```
 """
 function get_Fundamental(symbol::AbstractString, item::AbstractString,interval::AbstractString, startdt, enddt;throw_error=false)
@@ -439,8 +442,8 @@ function get_Fundamental(symbol::AbstractString, item::AbstractString,interval::
          if throw_error
              error("$old_symbol is not a valid Symbol!")
          else
-             @warn "$old_symbol is not a valid Symbol an empy Dictionary was returned!" 
-             return Dict()
+             @warn "$old_symbol is not a valid Symbol an empy OrderedDict was returned!" 
+             return OrderedCollections.OrderedDict()
          end
      else
          symbol = symbol[1]
@@ -480,21 +483,22 @@ function get_Fundamental(symbol::AbstractString, item::AbstractString,interval::
         "formatted" => "false"
     )  
     url = "https://query2.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/$(symbol)"
-    res = HTTP.get(url,query = q)
+    res = HTTP.get(url,query = q, proxy=_PROXY_SETTINGS[:proxy],headers=_PROXY_SETTINGS[:auth])
     res = JSON3.read(res.body).timeseries.result
     if entire_statement
-        result = Dict{String,Any}()
+        result = OrderedCollections.OrderedDict{String,Any}()
         for i in eachindex(res)
             #continue if there is no data for this element
             if !in(:timestamp,keys(res[i]))
                 continue
             end
-            unix2datetime.(res[i].timestamp)
+            timestamp = unix2datetime.(res[i].timestamp)
             k = res[i].meta.type[1]
             element_result = []
             for j in values(res[i][Symbol(k)])
                 push!(element_result,j.reportedValue.raw)
             end
+            result["timestamp"] = timestamp
             result[replace(k,r"^(quarterly|annual|monthly)"=>"")] = element_result
         end
     else
@@ -506,7 +510,7 @@ function get_Fundamental(symbol::AbstractString, item::AbstractString,interval::
                 push!(value, i.reportedValue.raw)
             end
 
-            result = Dict("timestamp" => unix2datetime.(res[1].timestamp),item =>value)
+            result = OrderedCollections.OrderedDict("timestamp" => unix2datetime.(res[1].timestamp),item =>value)
         end             
     end
     return result

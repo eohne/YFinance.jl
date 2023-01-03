@@ -1,48 +1,50 @@
 """
     get_Options(symbol::String)
 
-Retrievs options data from Yahoo Finance stored in a Dictionary with two items. One contains Call options the other Put options. These subitems are dictionaries themselves.
-The call and put options Dictionaries can readily be transformed to a DataFrame.
+Retrievs options data from Yahoo Finance stored in a OrderedCollections.OrderedDict with two items. One contains Call options the other Put options. These subitems are OrderedCollections.OrderedDict themselves.
+The call and put options OrderedCollections.OrderedDict can readily be transformed to a DataFrame.
 
 # Arguments
 
  * smybol`::String` is a ticker (e.g. AAPL for Apple Computers, or ^GSPC for the S&P500)  
 
- *  throw_error`::Bool` defaults to `false`. If set to true the function errors when the ticker is not valid. Else a warning is given and an empty dictionary is returned.
+ *  throw_error`::Bool` defaults to `false`. If set to true the function errors when the ticker is not valid. Else a warning is given and an empty OrderedCollections.OrderedDict is returned.
 
 # Examples  
 ```julia-repl
 julia> get_Options("AAPL")
-Dict{String, Dict{String, Vector{Any}}} with 2 entries:
-"calls" => Dict("percentChange"=>[ -2.90804  …   0], "expiration"=>[DateTime("2022-12-09T00:…  
-"puts"  => Dict("percentChange"=>[0,  …   0], "expiration"=>[DateTime("2022-12-09T00:00:00"), DateTime("20…
+OrderedDict{String, OrderedDict{String, Vector{Any}}} with 2 entries:
+  "calls" => OrderedDict("contractSymbol"=>["AAPL221230C00050000", "AAPL221230C00055000",…
+  "puts"  => OrderedDict("contractSymbol"=>["AAPL221230P00050000", "AAPL221230P00055000",…
 
 julia> using DataFrames
 julia> get_Options("AAPL")["calls"] |> DataFrame
-65×16 DataFrame
-Row │ ask    bid    change     contractSize  contractSymbol       currency  exp ⋯
-    │ Any    Any    Any        Any           Any                  Any       Any ⋯
-────┼────────────────────────────────────────────────────────────────────────────
-  1 │ 94.3   94.1   0          REGULAR       AAPL221209C00050000  USD       202 ⋯
-  2 │ 84.3   84.15  0          REGULAR       AAPL221209C00060000  USD       202  
- ⋮  │   ⋮      ⋮        ⋮           ⋮                 ⋮              ⋮          ⋱  
- 64 │ 0.01   0      0          REGULAR       AAPL221209C00240000  USD       202  
- 65 │ 0      0      0          REGULAR       AAPL221209C00250000  USD       202  
-                                                    10 columns and 61 rows omitted
+72×16 DataFrame
+ Row │ contractSymbol       strike  currency  lastPrice  change  percentChange  volume   ⋯
+     │ Any                  Any     Any       Any        Any     Any            Any      ⋯
+─────┼────────────────────────────────────────────────────────────────────────────────────
+   1 │ AAPL221230C00050000  50      USD       79.85      0       0              1        ⋯
+   2 │ AAPL221230C00055000  55      USD       72.85      0       0              1
+   3 │ AAPL221230C00060000  60      USD       66.4       0       0              19        
+  ⋮  │          ⋮             ⋮        ⋮          ⋮        ⋮           ⋮           ⋮     ⋱
+  71 │ AAPL221230C00230000  230     USD       0.02       0       0              missing   
+  72 │ AAPL221230C00250000  250     USD       0.01       0       0              2        ⋯
+                                                             9 columns and 67 rows omitted
 
 julia> using DataFrames
-julia> data  = get_Options("AAPL")
+julia> data  = get_Options("AAPL");
 julia> vcat( [DataFrame(i) for i in values(data)]...)
-124×16 DataFrame
-Row │ ask    bid    change     contractSize  contractSymbol       cur ⋯
-    │ Any    Any    Any        Any           Any                  Any ⋯
-────┼──────────────────────────────────────────────────────────────────
-  1 │ 94.3   94.1   0          REGULAR       AAPL221209C00050000  USD ⋯
-  2 │ 84.55  84.35  0          REGULAR       AAPL221209C00060000  USD  
- ⋮  │   ⋮      ⋮        ⋮           ⋮                 ⋮               ⋱ 
-123 │ 75.85  75.15  0          REGULAR       AAPL221209P00220000  USD  
-124 │ 85.85  85.15  0          REGULAR       AAPL221209P00230000  USD  
-                                        11 columns and 120 rows omitted
+141×16 DataFrame
+ Row │ contractSymbol       strike  currency  lastPrice  change  percentChange  volume   ⋯
+     │ Any                  Any     Any       Any        Any     Any            Any      ⋯
+─────┼────────────────────────────────────────────────────────────────────────────────────
+   1 │ AAPL221230C00050000  50      USD       79.85      0       0              1        ⋯
+   2 │ AAPL221230C00055000  55      USD       72.85      0       0              1
+   3 │ AAPL221230C00060000  60      USD       66.4       0       0              19        
+  ⋮  │          ⋮             ⋮        ⋮          ⋮        ⋮           ⋮          ⋮      ⋱
+ 140 │ AAPL221230P00225000  225     USD       94.65      0       0              1
+ 141 │ AAPL221230P00230000  230     USD       99.65      0       0              1        ⋯
+                                                            9 columns and 136 rows omitted
 ```
 """
 function get_Options(symbol::String;throw_error=false)
@@ -54,18 +56,18 @@ function get_Options(symbol::String;throw_error=false)
          if throw_error
              error("$old_symbol is not a valid Symbol!")
          else
-             @warn "$old_symbol is not a valid Symbol an empy Dictionary was returned!" 
-             return Dict()
+             @warn "$old_symbol is not a valid Symbol an empy OrderedCollections.OrderedDict was returned!" 
+             return OrderedCollections.OrderedDict()
          end
      else
          symbol = symbol[1]
      end
 
-    res = HTTP.get("https://query2.finance.yahoo.com/v7/finance/options/$(symbol)",query = Dict("formatted"=>"false"))    
+    res = HTTP.get("https://query2.finance.yahoo.com/v7/finance/options/$(symbol)",query = Dict("formatted"=>"false"), proxy=_PROXY_SETTINGS[:proxy],headers=_PROXY_SETTINGS[:auth])    
     res = JSON3.read(res.body)
     puts = res.optionChain.result[1].options[1].puts
     calls = res.optionChain.result[1].options[1].calls
-    res_p = Dict(
+    res_p = OrderedCollections.OrderedDict(
         "contractSymbol"=> [],
         "strike"=> [],
         "currency"=> [],
@@ -82,7 +84,7 @@ function get_Options(symbol::String;throw_error=false)
         "impliedVolatility"=> [],
         "inTheMoney"=> []
         )
-    res_c = Dict(
+    res_c = OrderedCollections.OrderedDict(
         "contractSymbol"=> [],
         "strike"=> [],
         "currency"=> [],
@@ -128,6 +130,6 @@ function get_Options(symbol::String;throw_error=false)
     end
     res_c["type"] = repeat(["call"], length(res_c["strike"]))
     res_p["type"] = repeat(["put"], length(res_p["strike"]))
-    return Dict("calls" => res_c, "puts" => res_p)
+    return OrderedCollections.OrderedDict("calls" => res_c, "puts" => res_p)
 end
 

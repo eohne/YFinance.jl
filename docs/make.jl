@@ -12,8 +12,14 @@ makedocs(
                     "QuoteSummary" =>"QuoteSummary.md",
                     "Options" =>"Options.md",
                     "ESG" =>"ESG.md",
+                    "Proxy" => "Proxies.md",
                     "All Functions" =>"AllFunctions.md",
-                ]
+                ],
+                "Example Usage" => [
+                    "Convert to DataFrames, TimeArrays, TSFrames" => "DataFramesetc.md",
+                    "Plotting Data with PlotlyJS" => "Plotting_Example.md"
+                ],
+                "Version Change Log" => "VersionChanges.md"
                ])
 deploydocs(;
     repo="github.com/eohne/YFinance.jl",

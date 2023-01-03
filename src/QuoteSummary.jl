@@ -75,7 +75,7 @@ function get_quoteSummary(symbol::String; item=nothing,throw_error=false)
         if throw_error
             error("$old_symbol is not a valid Symbol!")
         else
-            @warn "$old_symbol is not a valid Symbol an empy Dictionary was returned!" 
+            @warn "$old_symbol is not a valid Symbol an empy OrderedCollections.OrderedDict was returned!" 
             return JSON3.Object()
         end
     else
@@ -94,7 +94,7 @@ function get_quoteSummary(symbol::String; item=nothing,throw_error=false)
         q= Dict("formatted" => "false","modules" => join(item,","))
     end
     
-    res = HTTP.get("https://query2.finance.yahoo.com/v10/finance/quoteSummary/$(symbol)",query =q )    
+    res = HTTP.get("https://query2.finance.yahoo.com/v10/finance/quoteSummary/$(symbol)",query =q, proxy=_PROXY_SETTINGS[:proxy],headers=_PROXY_SETTINGS[:auth])    
     res = JSON3.read(res.body)
     if typeof(item) <: AbstractString
         return res.quoteSummary.result[1][Symbol(item)]
@@ -158,15 +158,15 @@ If a ticker symbol is provided `get_quoteSummary(symbol::String)` is called firs
 # Examples
 ```julia-repl
 julia> get_quoteSummary("AAPL") |> get_calendar_events
-Dict{String, Any} with 3 entries:
-  "earnings_dates"  => [DateTime("2023-01-25T10:59:00"), DateTime("2023-01-30T12:00:00")]
+OrderedDict{String, Any} with 3 entries:
   "dividend_date"   => DateTime("2022-11-10T00:00:00")
+  "earnings_dates"  => [DateTime("2023-01-25T10:59:00"), DateTime("2023-01-30T12:00:00")]
   "exdividend_date" => DateTime("2022-11-04T00:00:00")
 
 julia> get_calendar_events("AAPL")
-Dict{String, Any} with 3 entries:
-  "earnings_dates"  => [DateTime("2023-01-25T10:59:00"), DateTime("2023-01-30T12:00:00")]
+OrderedDict{String, Any} with 3 entries:
   "dividend_date"   => DateTime("2022-11-10T00:00:00")
+  "earnings_dates"  => [DateTime("2023-01-25T10:59:00"), DateTime("2023-01-30T12:00:00")]
   "exdividend_date" => DateTime("2022-11-04T00:00:00")
 
 julia> using DataFrames
@@ -184,10 +184,9 @@ function get_calendar_events(quoteSummary::JSON3.Object)
     field_types = _check_field_quotetype(:calendarEvents)
     @assert in(quote_type,field_types) """Calendar Events dont exist for $(quote_type) items only for $(join(field_types,", "))""" 
     @assert in(:calendarEvents, keys(quoteSummary)) "There are no calendar Events for this item."
-    res = Dict( "earnings_dates" => unix2datetime.(quoteSummary[:calendarEvents].earnings.earningsDate),
-                "dividend_date" => unix2datetime(quoteSummary[:calendarEvents].dividendDate),
-                "exdividend_date" =>unix2datetime(quoteSummary[:calendarEvents].exDividendDate)
-    )
+    res = OrderedCollections.OrderedDict("dividend_date" => unix2datetime(quoteSummary[:calendarEvents].dividendDate),
+                "earnings_dates" => unix2datetime.(quoteSummary[:calendarEvents].earnings.earningsDate),
+                "exdividend_date" =>unix2datetime(quoteSummary[:calendarEvents].exDividendDate))
     return res
 end
 get_calendar_events(symbol::AbstractString) =  get_quoteSummary(symbol) |> get_calendar_events
@@ -208,28 +207,28 @@ If a ticker symbol is provided `get_quoteSummary(symbol::String)` is called firs
 # Examples
 ```julia-repl
 julia> get_quoteSummary("AAPL") |> get_earnings_estimates
-Dict{String, Vector} with 3 entries:
+OrderedDict{String, Vector} with 3 entries:
   "quarter"  => ["4Q2021", "1Q2022", "2Q2022", "3Q2022", "4Q2022"]
-  "estimate" => [1.89, 1.43, 1.16, 1.27, 2.01]
+  "estimate" => [1.89, 1.43, 1.16, 1.27, 1.98]
   "actual"   => Union{Missing, Float64}[2.1, 1.52, 1.2, 1.29, missing]
 
 julia> get_earnings_estimates("AAPL")
-Dict{String, Vector} with 3 entries:
+OrderedDict{String, Vector} with 3 entries:
   "quarter"  => ["4Q2021", "1Q2022", "2Q2022", "3Q2022", "4Q2022"]
-  "estimate" => [1.89, 1.43, 1.16, 1.27, 2.01]
+  "estimate" => [1.89, 1.43, 1.16, 1.27, 1.98]
   "actual"   => Union{Missing, Float64}[2.1, 1.52, 1.2, 1.29, missing]
 
 julia> using DataFrames
 julia> get_earnings_estimates("AAPL") |> DataFrame
 5×3 DataFrame
- Row │ actual      estimate  quarter 
-     │ Float64?    Float64   String  
+ Row │ quarter  estimate  actual     
+     │ String   Float64   Float64?   
 ─────┼───────────────────────────────
-   1 │       2.1       1.89  4Q2021
-   2 │       1.52      1.43  1Q2022
-   3 │       1.2       1.16  2Q2022
-   4 │       1.29      1.27  3Q2022
-   5 │ missing         2.01  4Q2022
+   1 │ 4Q2021       1.89        2.1
+   2 │ 1Q2022       1.43        1.52
+   3 │ 2Q2022       1.16        1.2
+   4 │ 3Q2022       1.27        1.29
+   5 │ 4Q2022       1.98  missing   
 ```
 """
 function get_earnings_estimates(quoteSummary::JSON3.Object)
@@ -238,7 +237,7 @@ function get_earnings_estimates(quoteSummary::JSON3.Object)
     @assert in(quote_type,field_types) """Earnings dont exist for $(quote_type) items only for $(join(field_types,", "))""" 
     @assert in(:earnings, keys(quoteSummary)) "There are no earnings for this item."
     if isempty(quoteSummary[:earnings].earningsChart.quarterly)
-        return Dict()
+        return OrderedCollections.OrderedDict()
     end
 
     quarter = String[]
@@ -253,7 +252,7 @@ function get_earnings_estimates(quoteSummary::JSON3.Object)
     push!(quarter,string(quoteSummary[:earnings].earningsChart.currentQuarterEstimateDate,quoteSummary[:earnings].earningsChart.currentQuarterEstimateYear))
     push!(actual,missing)
     push!(estimate, quoteSummary[:earnings].earningsChart.currentQuarterEstimate)
-    return Dict(["quarter","estimate","actual"] .=> [quarter,estimate,actual])
+    return OrderedCollections.OrderedDict(["quarter","estimate","actual"] .=> [quarter,estimate,actual])
 end
 get_earnings_estimates(symbol::AbstractString) =  get_quoteSummary(symbol) |> get_earnings_estimates
 
@@ -271,29 +270,29 @@ If a ticker symbol is provided `get_quoteSummary(symbol::String)` is called firs
 # Examples
 ```julia-repl
 julia> get_quoteSummary("AAPL") |> get_eps
-Dict{String, Vector} with 4 entries:
-  "surprise" => [0.111, 0.063, 0.034, 0.016]
+OrderedDict{String, Vector} with 4 entries:
   "quarter"  => [DateTime("2021-12-31T00:00:00"), DateTime("2022-03-31T00:00:00"), DateTime("2022-06-30T00:00:00"), DateTime("2022-09-30T00:00:00")]
   "estimate" => [1.89, 1.43, 1.16, 1.27]
   "actual"   => [2.1, 1.52, 1.2, 1.29]
+  "surprise" => [0.111, 0.063, 0.034, 0.016]
 
 julia> get_eps("AAPL")
-Dict{String, Vector} with 4 entries:
-  "surprise" => [0.111, 0.063, 0.034, 0.016]
+OrderedDict{String, Vector} with 4 entries:
   "quarter"  => [DateTime("2021-12-31T00:00:00"), DateTime("2022-03-31T00:00:00"), DateTime("2022-06-30T00:00:00"), DateTime("2022-09-30T00:00:00")]
   "estimate" => [1.89, 1.43, 1.16, 1.27]
   "actual"   => [2.1, 1.52, 1.2, 1.29]
+  "surprise" => [0.111, 0.063, 0.034, 0.016]
 
 julia> using DataFrames
 julia> get_eps("AAPL") |> DataFrame
 4×4 DataFrame
- Row │ actual   estimate  quarter              surprise 
-     │ Float64  Float64   DateTime             Float64  
+ Row │ quarter              estimate  actual   surprise 
+     │ DateTime             Float64   Float64  Float64  
 ─────┼──────────────────────────────────────────────────
-   1 │    2.1       1.89  2021-12-31T00:00:00     0.111
-   2 │    1.52      1.43  2022-03-31T00:00:00     0.063
-   3 │    1.2       1.16  2022-06-30T00:00:00     0.034
-   4 │    1.29      1.27  2022-09-30T00:00:00     0.016
+   1 │ 2021-12-31T00:00:00      1.89     2.1      0.111
+   2 │ 2022-03-31T00:00:00      1.43     1.52     0.063
+   3 │ 2022-06-30T00:00:00      1.16     1.2      0.034
+   4 │ 2022-09-30T00:00:00      1.27     1.29     0.016
 ```
 """
 function get_eps(quoteSummary::JSON3.Object)
@@ -302,7 +301,7 @@ function get_eps(quoteSummary::JSON3.Object)
     @assert in(quote_type,field_types) """EPS do not exist for $(quote_type) items only for $(join(field_types,", "))""" 
     @assert in(:earningsHistory, keys(quoteSummary)) "There are no earnings per share for this item."
     if isempty(quoteSummary[:earningsHistory].history)
-        return Dict()
+        return OrderedCollections.OrderedDict()
     end
 
     quarter = DateTime[]
@@ -315,7 +314,7 @@ function get_eps(quoteSummary::JSON3.Object)
         push!(estimate,i.epsEstimate.raw)
         push!(surprise,i.surprisePercent.raw)
     end
-    return Dict(["quarter","estimate","actual","surprise"] .=> [quarter,estimate,actual,surprise])
+    return OrderedCollections.OrderedDict(["quarter","estimate","actual","surprise"] .=> [quarter,estimate,actual,surprise])
 end
 get_eps(symbol::AbstractString) =  get_quoteSummary(symbol) |> get_eps
 
@@ -334,44 +333,45 @@ If a ticker symbol is provided `get_quoteSummary(symbol::String)` is called firs
 # Examples
 ```julia-repl
 julia> get_quoteSummary("AAPL") |> get_insider_holders
-Dict{String, Vector} with 8 entries:
-  "name"                 => ["ADAMS KATHERINE L", "BELL JAMES A", "JUNG AND…
-  "lastestTransDate"     => Union{Missing, DateTime}[DateTime("2022-10-03T0…
-  "positionDirect"       => Union{Missing, Int64}[427334, 34990, 139594, 31…
-  "relation"             => Union{Missing, String}["General Counsel", "Dire…
-  "positionIndirect"     => Union{Missing, Int64}[missing, missing, missing…
-  "description"          => Union{Missing, String}["Sale", "Stock Gift", "C…
-  "positionDirectDate"   => Union{Missing, DateTime}[DateTime("2022-10-03T0…
-  "positionIndirectDate" => Union{Missing, DateTime}[missing, missing, miss…
+OrderedDict{String, Vector} with 8 entries:
+    "name"                 => ["ADAMS KATHERINE L", "BELL JAMES A", "JUNG ANDREA", "KONDO C…
+    "relation"             => Union{Missing, String}["General Counsel", "Director", "Direct…  
+    "description"          => Union{Missing, String}["Sale", "Stock Gift", "Conversion of E…  
+    "lastestTransDate"     => Union{Missing, DateTime}[DateTime("2022-10-03T00:00:00"), Dat…  
+    "positionDirect"       => Union{Missing, Int64}[427334, 34990, 139594, 31505, 4588720, …  
+    "positionDirectDate"   => Union{Missing, DateTime}[DateTime("2022-10-03T00:00:00"), Dat…  
+    "positionIndirect"     => Union{Missing, Int64}[missing, missing, missing, missing, mis…  
+    "positionIndirectDate" => Union{Missing, DateTime}[missing, missing, missing, missing, …
 
 julia> get_insider_holders("AAPL")
-Dict{String, Vector} with 8 entries:
-  "name"                 => ["ADAMS KATHERINE L", "BELL JAMES A", "JUNG AND…
-   "lastestTransDate"     => Union{Missing, DateTime}[DateTime("2022-10-03T0…
-   "positionDirect"       => Union{Missing, Int64}[427334, 34990, 139594, 31…
-   "relation"             => Union{Missing, String}["General Counsel", "Dire…
-   "positionIndirect"     => Union{Missing, Int64}[missing, missing, missing…
-   "description"          => Union{Missing, String}["Sale", "Stock Gift", "C…
-   "positionDirectDate"   => Union{Missing, DateTime}[DateTime("2022-10-03T0…
-   "positionIndirectDate" => Union{Missing, DateTime}[missing, missing, miss…
+OrderedDict{String, Vector} with 8 entries:
+    "name"                 => ["ADAMS KATHERINE L", "BELL JAMES A", "JUNG ANDREA", "KONDO C…
+    "relation"             => Union{Missing, String}["General Counsel", "Director", "Direct…  
+    "description"          => Union{Missing, String}["Sale", "Stock Gift", "Conversion of E…  
+    "lastestTransDate"     => Union{Missing, DateTime}[DateTime("2022-10-03T00:00:00"), Dat…  
+    "positionDirect"       => Union{Missing, Int64}[427334, 34990, 139594, 31505, 4588720, …  
+    "positionDirectDate"   => Union{Missing, DateTime}[DateTime("2022-10-03T00:00:00"), Dat…  
+    "positionIndirect"     => Union{Missing, Int64}[missing, missing, missing, missing, mis…  
+    "positionIndirectDate" => Union{Missing, DateTime}[missing, missing, missing, missing, …
+
 
 julia> using DataFrames
 julia> get_insider_holders("AAPL") |> DataFrame
 10×8 DataFrame
- Row │ description                        lastestTransDate     name        ⋯
-     │ String?                            DateTime?            String      ⋯
-─────┼──────────────────────────────────────────────────────────────────────
-   1 │ Sale                               2022-10-03T00:00:00  ADAMS KATHE ⋯
-   2 │ Stock Gift                         2022-05-06T00:00:00  BELL JAMES   
-   3 │ Conversion of Exercise of deriva…  2022-02-01T00:00:00  JUNG ANDREA  
-   4 │ Sale                               2022-11-22T00:00:00  KONDO CHRIS  
-   5 │ Sale                               2022-02-01T00:00:00  LEVINSON AR ⋯
-   6 │ Sale                               2022-10-28T00:00:00  MAESTRI LUC  
-   7 │ Sale                               2022-10-17T00:00:00  O'BRIEN DEI  
-   8 │ Conversion of Exercise of deriva…  2022-02-01T00:00:00  SUGAR RONAL  
-   9 │ Conversion of Exercise of deriva…  2022-02-01T00:00:00  WAGNER SUSA ⋯
-  10 │ Conversion of Exercise of deriva…  2022-09-30T00:00:00  WILLIAMS JE  
-                                                           6 columns omitted
+ Row │ name                relation                 description                        l ⋯
+     │ String              String?                  String?                            D ⋯
+─────┼────────────────────────────────────────────────────────────────────────────────────
+   1 │ ADAMS KATHERINE L   General Counsel          Sale                               2 ⋯
+   2 │ BELL JAMES A        Director                 Stock Gift                         2  
+   3 │ JUNG ANDREA         Director                 Conversion of Exercise of deriva…  2  
+   4 │ KONDO CHRISTOPHER   Officer                  Sale                               2  
+   5 │ LEVINSON ARTHUR D   Director                 Sale                               2 ⋯
+   6 │ MAESTRI LUCA        Chief Financial Officer  Sale                               2  
+   7 │ O'BRIEN DEIRDRE     Officer                  Sale                               2  
+   8 │ SUGAR RONALD D      Director                 Conversion of Exercise of deriva…  2  
+   9 │ WAGNER SUSAN L      Director                 Conversion of Exercise of deriva…  2 ⋯
+  10 │ WILLIAMS JEFFREY E  Chief Operating Officer  Conversion of Exercise of deriva…  2  
+                                                                         5 columns omitted
 ```
 """
 function get_insider_holders(quoteSummary::JSON3.Object)
@@ -380,7 +380,7 @@ function get_insider_holders(quoteSummary::JSON3.Object)
     @assert in(quote_type,field_types) """Insider Holdings dont exist for $(quote_type) items only for $(join(field_types,", "))""" 
     @assert in(:insiderHolders, keys(quoteSummary)) "There are is no insiderHolders item."
     if isempty(quoteSummary[:insiderHolders].holders)
-        return Dict()
+        return OrderedCollections.OrderedDict()
     end
 
     name = String[]
@@ -401,7 +401,7 @@ function get_insider_holders(quoteSummary::JSON3.Object)
         push!(indirect,_no_key_missing(i,:positionIndirect,:raw))
         push!(indirect_dt, _no_key_missing(i,:positionIndirectDate,:fmt,true))
     end
-    res = Dict(["name","relation","description","lastestTransDate","positionDirect",
+    res = OrderedCollections.OrderedDict(["name","relation","description","lastestTransDate","positionDirect",
                 "positionDirectDate","positionIndirect","positionIndirectDate"] .=> 
                [name, relation,des,lasttrandt,direct,direct_dt,indirect,indirect_dt])
     return res
@@ -423,39 +423,46 @@ If a ticker symbol is provided `get_quoteSummary(symbol::String)` is called firs
 # Examples
 ```julia-repl
 julia> get_quoteSummary("AAPL") |> get_insider_transactions
-Dict{String, Vector} with 7 entries:
-  "shares"          => Union{Missing, Int64}[20200, 176299, 8053, 13136, 16…
-  "filerRelation"   => Union{Missing, String}["Officer", "Chief Financial O…
-  "transactionText" => Union{Missing, String}["Sale at price 148.72 per sha…
-  "filerName"       => ["KONDO CHRISTOPHER", "MAESTRI LUCA", "O'BRIEN DEIRD…
-  "ownership"       => Union{Missing, String}["D", "D", "D", "D", "D", "D",…
-  "date"            => Union{Missing, DateTime}[DateTime("2022-11-22T00:00:…
-  "value"           => Union{Missing, Int64}[3004144, 27493275, 1147150, mi…
+OrderedDict{String, Vector} with 7 entries:
+  "filerName"       => ["KONDO CHRISTOPHER", "MAESTRI LUCA", "O'BRIEN DEIRDRE", "KONDO CH…  
+  "filerRelation"   => Union{Missing, String}["Officer", "Chief Financial Officer", "Offi…  
+  "transactionText" => Union{Missing, String}["Sale at price 148.72 per share.", "Sale at…  
+  "date"            => Union{Missing, DateTime}[DateTime("2022-11-22T00:00:00"), DateTime…  
+  "ownership"       => Union{Missing, String}["D", "D", "D", "D", "D", "D", "D", "D", "I"…  
+  "shares"          => Union{Missing, Int64}[20200, 176299, 8053, 13136, 16612, 181139, 1…  
+  "value"           => Union{Missing, Int64}[3004144, 27493275, 1147150, missing, missing…
 
 julia> get_insider_transactions("AAPL")
-Dict{String, Vector} with 7 entries:
-  "shares"          => Union{Missing, Int64}[20200, 176299, 8053, 13136, 16…
-  "filerRelation"   => Union{Missing, String}["Officer", "Chief Financial O…
-  "transactionText" => Union{Missing, String}["Sale at price 148.72 per sha…
-  "filerName"       => ["KONDO CHRISTOPHER", "MAESTRI LUCA", "O'BRIEN DEIRD…
-  "ownership"       => Union{Missing, String}["D", "D", "D", "D", "D", "D",…
-  "date"            => Union{Missing, DateTime}[DateTime("2022-11-22T00:00:…
-  "value"           => Union{Missing, Int64}[3004144, 27493275, 1147150, mi…
+OrderedDict{String, Vector} with 7 entries:
+  "filerName"       => ["KONDO CHRISTOPHER", "MAESTRI LUCA", "O'BRIEN DEIRDRE", "KONDO CH…  
+  "filerRelation"   => Union{Missing, String}["Officer", "Chief Financial Officer", "Offi…  
+  "transactionText" => Union{Missing, String}["Sale at price 148.72 per share.", "Sale at…  
+  "date"            => Union{Missing, DateTime}[DateTime("2022-11-22T00:00:00"), DateTime…  
+  "ownership"       => Union{Missing, String}["D", "D", "D", "D", "D", "D", "D", "D", "I"…  
+  "shares"          => Union{Missing, Int64}[20200, 176299, 8053, 13136, 16612, 181139, 1…  
+  "value"           => Union{Missing, Int64}[3004144, 27493275, 1147150, missing, missing…
 
 julia> using DataFrames
 julia> get_insider_transactions("AAPL") |> DataFrame
 75×7 DataFrame
- Row │ date                 filerName          filerRelation            ⋯
-     │ DateTime?            String             String?                  ⋯
-─────┼───────────────────────────────────────────────────────────────────
-   1 │ 2022-11-22T00:00:00  KONDO CHRISTOPHER  Officer                  ⋯
-   2 │ 2022-10-28T00:00:00  MAESTRI LUCA       Chief Financial Officer   
-   3 │ 2022-10-17T00:00:00  O'BRIEN DEIRDRE    Officer
-  ⋮  │          ⋮                   ⋮                     ⋮             ⋱
-  73 │ 2021-02-01T00:00:00  LOZANO MONICA C.   Director
-  74 │ 2021-02-01T00:00:00  GORE ALBERT A JR   Director                 ⋯
-  75 │ 2021-02-01T00:00:00  ADAMS KATHERINE L  General Counsel
-                                            4 columns and 69 rows omitted
+ Row │ filerName           filerRelation            transactionText                    d ⋯
+     │ String              String?                  String?                            D ⋯
+─────┼────────────────────────────────────────────────────────────────────────────────────
+   1 │ KONDO CHRISTOPHER   Officer                  Sale at price 148.72 per share.    2 ⋯
+   2 │ MAESTRI LUCA        Chief Financial Officer  Sale at price 154.70 - 157.20 pe…  2  
+   3 │ O'BRIEN DEIRDRE     Officer                  Sale at price 142.45 per share.    2  
+   4 │ KONDO CHRISTOPHER   Officer                                                     2  
+   5 │ O'BRIEN DEIRDRE     Officer                                                     2 ⋯   
+   6 │ ADAMS KATHERINE L   General Counsel          Sale at price 138.44 - 142.93 pe…  2  
+   7 │ O'BRIEN DEIRDRE     Officer                  Sale at price 141.09 - 142.83 pe…  2  
+  ⋮  │         ⋮                      ⋮                             ⋮                    ⋱
+  70 │ WAGNER SUSAN L      Director                                                    2  
+  71 │ JUNG ANDREA         Director                                                    2 ⋯
+  72 │ BELL JAMES A        Director                                                    2  
+  73 │ LOZANO MONICA C.    Director                                                    2  
+  74 │ GORE ALBERT A JR    Director                                                    2  
+  75 │ ADAMS KATHERINE L   General Counsel          Sale at price 131.79 - 134.56 pe…  2 ⋯
+                                                             4 columns and 62 rows omitted
 ```
 """
 function get_insider_transactions(quoteSummary::JSON3.Object)
@@ -464,7 +471,7 @@ function get_insider_transactions(quoteSummary::JSON3.Object)
     @assert in(quote_type,field_types) """Insider Transactions dont exist for $(quote_type) items only for $(join(field_types,", "))""" 
     @assert in(:insiderTransactions, keys(quoteSummary)) "There are is no insiderTransactions item."
     if isempty(quoteSummary[:insiderTransactions].transactions)
-        return Dict()
+        return OrderedCollections.OrderedDict()
     end
 
     name = String[]
@@ -483,7 +490,7 @@ function get_insider_transactions(quoteSummary::JSON3.Object)
         push!(shares,_no_key_missing(i,:shares,:raw))
         push!(value,_no_key_missing(i,:value,:raw))
     end
-    res = Dict(["filerName","filerRelation","transactionText","date","ownership",
+    res = OrderedCollections.OrderedDict(["filerName","filerRelation","transactionText","date","ownership",
                 "shares","value"] .=> 
                [name, relation,text,date,ownership,shares,value])
     return res
@@ -504,37 +511,40 @@ If a ticker symbol is provided `get_quoteSummary(symbol::String)` is called firs
 # Examples
 ```julia-repl
 julia> get_quoteSummary("AAPL") |> get_institutional_ownership
-Dict{String, Vector} with 6 entries:
-  "organization" => ["Vanguard Group, Inc. (The)", "Blackrock Inc.", "Be…
-  "pctChange"    => Union{Missing, Float64}[-0.0039, -0.0082, 0.0, -0.01…
-  "pctHeld"      => Union{Missing, Float64}[0.08, 0.0641, 0.0562, 0.0372…
-  "position"     => Union{Missing, Int64}[1272378901, 1020245185, 894802…
-  "value"        => Union{Missing, Int64}[180881389225, 145038059235, 12…
-  "reportDate"   => Union{Missing, DateTime}[DateTime("2022-09-30T00:00:…
+OrderedDict{String, Vector} with 6 entries:
+  "organization" => ["Vanguard Group, Inc. (The)", "Blackrock Inc.", "Berkshire Hathaway,…  
+  "reportDate"   => Union{Missing, DateTime}[DateTime("2022-09-30T00:00:00"), DateTime("2…  
+  "pctHeld"      => Union{Missing, Float64}[0.08, 0.0641, 0.0562, 0.0372, 0.0221, 0.0176,…  
+  "position"     => Union{Missing, Int64}[1272378901, 1020245185, 894802319, 591543874, 3…  
+  "value"        => Union{Missing, Int64}[164913030135, 132233979050, 115975329111, 76670…  
+  "pctChange"    => Union{Missing, Float64}[-0.0039, -0.0082, 0.0, -0.0111, 0.0191, 0.005…
 
 julia> get_institutional_ownership("AAPL")
-Dict{String, Vector} with 6 entries:
-  "organization" => ["Vanguard Group, Inc. (The)", "Blackrock Inc.", "Be…
-  "pctChange"    => Union{Missing, Float64}[-0.0039, -0.0082, 0.0, -0.01…
-  "pctHeld"      => Union{Missing, Float64}[0.08, 0.0641, 0.0562, 0.0372…
-  "position"     => Union{Missing, Int64}[1272378901, 1020245185, 894802…
-  "value"        => Union{Missing, Int64}[180881389225, 145038059235, 12…
-  "reportDate"   => Union{Missing, DateTime}[DateTime("2022-09-30T00:00:…
+OrderedDict{String, Vector} with 6 entries:
+  "organization" => ["Vanguard Group, Inc. (The)", "Blackrock Inc.", "Berkshire Hathaway,…  
+  "reportDate"   => Union{Missing, DateTime}[DateTime("2022-09-30T00:00:00"), DateTime("2…  
+  "pctHeld"      => Union{Missing, Float64}[0.08, 0.0641, 0.0562, 0.0372, 0.0221, 0.0176,…  
+  "position"     => Union{Missing, Int64}[1272378901, 1020245185, 894802319, 591543874, 3…  
+  "value"        => Union{Missing, Int64}[164913030135, 132233979050, 115975329111, 76670…  
+  "pctChange"    => Union{Missing, Float64}[-0.0039, -0.0082, 0.0, -0.0111, 0.0191, 0.005…
 
 julia> using DataFrames
 julia> get_institutional_ownership("AAPL") |> DataFrame
 10×6 DataFrame
- Row │ organization                   pctChange  pctHeld   position     ⋯
-     │ String                         Float64?   Float64?  Int64?       ⋯
-─────┼───────────────────────────────────────────────────────────────────
-   1 │ Vanguard Group, Inc. (The)       -0.0039    0.08    1272378901   ⋯
-   2 │ Blackrock Inc.                   -0.0082    0.0641  1020245185    
-   3 │ Berkshire Hathaway, Inc           0.0       0.0562   894802319    
-  ⋮  │               ⋮                    ⋮         ⋮          ⋮        ⋱
-   8 │ Morgan Stanley                    0.0015    0.0115   182728771    
-   9 │ Northern Trust Corporation       -0.0208    0.0111   176084862   ⋯
-  10 │ Bank of America Corporation      -0.0461    0.0089   142260591    
-                                             2 columns and 4 rows omitted
+ Row │ organization                   reportDate           pctHeld   position    value   ⋯
+     │ String                         DateTime?            Float64?  Int64?      Int64?  ⋯
+─────┼────────────────────────────────────────────────────────────────────────────────────
+   1 │ Vanguard Group, Inc. (The)     2022-09-30T00:00:00    0.08    1272378901  1649130 ⋯
+   2 │ Blackrock Inc.                 2022-09-30T00:00:00    0.0641  1020245185  1322339  
+   3 │ Berkshire Hathaway, Inc        2022-09-30T00:00:00    0.0562   894802319  1159753  
+   4 │ State Street Corporation       2022-09-30T00:00:00    0.0372   591543874   766700  
+   5 │ FMR, LLC                       2022-09-30T00:00:00    0.0221   350900116   454801 ⋯
+   6 │ Geode Capital Management, LLC  2022-09-30T00:00:00    0.0176   279758518   362595  
+   7 │ Price (T.Rowe) Associates Inc  2022-09-30T00:00:00    0.0141   224863541   291445  
+   8 │ Morgan Stanley                 2022-09-30T00:00:00    0.0115   182728771   236834  
+   9 │ Northern Trust Corporation     2022-09-30T00:00:00    0.0111   176084862   228223 ⋯
+  10 │ Bank of America Corporation    2022-09-30T00:00:00    0.0089   142260591   184383  
+                                                                         2 columns omitted
 ```
 """
 function get_institutional_ownership(quoteSummary::JSON3.Object)
@@ -543,7 +553,7 @@ function get_institutional_ownership(quoteSummary::JSON3.Object)
     @assert in(quote_type,field_types) """Institutional Ownership does not exist for $(quote_type) items only for $(join(field_types,", "))""" 
     @assert in(:institutionOwnership, keys(quoteSummary)) "There are is no institutionOwnership item."
     if isempty(quoteSummary[:institutionOwnership].ownershipList)
-        return Dict()
+        return OrderedCollections.OrderedDict()
     end
 
     organization = String[]
@@ -560,7 +570,7 @@ function get_institutional_ownership(quoteSummary::JSON3.Object)
         push!(value, _no_key_missing(i,:value,:raw))
         push!(pctChange,_no_key_missing(i,:pctChange,:raw))
     end
-    res = Dict(["organization","reportDate","pctHeld","position","value",
+    res = OrderedCollections.OrderedDict(["organization","reportDate","pctHeld","position","value",
                 "pctChange"] .=> 
                [organization,reportDate,pctHeld,position,value,pctChange])
     return res
@@ -581,18 +591,18 @@ If a ticker symbol is provided `get_quoteSummary(symbol::String)` is called firs
 # Examples
 ```julia-repl
 julia> get_quoteSummary("AAPL") |> get_major_holders_breakdown
-Dict{String, Real} with 4 entries:
-  "institutionsCount"            => 5525
+OrderedDict{String, Real} with 4 entries:  
   "insidersPercentHeld"          => 0.00072
-  "institutionsFloatPercentHeld" => 0.60065
-  "institutionsPercentHeld"      => 0.60021
+  "institutionsPercentHeld"      => 0.60915
+  "institutionsFloatPercentHeld" => 0.60959
+  "institutionsCount"            => 5526  
 
 julia> get_major_holders_breakdown("AAPL")
-Dict{String, Real} with 4 entries:
-  "institutionsCount"            => 5525
+OrderedDict{String, Real} with 4 entries:  
   "insidersPercentHeld"          => 0.00072
-  "institutionsFloatPercentHeld" => 0.60065
-  "institutionsPercentHeld"      => 0.60021
+  "institutionsPercentHeld"      => 0.60915
+  "institutionsFloatPercentHeld" => 0.60959
+  "institutionsCount"            => 5526
 ```
 """
 function get_major_holders_breakdown(quoteSummary::JSON3.Object)
@@ -600,7 +610,7 @@ function get_major_holders_breakdown(quoteSummary::JSON3.Object)
     field_types = _check_field_quotetype(:majorHoldersBreakdown)
     @assert in(quote_type,field_types) """The breadkown of major holders does not exist for $(quote_type) items only for $(join(field_types,", "))""" 
     @assert in(:majorHoldersBreakdown, keys(quoteSummary)) "There are is no majorHoldersBreakdown item."
-    result = Dict(String(k) => v for (k , v) in quoteSummary.majorHoldersBreakdown)
+    result = OrderedCollections.OrderedDict(String(k) => v for (k , v) in quoteSummary.majorHoldersBreakdown)
     delete!(result,"maxAge")
     return result    
 end
@@ -621,33 +631,33 @@ If a ticker symbol is provided `get_quoteSummary(symbol::String)` is called firs
 # Examples
 ```julia-repl
 julia> get_quoteSummary("AAPL") |> get_recommendation_trend
-Dict{String, Vector} with 6 entries:
-  "strongbuy"  => [11, 11, 13, 13]
-  "sell"       => [0, 1, 1, 0]
-  "buy"        => [21, 26, 25, 20]
+OrderedDict{String, Vector} with 6 entries:
   "period"     => ["0m", "-1m", "-2m", "-3m"]
-  "hold"       => [6, 5, 6, 8]
+  "strongbuy"  => [11, 11, 11, 13]
+  "buy"        => [21, 25, 26, 20]
+  "hold"       => [6, 6, 5, 8]
+  "sell"       => [0, 1, 1, 0]
   "strongsell" => [0, 0, 0, 0]
 
 julia> get_recommendation_trend("AAPL")
-Dict{String, Vector} with 6 entries:
-  "strongbuy"  => [11, 11, 13, 13]
-  "sell"       => [0, 1, 1, 0]
-  "buy"        => [21, 26, 25, 20]
+OrderedDict{String, Vector} with 6 entries:
   "period"     => ["0m", "-1m", "-2m", "-3m"]
-  "hold"       => [6, 5, 6, 8]
+  "strongbuy"  => [11, 11, 11, 13]
+  "buy"        => [21, 25, 26, 20]
+  "hold"       => [6, 6, 5, 8]
+  "sell"       => [0, 1, 1, 0]
   "strongsell" => [0, 0, 0, 0]
   
 julia> using DataFrames
 julia> get_recommendation_trend("AAPL") |> DataFrame
 4×6 DataFrame
- Row │ buy    hold   period  sell   strongbuy  strongsell 
-     │ Int64  Int64  String  Int64  Int64      Int64      
+ Row │ period  strongbuy  buy    hold   sell   strongsell 
+     │ String  Int64      Int64  Int64  Int64  Int64      
 ─────┼────────────────────────────────────────────────────
-   1 │    21      6  0m          0         11           0
-   2 │    26      5  -1m         1         11           0
-   3 │    25      6  -2m         1         13           0
-   4 │    20      8  -3m         0         13           0
+   1 │ 0m             11     21      6      0           0
+   2 │ -1m            11     25      6      1           0
+   3 │ -2m            11     26      5      1           0
+   4 │ -3m            13     20      8      0           0
 ```
 """
 function get_recommendation_trend(quoteSummary::JSON3.Object)
@@ -656,7 +666,7 @@ function get_recommendation_trend(quoteSummary::JSON3.Object)
     @assert in(quote_type,field_types) """The recommendation trend does not exist for $(quote_type) items only for $(join(field_types,", "))""" 
     @assert in(:recommendationTrend, keys(quoteSummary)) "There are is no recommendationTrend item."
     if isempty(quoteSummary[:recommendationTrend].trend)
-        return Dict()
+        return OrderedCollections.OrderedDict()
     end
 
     period = String[]
@@ -673,7 +683,7 @@ function get_recommendation_trend(quoteSummary::JSON3.Object)
         push!(sell, i.sell)
         push!(strongsell, i.strongSell)
     end
-    res = Dict(["period","strongbuy","buy","hold","sell",
+    res = OrderedCollections.OrderedDict(["period","strongbuy","buy","hold","sell",
                 "strongsell"] .=> 
                [period,strongbuy,buy,hold,sell,strongsell])
     return res
@@ -695,23 +705,45 @@ If a ticker symbol is provided `get_quoteSummary(symbol::String)` is called firs
 # Examples
 ```julia-repl
 julia> get_quoteSummary("AAPL") |> get_summary_detail
-Dict{String, Any} with 41 entries:
-  "tradeable"                  => false
-  "dayLow"                     => 140.91
-  "coinMarketCapLink"          => nothing
+OrderedDict{String, Any} with 41 entries:
   "priceHint"                  => 2
-  "regularMarketPreviousClose" => 142.65
-  "askSize"                    => 900
+  "previousClose"              => 126.04
+  "open"                       => 127.99
+  "dayLow"                     => 127.815
+  "dayHigh"                    => 130.48
+  "regularMarketPreviousClose" => 126.04
+  "regularMarketOpen"          => 127.99
+  "regularMarketDayLow"        => 127.815
+  "regularMarketDayHigh"       => 130.48
+  "dividendRate"               => 0.92
+  "dividendYield"              => 0.0073
+  "exDividendDate"             => 1667520000
+  "payoutRatio"                => 0.1473
+  "fiveYearAvgDividendYield"   => 0.99
+  "beta"                       => 1.21947
+  "trailingPE"                 => 21.2128
+  "forwardPE"                  => 19.1448
   ⋮                            => ⋮
 
 julia> get_summary_detail("AAPL")
-Dict{String, Any} with 41 entries:
-  "tradeable"                  => false
-  "dayLow"                     => 140.91
-  "coinMarketCapLink"          => nothing
+OrderedDict{String, Any} with 41 entries:
   "priceHint"                  => 2
-  "regularMarketPreviousClose" => 142.65
-  "askSize"                    => 900
+  "previousClose"              => 126.04
+  "open"                       => 127.99
+  "dayLow"                     => 127.815
+  "dayHigh"                    => 130.48
+  "regularMarketPreviousClose" => 126.04
+  "regularMarketOpen"          => 127.99
+  "regularMarketDayLow"        => 127.815
+  "regularMarketDayHigh"       => 130.48
+  "dividendRate"               => 0.92
+  "dividendYield"              => 0.0073
+  "exDividendDate"             => 1667520000
+  "payoutRatio"                => 0.1473
+  "fiveYearAvgDividendYield"   => 0.99
+  "beta"                       => 1.21947
+  "trailingPE"                 => 21.2128
+  "forwardPE"                  => 19.1448
   ⋮                            => ⋮
 ```
 """
@@ -720,7 +752,7 @@ function get_summary_detail(quoteSummary::JSON3.Object)
     field_types = _check_field_quotetype(:summaryDetail)
     @assert in(quote_type,field_types) """Summary details dont exist for $(quote_type) items only for $(join(field_types,", "))""" 
     @assert in(:summaryDetail, keys(quoteSummary)) "There are is no summaryDetail item."
-    result = Dict(String(k) => v for (k , v) in quoteSummary.summaryDetail)
+    result = OrderedCollections.OrderedDict(String(k) => v for (k , v) in quoteSummary.summaryDetail)
     delete!(result,"maxAge")
     return result    
 end
@@ -740,22 +772,22 @@ If a ticker symbol is provided `get_quoteSummary(symbol::String)` is called firs
 
 # Examples
 ```julia-repl
-julia> get_get_quoteSummary("AAPL") |> sector_industry
-Dict{String, String} with 2 entries:
-  "industry" => "Consumer Electronics"
+julia> get_quoteSummary("AAPL") |> get_sector_industry
+OrderedDict{String, String} with 2 entries:
   "sector"   => "Technology"
+  "industry" => "Consumer Electronics"
 
 julia> get_sector_industry("AAPL")
-Dict{String, String} with 2 entries:
-  "industry" => "Consumer Electronics"
+OrderedDict{String, String} with 2 entries:
   "sector"   => "Technology"
+  "industry" => "Consumer Electronics"
 ```
 """
 function get_sector_industry(quoteSummary::JSON3.Object)
     quote_type = _quote_type(quoteSummary)
     field_types = _check_field_quotetype(:summaryProfile)
     @assert in(quote_type,field_types) """The summary profile does not exist for $(quote_type) items only for $(join(field_types,", "))""" 
-    result = Dict("sector" =>quoteSummary.summaryProfile.sector, "industry"=>quoteSummary.summaryProfile.industry)
+    result = OrderedCollections.OrderedDict("sector" =>quoteSummary.summaryProfile.sector, "industry"=>quoteSummary.summaryProfile.industry)
     return result
 end
 get_sector_industry(symbol::AbstractString) =  get_quoteSummary(symbol) |> get_sector_industry
@@ -774,34 +806,42 @@ If a ticker symbol is provided `get_quoteSummary(symbol::String)` is called firs
 # Examples
 ```julia-repl
 julia> get_quoteSummary("AAPL") |> get_upgrade_downgrade_history
-Dict{String, Vector} with 5 entries:
-  "firm"      => ["UBS", "Morgan Stanley", "B of A Securities", "Barclay…
-  "action"    => Union{Missing, String}["main", "main", "main", "main", …
-  "fromGrade" => Union{Missing, String}["", "", "", "", "", "", "", "", …
-  "date"      => Union{Missing, DateTime}[DateTime("2022-11-08T12:17:03"…
-  "toGrade"   => Union{Missing, String}["Buy", "Overweight", "Neutral", …
+OrderedDict{String, Vector} with 5 entries:
+  "firm"      => ["JP Morgan", "UBS", "Morgan Stanley", "B of A Securities", "Barclays", …  
+  "date"      => Union{Missing, DateTime}[DateTime("2022-12-20T11:47:33"), DateTime("2022…  
+  "toGrade"   => Union{Missing, String}["Overweight", "Buy", "Overweight", "Neutral", "Eq…  
+  "fromGrade" => Union{Missing, String}["", "", "", "", "", "", "", "", "", ""  …  "", ""…  
+  "action"    => Union{Missing, String}["main", "main", "main", "main", "main", "main", "…
 
 julia> get_upgrade_downgrade_history("AAPL")
-Dict{String, Vector} with 5 entries:
-  "firm"      => ["UBS", "Morgan Stanley", "B of A Securities", "Barclay…
-  "action"    => Union{Missing, String}["main", "main", "main", "main", …
-  "fromGrade" => Union{Missing, String}["", "", "", "", "", "", "", "", …
-  "date"      => Union{Missing, DateTime}[DateTime("2022-11-08T12:17:03"…
-  "toGrade"   => Union{Missing, String}["Buy", "Overweight", "Neutral", …
+OrderedDict{String, Vector} with 5 entries:
+  "firm"      => ["JP Morgan", "UBS", "Morgan Stanley", "B of A Securities", "Barclays", …  
+  "date"      => Union{Missing, DateTime}[DateTime("2022-12-20T11:47:33"), DateTime("2022…  
+  "toGrade"   => Union{Missing, String}["Overweight", "Buy", "Overweight", "Neutral", "Eq…  
+  "fromGrade" => Union{Missing, String}["", "", "", "", "", "", "", "", "", ""  …  "", ""…  
+  "action"    => Union{Missing, String}["main", "main", "main", "main", "main", "main", "…
   
 julia> using DataFrames
 julia> get_upgrade_downgrade_history("AAPL") |> DataFrame
-871×5 DataFrame
- Row │ action   date                 firm               fromGrade  toGr ⋯
-     │ String?  DateTime?            String             String?    Stri ⋯
-─────┼───────────────────────────────────────────────────────────────────
-   1 │ main     2022-11-08T12:17:03  UBS                           Buy  ⋯
-   2 │ main     2022-11-08T12:14:23  Morgan Stanley                Over  
-   3 │ main     2022-11-07T13:08:30  B of A Securities             Neut  
-  ⋮  │    ⋮              ⋮                   ⋮              ⋮           ⋱
- 870 │ main     2012-03-08T07:33:00  FBN Securities                Outp  
- 871 │ main     2012-02-09T08:17:00  Canaccord Genuity             Buy  ⋯
-                                             1 column and 866 rows omitted
+872×5 DataFrame
+ Row │ firm               date                 toGrade       fromGrade  action  
+     │ String             DateTime?            String?       String?    String? 
+─────┼──────────────────────────────────────────────────────────────────────────
+   1 │ JP Morgan          2022-12-20T11:47:33  Overweight               main
+   2 │ UBS                2022-11-08T12:17:03  Buy                      main
+   3 │ Morgan Stanley     2022-11-08T12:14:23  Overweight               main
+   4 │ B of A Securities  2022-11-07T13:08:30  Neutral                  main
+   5 │ Barclays           2022-11-07T12:39:27  Equal-Weight             main
+   6 │ Wedbush            2022-10-28T13:19:17  Outperform               main
+   7 │ Credit Suisse      2022-10-28T11:59:30  Outperform               main
+  ⋮  │         ⋮                   ⋮                ⋮            ⋮         ⋮
+ 867 │ Oxen Group         2012-03-14T15:25:00  Buy                      init
+ 868 │ Canaccord Genuity  2012-03-14T08:21:00  Buy                      main
+ 869 │ Morgan Stanley     2012-03-14T06:13:00  Overweight               main
+ 870 │ Jefferies          2012-03-13T06:08:00  Buy                      main
+ 871 │ FBN Securities     2012-03-08T07:33:00  Outperform               main
+ 872 │ Canaccord Genuity  2012-02-09T08:17:00  Buy                      main
+                                                                859 rows omitted
 ```
 """
 function get_upgrade_downgrade_history(quoteSummary::JSON3.Object)
@@ -810,7 +850,7 @@ function get_upgrade_downgrade_history(quoteSummary::JSON3.Object)
     @assert in(quote_type,field_types) """The history of up- and downgrades does not exist for $(quote_type) items only for $(join(field_types,", "))""" 
     @assert in(:upgradeDowngradeHistory, keys(quoteSummary)) "There are is no upgradeDowngradeHistory item."
     if isempty(quoteSummary[:upgradeDowngradeHistory].history)
-        return Dict()
+        return OrderedCollections.OrderedDict()
     end
 
     firm = String[]
@@ -825,7 +865,7 @@ function get_upgrade_downgrade_history(quoteSummary::JSON3.Object)
         push!(fromGrade, _no_key_missing(i,:fromGrade))
         push!(action, _no_key_missing(i,:action))
     end
-    res = Dict(["firm","date","toGrade","fromGrade","action"] .=> 
+    res = OrderedCollections.OrderedDict(["firm","date","toGrade","fromGrade","action"] .=> 
                [firm,date,toGrade,fromGrade,action])
     return res
 end

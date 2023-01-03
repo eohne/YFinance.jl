@@ -15,7 +15,7 @@ Checks if the HTTP request works (status 200) or whether the request errors (com
 function validate_symbol(symbol::AbstractString)
     res = try
         q = Dict("range"=>"1d", "interval"=>"1d")
-        res = HTTP.get("https://query2.finance.yahoo.com/v8/finance/chart/$(symbol)",   query = q).status
+        res = HTTP.get("https://query2.finance.yahoo.com/v8/finance/chart/$(symbol)",   query = q, proxy=_PROXY_SETTINGS[:proxy],headers=_PROXY_SETTINGS[:auth]).status
     catch e 
         res = e.status 
     end #end try
@@ -72,9 +72,3 @@ function get_valid_symbols(symbol::AbstractVector{<:AbstractString})
     idx = collect(validate_symbol.(symbol))
     return  symbol[idx]
 end #end get_valid_symbols
-
-
-
-# q = Dict("range"=>"1d", "interval"=>"1d")
-# res = HTTP.get("https://query2.finance.yahoo.com/v8/finance/chart/$(symbol)",   query = q).status
-# instrumentType":"MUTUALFUND

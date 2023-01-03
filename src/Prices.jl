@@ -18,54 +18,55 @@ You can either provide a `range` or a `startdt` and an `enddt`.
 
  * `autoadjust` defaults to `true`. It adjusts open, high, low, close prices, and volume by multiplying by the ratio between the close and the adjusted close prices - only available for intervals of 1d and up. 
 
- *  throw_error`::Bool` defaults to `false`. If set to true the function errors when the ticker is not valid. Else a warning is given and an empty dictionary is returned.
+ *  throw_error`::Bool` defaults to `false`. If set to true the function errors when the ticker is not valid. Else a warning is given and an empty `OrderedCollections.OrderedDict` is returned.
 
  * exchange_local_time`::Bool` defaults to `false`. If set to true the timestamp corresponds to the exchange local time else to GMT.
 
 # Examples
 ```julia-repl
 julia> get_prices("AAPL",range="1d",interval="90m")
-Dict{String, Any} with 7 entries:
-"vol"    => [10452686, 0]
-"ticker" => "AAPL"
-"high"   => [142.55, 142.045]
-"open"   => [142.34, 142.045]
-"timestamp"     => [DateTime("2022-12-09T14:30:00"), DateTime("2022-12-09T15:08:33")]
-"low"    => [140.9, 142.045]
-"close"  => [142.28, 142.045]
+OrderedDict{String, Any} with 7 entries:
+  "ticker"    => "AAPL"
+  "timestamp" => [DateTime("2022-12-29T14:30:00"), DateTime("2022-12-29T16:00:00"), DateTime("2022-12-29T17:30:00"), DateTime("2022-12-29T19:00:00"), DateTime("2022-12-29T20:30:00"), DateTime("2022-12-29T21:00:00")]   
+  "open"      => [127.99, 129.96, 129.992, 130.035, 129.95, 129.61]
+  "high"      => [129.98, 130.481, 130.098, 130.24, 130.22, 129.61]
+  "low"       => [127.73, 129.44, 129.325, 129.7, 129.56, 129.61]
+  "close"     => [129.954, 129.998, 130.035, 129.95, 129.6, 129.61]
+  "vol"       => [29101646, 14058713, 9897737, 9552323, 6308537, 0]
 ```
 ## Can be easily converted to a DataFrame
 ```julia-repl
 julia> using DataFrames
 julia> get_prices("AAPL",range="1d",interval="90m") |> DataFrame
-2×7 DataFrame
-Row │ close    timestamp            high     low      open     ticker  vol      
-    │ Float64  DateTime             Float64  Float64  Float64  String  Int64    
-────┼───────────────────────────────────────────────────────────────────────────
-  1 │  142.28  2022-12-09T14:30:00   142.55   140.9    142.34  AAPL    10452686
-  2 │  142.19  2022-12-09T15:08:03   142.19   142.19   142.19  AAPL           0
+6×7 DataFrame
+ Row │ ticker  timestamp            open     high     low      close    vol      
+     │ String  DateTime             Float64  Float64  Float64  Float64  Int64    
+─────┼───────────────────────────────────────────────────────────────────────────
+   1 │ AAPL    2022-12-29T14:30:00  127.99   129.98   127.73   129.954  29101646 
+   2 │ AAPL    2022-12-29T16:00:00  129.96   130.481  129.44   129.998  14058713 
+   3 │ AAPL    2022-12-29T17:30:00  129.992  130.098  129.325  130.035   9897737 
+   4 │ AAPL    2022-12-29T19:00:00  130.035  130.24   129.7    129.95    9552323 
+   5 │ AAPL    2022-12-29T20:30:00  129.95   130.22   129.56   129.6     6308537 
+   6 │ AAPL    2022-12-29T21:00:00  129.61   129.61   129.61   129.61          0 
 ```
 
 ## Broadcasting
 ```julia-repl
 julia> get_prices.(["AAPL","NFLX"],range="1d",interval="90m")
-2-element Vector{Dict{String, Any}}:
-Dict(
-    "vol" => [11085386, 0], 
-    "ticker" => "AAPL", 
-    "high" => [142.5500030517578, 142.2949981689453], 
-    "open" => [142.33999633789062, 142.2949981689453], 
-    "timestamp" => [DateTime("2022-12-09T14:30:00"), DateTime("2022-12-09T15:15:34")], 
-    "low" => [140.89999389648438, 142.2949981689453], 
-    "close" => [142.27000427246094, 142.2949981689453])
-Dict(
-    "vol" => [4435651, 0], 
-    "ticker" => "NFLX", 
-    "high" => [326.29998779296875, 325.30999755859375], 
-    "open" => [321.45001220703125, 325.30999755859375], 
-    "timestamp" => [DateTime("2022-12-09T14:30:00"), DateTime("2022-12-09T15:15:35")], 
-    "low" => [319.5199890136719, 325.30999755859375], 
-    "close" => [325.79998779296875, 325.30999755859375])
+OrderedDict("ticker" => "AAPL",
+    "timestamp" => [DateTime("2022-12-29T14:30:00"), DateTime("2022-12-29T16:00:00"), DateTime("2022-12-29T17:30:00"), DateTime("2022-12-29T19:00:00"), DateTime("2022-12-29T20:30:00"), DateTime("2022-12-29T21:00:00")], 
+    "open" => [127.98999786376953, 129.9600067138672, 129.99240112304688, 130.03500366210938, 129.9499969482422, 129.61000061035156], 
+    "high" => [129.97999572753906, 130.4813995361328, 130.09829711914062, 130.24000549316406, 130.22000122070312, 129.61000061035156], 
+    "low" => [127.7300033569336, 129.44000244140625, 129.3249969482422, 129.6999969482422, 129.55999755859375, 129.61000061035156], 
+    "close" => [129.95419311523438, 129.99830627441406, 130.03500366210938, 129.9499969482422, 129.60000610351562, 129.61000061035156], 
+    "vol" => [29101646, 14058713, 9897737, 9552323, 6308537, 0])
+OrderedDict("ticker" => "NFLX",
+    "timestamp" => [DateTime("2022-12-29T14:30:00"), DateTime("2022-12-29T16:00:00"), DateTime("2022-12-29T17:30:00"), DateTime("2022-12-29T19:00:00"), DateTime("2022-12-29T20:30:00"), DateTime("2022-12-29T21:00:00")],
+    "open" => [283.17999267578125, 289.5199890136719, 293.4200134277344, 290.05499267578125, 290.760009765625, 291.1199951171875],
+    "high" => [291.8699951171875, 295.4999084472656, 293.5, 291.32000732421875, 292.3299865722656, 291.1199951171875],
+    "low" => [281.010009765625, 289.489990234375, 289.5400085449219, 288.7699890136719, 290.5400085449219, 291.1199951171875],
+    "close" => [289.5199890136719, 293.46990966796875, 290.04998779296875, 290.82000732421875, 291.1199951171875, 291.1199951171875],
+    "vol" => [2950791, 2458057, 1362915, 1212217, 1121821, 0]) 
 ```
 
 ## Converting it to a DataFrame:
@@ -73,14 +74,22 @@ Dict(
 julia> using DataFrames
 julia> data = get_prices.(["AAPL","NFLX"],range="1d",interval="90m");
 julia> vcat([DataFrame(i) for i in data]...)
-4×7 DataFrame
-Row │ close    timestamp            high     low      open     ticker  vol      
-    │ Float64  DateTime             Float64  Float64  Float64  String  Int64    
-────┼───────────────────────────────────────────────────────────────────────────
-  1 │  142.21  2022-12-09T14:30:00   142.55   140.9    142.34  AAPL    11111223
-  2 │  142.16  2022-12-09T15:12:20   142.16   142.16   142.16  AAPL           0
-  3 │  324.51  2022-12-09T14:30:00   326.3    319.52   321.45  NFLX     4407336
-  4 │  324.65  2022-12-09T15:12:20   324.65   324.65   324.65  NFLX           0
+12×7 DataFrame
+ Row │ ticker  timestamp            open     high     low      close    vol      
+     │ String  DateTime             Float64  Float64  Float64  Float64  Int64    
+─────┼───────────────────────────────────────────────────────────────────────────
+   1 │ AAPL    2022-12-29T14:30:00  127.99   129.98   127.73   129.954  29101646
+   2 │ AAPL    2022-12-29T16:00:00  129.96   130.481  129.44   129.998  14058713
+   3 │ AAPL    2022-12-29T17:30:00  129.992  130.098  129.325  130.035   9897737
+   4 │ AAPL    2022-12-29T19:00:00  130.035  130.24   129.7    129.95    9552323
+   5 │ AAPL    2022-12-29T20:30:00  129.95   130.22   129.56   129.6     6308537
+   6 │ AAPL    2022-12-29T21:00:00  129.61   129.61   129.61   129.61          0
+   7 │ NFLX    2022-12-29T14:30:00  283.18   291.87   281.01   289.52    2950791
+   8 │ NFLX    2022-12-29T16:00:00  289.52   295.5    289.49   293.47    2458057
+   9 │ NFLX    2022-12-29T17:30:00  293.42   293.5    289.54   290.05    1362915
+  10 │ NFLX    2022-12-29T19:00:00  290.055  291.32   288.77   290.82    1212217
+  11 │ NFLX    2022-12-29T20:30:00  290.76   292.33   290.54   291.12    1121821
+  12 │ NFLX    2022-12-29T21:00:00  291.12   291.12   291.12   291.12          0
 ```
 """
 function get_prices(symbol::AbstractString; range::AbstractString="5d", interval::AbstractString="1d",startdt="", enddt="",prepost=false,autoadjust=true,timeout = 10,throw_error=false,exchange_local_time=false)
@@ -97,8 +106,8 @@ function get_prices(symbol::AbstractString; range::AbstractString="5d", interval
         if throw_error
             error("$old_symbol is not a valid Symbol!")
         else
-            @warn "$old_symbol is not a valid Symbol an empy Dictionary was returned!" 
-            return Dict()
+            @warn "$old_symbol is not a valid Symbol an empy OrderedCollections.OrderedDict was returned!" 
+            return OrderedCollections.OrderedDict()
         end
     else
         symbol = symbol[1]
@@ -139,7 +148,7 @@ function get_prices(symbol::AbstractString; range::AbstractString="5d", interval
         "events" => "div,splits"
     )
     url = "$(_BASE_URL_)/v8/finance/chart/$(uppercase(symbol))"
-    res = HTTP.get(url,query=parameters,readtimeout = timeout)
+    res = HTTP.get(url,query=parameters,readtimeout = timeout, proxy=_PROXY_SETTINGS[:proxy],headers=_PROXY_SETTINGS[:auth])
     res = JSON3.read(res.body).chart.result[1]
 
     #check for duplicate values at the end (common error by yahoo)
@@ -158,7 +167,7 @@ function get_prices(symbol::AbstractString; range::AbstractString="5d", interval
 
     # if interval in ["1m","2m","5m","15m","30m","60m","90m"] there is no adjusted close!
     if in(interval, ["1m","2m","5m","15m","30m","60m","90m"])
-        d =     Dict(
+        d =     OrderedCollections.OrderedDict(
                 "ticker" => symbol,
                 "timestamp" => Dates.unix2datetime.(res.timestamp[idx] .+ time_offset),
                 "open" => res.indicators.quote[1].open[idx],
@@ -167,7 +176,7 @@ function get_prices(symbol::AbstractString; range::AbstractString="5d", interval
                 "close" => res.indicators.quote[1].close[idx],
                 "vol" => res.indicators.quote[1].volume[idx]) 
     else   
-        d =     Dict(
+        d =     OrderedCollections.OrderedDict(
             "ticker" => symbol,
             "timestamp" => Dates.unix2datetime.(res.timestamp[idx].+ time_offset) ,
             "open" => res.indicators.quote[1].open[idx],

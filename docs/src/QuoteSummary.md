@@ -9,7 +9,7 @@ get_quoteSummary
 
 # Sub-Items
 
-The below functions can extract certain items from the Yahoo quoteSummary. The functions below return Dictionaries that can readily be piped into a DataFrame.
+The below functions can extract certain items from the Yahoo quoteSummary. The functions below return OrderedDictionaries form the OrderCollections.jl package that can readily be piped into a DataFrame.
  
 ## Calendar Events
 
