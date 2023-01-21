@@ -1,10 +1,8 @@
 # YFinance.jl
-[![Build Status](https://github.com/eohne/YFinance.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/eohne/YFinance.jl/actions/workflows/CI.yml?query=branch%3Amaster) [![][docs-latest-img]][docs-latest-url]  
+[![Build Status](https://github.com/eohne/YFinance.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/eohne/YFinance.jl/actions/workflows/CI.yml?query=branch%3Amaster) [![][docs-stable-img]][docs-stable-url]  
 
 
-*Download price, fundamental, and option data from Yahoo Finance*  
-
-This is my first package and only a side project so please do not expect too much. 
+*Download price, fundamental, option, currency, futures, etf, mutual fund, and various other data from Yahoo Finance*  
 
 
 ## \*\*\* LEGAL DISCLAIMER \*\*\*
@@ -27,5 +25,5 @@ The package is registered in the [`General`](https://github.com/JuliaRegistries/
 ```
 
 [docs-latest-img]: https://img.shields.io/badge/docs-latest-blue.svg
-[docs-latest-url]: https://eohne.github.io/YFinance.jl/dev/
+[docs-stable-url]: https://eohne.github.io/YFinance.jl/stable/
 
