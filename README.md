@@ -24,6 +24,6 @@ The package is registered in the [`General`](https://github.com/JuliaRegistries/
     Pkg.add("YFinance")
 ```
 
-[docs-latest-img]: https://img.shields.io/badge/docs-latest-blue.svg
+[docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
 [docs-stable-url]: https://eohne.github.io/YFinance.jl/stable/
 
