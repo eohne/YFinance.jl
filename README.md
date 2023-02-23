@@ -25,5 +25,5 @@ The package is registered in the [`General`](https://github.com/JuliaRegistries/
 ```
 
 [docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
-[docs-stable-url]: https://eohne.github.io/YFinance.jl/stable/
+[docs-stable-url]: https://eohne.github.io/YFinance.jl/dev/
 
