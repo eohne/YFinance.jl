@@ -1,7 +1,7 @@
 const _BASE_URL_ = "https://query2.finance.yahoo.com";
 
 """
-    get_prices(symbol::AbstractString; range::AbstractString="1mo", interval::AbstractString="1d",startdt="", enddt="",prepost=false,autoadjust=true,timeout = 10,throw_error=false)
+    get_prices(symbol::AbstractString; range::AbstractString="1mo", interval::AbstractString="1d",startdt="", enddt="",prepost=false,autoadjust=true,timeout = 10,throw_error=false,exchange_local_time=false)
 
 Retrievs prices from Yahoo Finance.
 
@@ -18,9 +18,9 @@ You can either provide a `range` or a `startdt` and an `enddt`.
 
  * `autoadjust` defaults to `true`. It adjusts open, high, low, close prices, and volume by multiplying by the ratio between the close and the adjusted close prices - only available for intervals of 1d and up. 
 
- *  throw_error`::Bool` defaults to `false`. If set to true the function errors when the ticker is not valid. Else a warning is given and an empty `OrderedCollections.OrderedDict` is returned.
+ *  `throw_error::Bool` defaults to `false`. If set to true the function errors when the ticker is not valid. Else a warning is given and an empty `OrderedCollections.OrderedDict` is returned.
 
- * exchange_local_time`::Bool` defaults to `false`. If set to true the timestamp corresponds to the exchange local time else to GMT.
+ * `exchange_local_time::Bool` defaults to `false`. If set to true the timestamp corresponds to the exchange local time else to GMT.
 
 # Examples
 ```julia-repl

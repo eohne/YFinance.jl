@@ -397,15 +397,15 @@ Retrievs financial statement information from Yahoo Finance stored in a OrderedC
 
 # Arguments
 
- * smybol`::String` is a ticker (e.g. AAPL for Apple Computers, or ^GSPC for the S&P500)  
+ * `smybol::String` is a ticker (e.g. AAPL for Apple Computers, or ^GSPC for the S&P500)  
 
- * item`::String` can either be an entire financial statement or a subitem. Entire financial statements:"income_statement", "valuation", "cash_flow", "balance_sheet".  To see valid sub items grouped by financial statement type in a OrderedCollections.OrderedDict call `_Fundamental_Types`  
+ * `item::String` can either be an entire financial statement or a subitem. Entire financial statements:`"income_statement", "valuation", "cash_flow", "balance_sheet"`. To see valid sub items grouped by financial statement type in a `OrderedCollections.OrderedDict` call `_Fundamental_Types`  
 
- * interval`::String` can be one of "annual", "quarterly", "monthly"  
+ * `interval::String` can be one of "annual", "quarterly", "monthly"  
 
  * `startdt` and `enddt` take the following types: `::Date`,`::DateTime`, or a `String` of the following form `yyyy-mm-dd`  
 
- *  throw_error`::Bool` defaults to `false`. If set to true the function errors when the ticker is not valid. Else a warning is given and an empty OrderedCollections.OrderedDict is returned.
+ *  `throw_error::Bool` defaults to `false`. If set to true the function errors when the ticker is not valid. Else a warning is given and an empty `OrderedCollections.OrderedDict` is returned.
 
 # Examples
 ```julia-repl

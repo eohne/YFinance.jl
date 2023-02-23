@@ -3,6 +3,7 @@ using YFinance
 using Documenter
 makedocs(
          sitename = "YFinance.jl",
+         format = Documenter.HTML(analytics = "G-LFRFQ0X1VF"),
          modules  = [YFinance],
          pages=[
                 "Home" => "index.md",

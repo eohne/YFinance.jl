@@ -109,7 +109,7 @@ For illustration I used Apple (AAPL), the S&P500 (^GSPC), and the NASDAQ (^IXIC)
 ```julia
 # Lets get multiple tickers and stack them into a dataframe!
 # Downloads data and stacks it into a dataframe
-function get_long_df(symbols::AbstractVector{<:AbstractString},interval=interval,range=range)
+function get_long_df(symbols::AbstractVector{<:AbstractString},interval,range)
     p = get_prices.(symbols,interval=interval,range=range);
     p = vcat([DataFrame(i) for i in values(p)]...);
     p.timestamp = Date.(p.timestamp);

@@ -13,7 +13,7 @@ DataFrame(prices)
 ```
 ## TimeArray from TimeSeries
 
-The TimeArray takes a NamedTuple, a symbol indicating the column with the DateTime information, and some metadata.  
+The TimeArray takes a Vector with the timestamp, a matrix with the price data, column names, and some metadata.  
 
 Below is a simple function showing how one may convert the dictionaries containing the price information into a TimeArray - this is most likely not the fastest or most elegant way.
 
@@ -22,11 +22,10 @@ using TimeSeries
 
 prices = get_prices("AAPL")
 
-function stock_price_to_time_array(x)
-    ks = [keys(x)...][2:end] # only get the keys that are not the ticker
-    nt = NamedTuple( Symbol(k) => x[k] for k in ks) # convert the dictionary to a named tuple
-    ta = TimeArray(nt, timestamp = :timestamp,meta = x["ticker"]) # create the timeseries array
-    return ta
+function stock_price_to_time_array(d)
+    coln = collect(keys(x))[3:end] # only get the keys that are not ticker or datetime
+    m = hcat([x[k] for k in coln]...) #Convert the dictionary into a matrix
+    return TimeArray(x["timestamp"],m,Symbol.(coln),x["ticker"])
 end
 
 stock_price_to_time_array(prices)
@@ -43,7 +42,7 @@ using TSFrames
 prices = get_prices("AAPL")
 
 function stock_price_to_TSFrames(x)
-    coln = [keys(x)...][3:end] # only get the keys that are not ticker or datetime
+    coln = collect(keys(x))[3:end] # only get the keys that are not ticker or datetime
     m = hcat([x[k] for k in coln]...) #Convert the dictionary into a matrix
     tsf = TSFrame(m,x["timestamp"],colnames = Symbol.(coln)) # create the timeseries array
     return tsf

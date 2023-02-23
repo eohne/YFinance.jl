@@ -26,7 +26,7 @@ The package is registered in the [`General`](https://github.com/JuliaRegistries/
 
 You can install the YFinance package by entering the package manager and typing:
 ```julia
-] add CSV 
+] add YFinance 
 ```
 You could also install the package by first calling `using Pkg`:
 ```julia
