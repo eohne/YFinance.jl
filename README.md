@@ -2,7 +2,7 @@
 [![Build Status](https://github.com/eohne/YFinance.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/eohne/YFinance.jl/actions/workflows/CI.yml?query=branch%3Amaster) [![][docs-stable-img]][docs-stable-url]  
 
 
-*Download price, fundamental, option, currency, futures, etf, mutual fund, and various other data from Yahoo Finance*  
+*Download price, fundamental, option, currency, futures, ETF, mutual fund, and various other data from Yahoo Finance*  
 
 
 ## \*\*\* LEGAL DISCLAIMER \*\*\*
