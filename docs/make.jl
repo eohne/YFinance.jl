@@ -26,5 +26,5 @@ makedocs(
 deploydocs(;
     repo="github.com/eohne/YFinance.jl",
     devurl = "dev",
-    versions = ["stable" => "v^", "v#.#", devurl => devurl]
+    versions = ["stable" => "v^", "v#.#", "dev" => "dev"]
 )
