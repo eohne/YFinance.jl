@@ -3,7 +3,8 @@ using YFinance
 using Documenter
 makedocs(
          sitename = "YFinance.jl",
-         format = Documenter.HTML(analytics = "G-LFRFQ0X1VF"),
+         format = Documenter.HTML(analytics = "G-LFRFQ0X1VF",
+         canonical = "https://eohne.github.io/YFinance.jl/dev/"),
          modules  = [YFinance],
          pages=[
                 "Home" => "index.md",
@@ -24,4 +25,6 @@ makedocs(
                ])
 deploydocs(;
     repo="github.com/eohne/YFinance.jl",
+    devurl = "dev",
+    versions = ["stable" => "v^", "v#.#", devurl => devurl]
 )

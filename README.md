@@ -1,8 +1,8 @@
 # YFinance.jl
-[![Build Status](https://github.com/eohne/YFinance.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/eohne/YFinance.jl/actions/workflows/CI.yml?query=branch%3Amaster) [![][docs-stable-img]][docs-stable-url]  
+[![Build Status](https://github.com/eohne/YFinance.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/eohne/YFinance.jl/actions/workflows/CI.yml?query=branch%3Amaster) [![][docs-dev-img]][docs-dev-url]  
 
 
-*Download price, fundamental, option, currency, futures, etf, mutual fund, and various other data from Yahoo Finance*  
+*Download price, fundamental, option, currency, futures, ETF, mutual fund, and various other data from Yahoo Finance*  
 
 
 ## \*\*\* LEGAL DISCLAIMER \*\*\*
@@ -24,6 +24,6 @@ The package is registered in the [`General`](https://github.com/JuliaRegistries/
     Pkg.add("YFinance")
 ```
 
-[docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
-[docs-stable-url]: https://eohne.github.io/YFinance.jl/stable/
+[docs-dev-img]: https://img.shields.io/badge/docs-latest-blue.svg
+[docs-dev-url]: https://eohne.github.io/YFinance.jl/dev/
 
