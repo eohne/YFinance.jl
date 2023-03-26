@@ -12,6 +12,9 @@ using Test
         ta = get_prices("AAPL",startdt =Dates.today()-Year(5) , enddt = Dates.today())
         @test length(ta["timestamp"]) > 100
 
+        ta = get_prices("ADANIENT.NS",startdt =Dates.today()-Year(10) , enddt = Dates.today())
+        @test length(ta["timestamp"]) > 100
+        
         ta = get_Fundamental("AAPL","income_statement","annual",Dates.today() - Year(5),Dates.today())
         @test in("InterestExpense",keys(ta))
         @test length(ta["InterestExpense"]) > 3

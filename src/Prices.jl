@@ -1,5 +1,15 @@
 const _BASE_URL_ = "https://query2.finance.yahoo.com";
 
+function _clean_prices_nothing(x::Array)
+    res = x
+    for i in eachindex(x)
+        if isnothing(view(x,i))
+            res[i]=NaN 
+        end
+    end
+    return res
+end
+
 """
     get_prices(symbol::AbstractString; range::AbstractString="1mo", interval::AbstractString="1d",startdt="", enddt="",prepost=false,autoadjust=true,timeout = 10,throw_error=false,exchange_local_time=false)
 
@@ -10,7 +20,7 @@ Retrievs prices from Yahoo Finance.
  * `Smybol` is a ticker (e.g. AAPL for Apple Computers, or ^GSPC for the S&P500)
 
 You can either provide a `range` or a `startdt` and an `enddt`.
- * `range` takes the following values: "1d","5d","1mo","3mo","6mo","1y","2y","5y","10y","ytd","max"
+ * `range` takes the following values: "1d","5d","1mo","3mo","6mo","1y","2y","5y","10y","ytd","max". Note: when range is selected rather than `startdt` or `enddt` the specified interval may not be observed by Yahoo! Therefore, it is recommended to use `startdt` and `enddt` instead. To get max simply set `startdt = "1900-01-01`
 
  * `startdt` and `enddt` take the following types: `::Date`,`::DateTime`, or a `String` of the following form `yyyy-mm-dd`
 
@@ -170,21 +180,21 @@ function get_prices(symbol::AbstractString; range::AbstractString="5d", interval
         d =     OrderedCollections.OrderedDict(
                 "ticker" => symbol,
                 "timestamp" => Dates.unix2datetime.(res.timestamp[idx] .+ time_offset),
-                "open" => res.indicators.quote[1].open[idx],
-                "high" => res.indicators.quote[1].high[idx],
-                "low"  => res.indicators.quote[1].low[idx],
-                "close" => res.indicators.quote[1].close[idx],
-                "vol" => res.indicators.quote[1].volume[idx]) 
+                "open" => res.indicators.quote[1].open[idx] |> clean_prices_nothing,
+                "high" => res.indicators.quote[1].high[idx] |> clean_prices_nothing,
+                "low"  => res.indicators.quote[1].low[idx] |> clean_prices_nothing,
+                "close" => res.indicators.quote[1].close[idx] |> clean_prices_nothing,
+                "vol" => res.indicators.quote[1].volume[idx] |> clean_prices_nothing) 
     else   
         d =     OrderedCollections.OrderedDict(
             "ticker" => symbol,
             "timestamp" => Dates.unix2datetime.(res.timestamp[idx].+ time_offset) ,
-            "open" => res.indicators.quote[1].open[idx],
-            "high" => res.indicators.quote[1].high[idx],
-            "low"  => res.indicators.quote[1].low[idx],
-            "close" => res.indicators.quote[1].close[idx],
-            "adjclose" => res.indicators.adjclose[1].adjclose[idx],
-            "vol" => res.indicators.quote[1].volume[idx]) 
+            "open" => res.indicators.quote[1].open[idx] |> clean_prices_nothing,
+            "high" => res.indicators.quote[1].high[idx] |> clean_prices_nothing,
+            "low"  => res.indicators.quote[1].low[idx] |> clean_prices_nothing,
+            "close" => res.indicators.quote[1].close[idx] |> clean_prices_nothing,
+            "adjclose" => res.indicators.adjclose[1].adjclose[idx] |> clean_prices_nothing,
+            "vol" => res.indicators.quote[1].volume[idx] |> clean_prices_nothing) 
         if autoadjust
             ratio = d["adjclose"] ./ d["close"]
             d["open"] = d["open"] .* ratio

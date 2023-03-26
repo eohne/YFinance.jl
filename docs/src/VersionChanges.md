@@ -1,3 +1,17 @@
+!!! info "v1.0.3"
+    ## Bug Fix
+    * get_prices would error when `autoadjust=true` for some tickers when Yahoo returns nothing for some observations in the price time series. The update now does not error in this cases and returns `NaN` for the missing datapoints. `NaN` is used instead of `Missing` because of performance improvements and the ability to integrate `YFinance.jl` with `TimeSeries.jl`. ([#5](https://github.com/eohne/YFinance.jl/issues/5)) 
+       - Thank you [RaSi96](https://github.com/RaSi96) for reporting this bug and helping me sort it out!
+
+    ## Docs
+    * Improved documentation for get_prices ([#5](https://github.com/eohne/YFinance.jl/issues/5))
+       - When the `range` keyword is used instead of `startdt` and `enddt` the specified interval is not observed by Yahoo at longer ranges. To enforce the specified `interval` use `startdt` and `enddt` instead. 
+       - Data points that yahoo returns as `nothing` are returned as `NaN`. It seems like Yahoo thinks it should have price information for these timestamps but does not have them and thus returns `nothing`.
+
+    ## Other
+    * Added a test case for the stock "ADANIENT.NS". The time series of the stock prices contains the `nothing` values mentioned in the `Bug Fix`. ([#5](https://github.com/eohne/YFinance.jl/issues/5))
+
+
 !!! info "v1.0.2"
     ## Changes
     * Return `OrderedDict` from `OrderedCollections.jl` instead of `Dict`
