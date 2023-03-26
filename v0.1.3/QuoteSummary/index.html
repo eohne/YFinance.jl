@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>QuoteSummary · YFinance.jl</title><script async src="https://www.googletagmanager.com/gtag/js?id=G-LFRFQ0X1VF"></script><script>  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LFRFQ0X1VF', {'page_path': location.pathname + location.search + location.hash});
+</script><script data-outdated-warner src="../assets/warner.js"></script><link rel="canonical" href="https://eohne.github.io/YFinance.jl/dev/QuoteSummary/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.045/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../">YFinance.jl</a></span></div><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><span class="tocitem">Function Documentation</span><ul><li><a class="tocitem" href="../Prices/">Prices</a></li><li><a class="tocitem" href="../Fundamental/">Fundamental</a></li><li class="is-active"><a class="tocitem" href>QuoteSummary</a><ul class="internal"><li class="toplevel"><a class="tocitem" href="#Sub-Items"><span>Sub-Items</span></a></li><li><a class="tocitem" href="#Calendar-Events"><span>Calendar Events</span></a></li><li><a class="tocitem" href="#Earnings-Estimates"><span>Earnings Estimates</span></a></li><li><a class="tocitem" href="#Earnings-Per-Share-(EPS)"><span>Earnings Per Share (EPS)</span></a></li><li><a class="tocitem" href="#Insider-Holdings"><span>Insider Holdings</span></a></li><li><a class="tocitem" href="#Insider-Transactions"><span>Insider Transactions</span></a></li><li><a class="tocitem" href="#Institutional-Ownership"><span>Institutional Ownership</span></a></li><li><a class="tocitem" href="#Major-Holders-Breakdown"><span>Major Holders Breakdown</span></a></li><li><a class="tocitem" href="#Analyst-Recommendation-Trend"><span>Analyst Recommendation Trend</span></a></li><li><a class="tocitem" href="#Up-and-Downgrade-History"><span>Up- &amp; Downgrade History</span></a></li><li><a class="tocitem" href="#Summary-Detail"><span>Summary Detail</span></a></li><li><a class="tocitem" href="#Sector-and-Industry"><span>Sector &amp; Industry</span></a></li></ul></li><li><a class="tocitem" href="../Options/">Options</a></li><li><a class="tocitem" href="../ESG/">ESG</a></li><li><a class="tocitem" href="../Proxies/">Proxy</a></li><li><a class="tocitem" href="../AllFunctions/">All Functions</a></li></ul></li><li><span class="tocitem">Example Usage</span><ul><li><a class="tocitem" href="../DataFramesetc/">Convert to DataFrames, TimeArrays, TSFrames</a></li><li><a class="tocitem" href="../Plotting_Example/">Plotting Data with PlotlyJS</a></li></ul></li><li><a class="tocitem" href="../VersionChanges/">Version Change Log</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Function Documentation</a></li><li class="is-active"><a href>QuoteSummary</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>QuoteSummary</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/eohne/YFinance.jl/blob/master/docs/src/QuoteSummary.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Download-Quote-Summary-Data"><a class="docs-heading-anchor" href="#Download-Quote-Summary-Data">Download Quote Summary Data</a><a id="Download-Quote-Summary-Data-1"></a><a class="docs-heading-anchor-permalink" href="#Download-Quote-Summary-Data" title="Permalink"></a></h1><p>The quote summary item contains tons of different kinds of information. Not all information is available for all tickers. The get_quoteSummary function returns all items available for the ticker.</p><article class="docstring"><header><a class="docstring-binding" id="YFinance.get_quoteSummary" href="#YFinance.get_quoteSummary"><code>YFinance.get_quoteSummary</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">get_quoteSummary(symbol::String; item=nothing)</code></pre><p>Retrievs general information from Yahoo Finance stored in a JSON3 object.</p><p><strong>Arguments</strong></p><ul><li><p>smybol<code>::String</code> is a ticker (e.g. AAPL for Apple Computers, or ^GSPC for the S&amp;P500)  </p></li><li><p>item can either be a string or multiple items as a <code>Vector</code> of <code>Strings</code>. To see valid items call <code>_QuoteSummary_Items</code> (not all items are available for all types of securities)  </p></li><li><p>throw_error<code>::Bool</code> defaults to <code>false</code>. If set to true the function errors when the ticker is not valid. Else a warning is given and an empty <code>JSON3.Object</code> is returned.</p></li></ul><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; get_quoteSummary(&quot;AAPL&quot;)
+
+JSON3.Object{Vector{UInt8}, SubArray{UInt64, 1, Vector{UInt64}, Tuple{UnitRange{Int64}}, true}} with 31 entries:
+:assetProfile             =&gt; {…
+:recommendationTrend      =&gt; {…
+:cashflowStatementHistory =&gt; {…
+
+⋮                         =&gt; ⋮
+julia&gt; get_quoteSummary(&quot;AAPL&quot;,item = &quot;quoteType&quot;)
+JSON3.Object{Vector{UInt8}, SubArray{UInt64, 1, Vector{UInt64}, Tuple{UnitRange{Int64}}, true}} with 13 entries:
+:exchange               =&gt; &quot;NMS&quot;
+:quoteType              =&gt; &quot;EQUITY&quot;
+:symbol                 =&gt; &quot;AAPL&quot;
+⋮                       =&gt; ⋮</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/eohne/YFinance.jl/blob/9095629ddf12b4d856cdbf47228d71cf000c794c/src/QuoteSummary.jl#L38-L68">source</a></section></article><h1 id="Sub-Items"><a class="docs-heading-anchor" href="#Sub-Items">Sub-Items</a><a id="Sub-Items-1"></a><a class="docs-heading-anchor-permalink" href="#Sub-Items" title="Permalink"></a></h1><p>The below functions can extract certain items from the Yahoo quoteSummary. The functions below return OrderedDictionaries form the OrderCollections.jl package that can readily be piped into a DataFrame.</p><h2 id="Calendar-Events"><a class="docs-heading-anchor" href="#Calendar-Events">Calendar Events</a><a id="Calendar-Events-1"></a><a class="docs-heading-anchor-permalink" href="#Calendar-Events" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="YFinance.get_calendar_events" href="#YFinance.get_calendar_events"><code>YFinance.get_calendar_events</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">get_calendar_events(quoteSummary::JSON3.Object)</code></pre><p>Retrievs calendar events from the quote summary.</p><p><strong>Arguments</strong></p><p>Can be either a <code>JSON3.Object</code> returned from <code>get_quoteSummary(symbol::String; item=nothing,throw_error=false)</code> or a ticker symbol of type <code>AbstractString</code> If a ticker symbol is provided <code>get_quoteSummary(symbol::String)</code> is called first. </p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; get_quoteSummary(&quot;AAPL&quot;) |&gt; get_calendar_events
+OrderedDict{String, Any} with 3 entries:
+  &quot;dividend_date&quot;   =&gt; DateTime(&quot;2022-11-10T00:00:00&quot;)
+  &quot;earnings_dates&quot;  =&gt; [DateTime(&quot;2023-01-25T10:59:00&quot;), DateTime(&quot;2023-01-30T12:00:00&quot;)]
+  &quot;exdividend_date&quot; =&gt; DateTime(&quot;2022-11-04T00:00:00&quot;)
+
+julia&gt; get_calendar_events(&quot;AAPL&quot;)
+OrderedDict{String, Any} with 3 entries:
+  &quot;dividend_date&quot;   =&gt; DateTime(&quot;2022-11-10T00:00:00&quot;)
+  &quot;earnings_dates&quot;  =&gt; [DateTime(&quot;2023-01-25T10:59:00&quot;), DateTime(&quot;2023-01-30T12:00:00&quot;)]
+  &quot;exdividend_date&quot; =&gt; DateTime(&quot;2022-11-04T00:00:00&quot;)
+
+julia&gt; using DataFrames
+julia&gt; get_calendar_events(&quot;AAPL&quot;) |&gt; DataFrame
+2×3 DataFrame
+ Row │ dividend_date        earnings_dates       exdividend_date     
+     │ DateTime             DateTime             DateTime
+─────┼───────────────────────────────────────────────────────────────
+   1 │ 2022-11-10T00:00:00  2023-01-25T10:59:00  2022-11-04T00:00:00
+   2 │ 2022-11-10T00:00:00  2023-01-30T12:00:00  2022-11-04T00:00:00</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/eohne/YFinance.jl/blob/9095629ddf12b4d856cdbf47228d71cf000c794c/src/QuoteSummary.jl#L148-L181">source</a></section></article><h2 id="Earnings-Estimates"><a class="docs-heading-anchor" href="#Earnings-Estimates">Earnings Estimates</a><a id="Earnings-Estimates-1"></a><a class="docs-heading-anchor-permalink" href="#Earnings-Estimates" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="YFinance.get_earnings_estimates" href="#YFinance.get_earnings_estimates"><code>YFinance.get_earnings_estimates</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">get_earnings_estimates(quoteSummary::JSON3.Object)</code></pre><p>Retrievs the earnings estimates from the quote summary.</p><p><strong>Arguments</strong></p><p>Can be either a <code>JSON3.Object</code> returned from <code>get_quoteSummary(symbol::String; item=nothing,throw_error=false)</code> or a ticker symbol of type <code>AbstractString</code> If a ticker symbol is provided <code>get_quoteSummary(symbol::String)</code> is called first. </p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; get_quoteSummary(&quot;AAPL&quot;) |&gt; get_earnings_estimates
+OrderedDict{String, Vector} with 3 entries:
+  &quot;quarter&quot;  =&gt; [&quot;4Q2021&quot;, &quot;1Q2022&quot;, &quot;2Q2022&quot;, &quot;3Q2022&quot;, &quot;4Q2022&quot;]
+  &quot;estimate&quot; =&gt; [1.89, 1.43, 1.16, 1.27, 1.98]
+  &quot;actual&quot;   =&gt; Union{Missing, Float64}[2.1, 1.52, 1.2, 1.29, missing]
+
+julia&gt; get_earnings_estimates(&quot;AAPL&quot;)
+OrderedDict{String, Vector} with 3 entries:
+  &quot;quarter&quot;  =&gt; [&quot;4Q2021&quot;, &quot;1Q2022&quot;, &quot;2Q2022&quot;, &quot;3Q2022&quot;, &quot;4Q2022&quot;]
+  &quot;estimate&quot; =&gt; [1.89, 1.43, 1.16, 1.27, 1.98]
+  &quot;actual&quot;   =&gt; Union{Missing, Float64}[2.1, 1.52, 1.2, 1.29, missing]
+
+julia&gt; using DataFrames
+julia&gt; get_earnings_estimates(&quot;AAPL&quot;) |&gt; DataFrame
+5×3 DataFrame
+ Row │ quarter  estimate  actual     
+     │ String   Float64   Float64?   
+─────┼───────────────────────────────
+   1 │ 4Q2021       1.89        2.1
+   2 │ 1Q2022       1.43        1.52
+   3 │ 2Q2022       1.16        1.2
+   4 │ 3Q2022       1.27        1.29
+   5 │ 4Q2022       1.98  missing   </code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/eohne/YFinance.jl/blob/9095629ddf12b4d856cdbf47228d71cf000c794c/src/QuoteSummary.jl#L197-L233">source</a></section></article><h2 id="Earnings-Per-Share-(EPS)"><a class="docs-heading-anchor" href="#Earnings-Per-Share-(EPS)">Earnings Per Share (EPS)</a><a id="Earnings-Per-Share-(EPS)-1"></a><a class="docs-heading-anchor-permalink" href="#Earnings-Per-Share-(EPS)" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="YFinance.get_eps" href="#YFinance.get_eps"><code>YFinance.get_eps</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">get_eps(quoteSummary::JSON3.Object)</code></pre><p>Retrievs the earnings per share from the quote summary.</p><p><strong>Arguments</strong></p><p>Can be either a <code>JSON3.Object</code> returned from <code>get_quoteSummary(symbol::String; item=nothing,throw_error=false)</code> or a ticker symbol of type <code>AbstractString</code> If a ticker symbol is provided <code>get_quoteSummary(symbol::String)</code> is called first. </p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; get_quoteSummary(&quot;AAPL&quot;) |&gt; get_eps
+OrderedDict{String, Vector} with 4 entries:
+  &quot;quarter&quot;  =&gt; [DateTime(&quot;2021-12-31T00:00:00&quot;), DateTime(&quot;2022-03-31T00:00:00&quot;), DateTime(&quot;2022-06-30T00:00:00&quot;), DateTime(&quot;2022-09-30T00:00:00&quot;)]
+  &quot;estimate&quot; =&gt; [1.89, 1.43, 1.16, 1.27]
+  &quot;actual&quot;   =&gt; [2.1, 1.52, 1.2, 1.29]
+  &quot;surprise&quot; =&gt; [0.111, 0.063, 0.034, 0.016]
+
+julia&gt; get_eps(&quot;AAPL&quot;)
+OrderedDict{String, Vector} with 4 entries:
+  &quot;quarter&quot;  =&gt; [DateTime(&quot;2021-12-31T00:00:00&quot;), DateTime(&quot;2022-03-31T00:00:00&quot;), DateTime(&quot;2022-06-30T00:00:00&quot;), DateTime(&quot;2022-09-30T00:00:00&quot;)]
+  &quot;estimate&quot; =&gt; [1.89, 1.43, 1.16, 1.27]
+  &quot;actual&quot;   =&gt; [2.1, 1.52, 1.2, 1.29]
+  &quot;surprise&quot; =&gt; [0.111, 0.063, 0.034, 0.016]
+
+julia&gt; using DataFrames
+julia&gt; get_eps(&quot;AAPL&quot;) |&gt; DataFrame
+4×4 DataFrame
+ Row │ quarter              estimate  actual   surprise 
+     │ DateTime             Float64   Float64  Float64  
+─────┼──────────────────────────────────────────────────
+   1 │ 2021-12-31T00:00:00      1.89     2.1      0.111
+   2 │ 2022-03-31T00:00:00      1.43     1.52     0.063
+   3 │ 2022-06-30T00:00:00      1.16     1.2      0.034
+   4 │ 2022-09-30T00:00:00      1.27     1.29     0.016</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/eohne/YFinance.jl/blob/9095629ddf12b4d856cdbf47228d71cf000c794c/src/QuoteSummary.jl#L260-L297">source</a></section></article><h2 id="Insider-Holdings"><a class="docs-heading-anchor" href="#Insider-Holdings">Insider Holdings</a><a id="Insider-Holdings-1"></a><a class="docs-heading-anchor-permalink" href="#Insider-Holdings" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="YFinance.get_insider_holders" href="#YFinance.get_insider_holders"><code>YFinance.get_insider_holders</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">get_insider_holders(quoteSummary::JSON3.Object)</code></pre><p>Retrievs the insiders holdings from the quote summary.</p><p><strong>Arguments</strong></p><p>Can be either a <code>JSON3.Object</code> returned from <code>get_quoteSummary(symbol::String; item=nothing,throw_error=false)</code> or a ticker symbol of type <code>AbstractString</code> If a ticker symbol is provided <code>get_quoteSummary(symbol::String)</code> is called first. </p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; get_quoteSummary(&quot;AAPL&quot;) |&gt; get_insider_holders
+OrderedDict{String, Vector} with 8 entries:
+    &quot;name&quot;                 =&gt; [&quot;ADAMS KATHERINE L&quot;, &quot;BELL JAMES A&quot;, &quot;JUNG ANDREA&quot;, &quot;KONDO C…
+    &quot;relation&quot;             =&gt; Union{Missing, String}[&quot;General Counsel&quot;, &quot;Director&quot;, &quot;Direct…  
+    &quot;description&quot;          =&gt; Union{Missing, String}[&quot;Sale&quot;, &quot;Stock Gift&quot;, &quot;Conversion of E…  
+    &quot;lastestTransDate&quot;     =&gt; Union{Missing, DateTime}[DateTime(&quot;2022-10-03T00:00:00&quot;), Dat…  
+    &quot;positionDirect&quot;       =&gt; Union{Missing, Int64}[427334, 34990, 139594, 31505, 4588720, …  
+    &quot;positionDirectDate&quot;   =&gt; Union{Missing, DateTime}[DateTime(&quot;2022-10-03T00:00:00&quot;), Dat…  
+    &quot;positionIndirect&quot;     =&gt; Union{Missing, Int64}[missing, missing, missing, missing, mis…  
+    &quot;positionIndirectDate&quot; =&gt; Union{Missing, DateTime}[missing, missing, missing, missing, …
+
+julia&gt; get_insider_holders(&quot;AAPL&quot;)
+OrderedDict{String, Vector} with 8 entries:
+    &quot;name&quot;                 =&gt; [&quot;ADAMS KATHERINE L&quot;, &quot;BELL JAMES A&quot;, &quot;JUNG ANDREA&quot;, &quot;KONDO C…
+    &quot;relation&quot;             =&gt; Union{Missing, String}[&quot;General Counsel&quot;, &quot;Director&quot;, &quot;Direct…  
+    &quot;description&quot;          =&gt; Union{Missing, String}[&quot;Sale&quot;, &quot;Stock Gift&quot;, &quot;Conversion of E…  
+    &quot;lastestTransDate&quot;     =&gt; Union{Missing, DateTime}[DateTime(&quot;2022-10-03T00:00:00&quot;), Dat…  
+    &quot;positionDirect&quot;       =&gt; Union{Missing, Int64}[427334, 34990, 139594, 31505, 4588720, …  
+    &quot;positionDirectDate&quot;   =&gt; Union{Missing, DateTime}[DateTime(&quot;2022-10-03T00:00:00&quot;), Dat…  
+    &quot;positionIndirect&quot;     =&gt; Union{Missing, Int64}[missing, missing, missing, missing, mis…  
+    &quot;positionIndirectDate&quot; =&gt; Union{Missing, DateTime}[missing, missing, missing, missing, …
+
+
+julia&gt; using DataFrames
+julia&gt; get_insider_holders(&quot;AAPL&quot;) |&gt; DataFrame
+10×8 DataFrame
+ Row │ name                relation                 description                        l ⋯
+     │ String              String?                  String?                            D ⋯
+─────┼────────────────────────────────────────────────────────────────────────────────────
+   1 │ ADAMS KATHERINE L   General Counsel          Sale                               2 ⋯
+   2 │ BELL JAMES A        Director                 Stock Gift                         2  
+   3 │ JUNG ANDREA         Director                 Conversion of Exercise of deriva…  2  
+   4 │ KONDO CHRISTOPHER   Officer                  Sale                               2  
+   5 │ LEVINSON ARTHUR D   Director                 Sale                               2 ⋯
+   6 │ MAESTRI LUCA        Chief Financial Officer  Sale                               2  
+   7 │ O&#39;BRIEN DEIRDRE     Officer                  Sale                               2  
+   8 │ SUGAR RONALD D      Director                 Conversion of Exercise of deriva…  2  
+   9 │ WAGNER SUSAN L      Director                 Conversion of Exercise of deriva…  2 ⋯
+  10 │ WILLIAMS JEFFREY E  Chief Operating Officer  Conversion of Exercise of deriva…  2  
+                                                                         5 columns omitted</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/eohne/YFinance.jl/blob/9095629ddf12b4d856cdbf47228d71cf000c794c/src/QuoteSummary.jl#L323-L376">source</a></section></article><h2 id="Insider-Transactions"><a class="docs-heading-anchor" href="#Insider-Transactions">Insider Transactions</a><a id="Insider-Transactions-1"></a><a class="docs-heading-anchor-permalink" href="#Insider-Transactions" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="YFinance.get_insider_transactions" href="#YFinance.get_insider_transactions"><code>YFinance.get_insider_transactions</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">get_insider_transactions(quoteSummary::JSON3.Object)</code></pre><p>Retrievs the insider transactions from the quote summary.</p><p><strong>Arguments</strong></p><p>Can be either a <code>JSON3.Object</code> returned from <code>get_quoteSummary(symbol::String; item=nothing,throw_error=false)</code> or a ticker symbol of type <code>AbstractString</code> If a ticker symbol is provided <code>get_quoteSummary(symbol::String)</code> is called first. </p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; get_quoteSummary(&quot;AAPL&quot;) |&gt; get_insider_transactions
+OrderedDict{String, Vector} with 7 entries:
+  &quot;filerName&quot;       =&gt; [&quot;KONDO CHRISTOPHER&quot;, &quot;MAESTRI LUCA&quot;, &quot;O&#39;BRIEN DEIRDRE&quot;, &quot;KONDO CH…  
+  &quot;filerRelation&quot;   =&gt; Union{Missing, String}[&quot;Officer&quot;, &quot;Chief Financial Officer&quot;, &quot;Offi…  
+  &quot;transactionText&quot; =&gt; Union{Missing, String}[&quot;Sale at price 148.72 per share.&quot;, &quot;Sale at…  
+  &quot;date&quot;            =&gt; Union{Missing, DateTime}[DateTime(&quot;2022-11-22T00:00:00&quot;), DateTime…  
+  &quot;ownership&quot;       =&gt; Union{Missing, String}[&quot;D&quot;, &quot;D&quot;, &quot;D&quot;, &quot;D&quot;, &quot;D&quot;, &quot;D&quot;, &quot;D&quot;, &quot;D&quot;, &quot;I&quot;…  
+  &quot;shares&quot;          =&gt; Union{Missing, Int64}[20200, 176299, 8053, 13136, 16612, 181139, 1…  
+  &quot;value&quot;           =&gt; Union{Missing, Int64}[3004144, 27493275, 1147150, missing, missing…
+
+julia&gt; get_insider_transactions(&quot;AAPL&quot;)
+OrderedDict{String, Vector} with 7 entries:
+  &quot;filerName&quot;       =&gt; [&quot;KONDO CHRISTOPHER&quot;, &quot;MAESTRI LUCA&quot;, &quot;O&#39;BRIEN DEIRDRE&quot;, &quot;KONDO CH…  
+  &quot;filerRelation&quot;   =&gt; Union{Missing, String}[&quot;Officer&quot;, &quot;Chief Financial Officer&quot;, &quot;Offi…  
+  &quot;transactionText&quot; =&gt; Union{Missing, String}[&quot;Sale at price 148.72 per share.&quot;, &quot;Sale at…  
+  &quot;date&quot;            =&gt; Union{Missing, DateTime}[DateTime(&quot;2022-11-22T00:00:00&quot;), DateTime…  
+  &quot;ownership&quot;       =&gt; Union{Missing, String}[&quot;D&quot;, &quot;D&quot;, &quot;D&quot;, &quot;D&quot;, &quot;D&quot;, &quot;D&quot;, &quot;D&quot;, &quot;D&quot;, &quot;I&quot;…  
+  &quot;shares&quot;          =&gt; Union{Missing, Int64}[20200, 176299, 8053, 13136, 16612, 181139, 1…  
+  &quot;value&quot;           =&gt; Union{Missing, Int64}[3004144, 27493275, 1147150, missing, missing…
+
+julia&gt; using DataFrames
+julia&gt; get_insider_transactions(&quot;AAPL&quot;) |&gt; DataFrame
+75×7 DataFrame
+ Row │ filerName           filerRelation            transactionText                    d ⋯
+     │ String              String?                  String?                            D ⋯
+─────┼────────────────────────────────────────────────────────────────────────────────────
+   1 │ KONDO CHRISTOPHER   Officer                  Sale at price 148.72 per share.    2 ⋯
+   2 │ MAESTRI LUCA        Chief Financial Officer  Sale at price 154.70 - 157.20 pe…  2  
+   3 │ O&#39;BRIEN DEIRDRE     Officer                  Sale at price 142.45 per share.    2  
+   4 │ KONDO CHRISTOPHER   Officer                                                     2  
+   5 │ O&#39;BRIEN DEIRDRE     Officer                                                     2 ⋯   
+   6 │ ADAMS KATHERINE L   General Counsel          Sale at price 138.44 - 142.93 pe…  2  
+   7 │ O&#39;BRIEN DEIRDRE     Officer                  Sale at price 141.09 - 142.83 pe…  2  
+  ⋮  │         ⋮                      ⋮                             ⋮                    ⋱
+  70 │ WAGNER SUSAN L      Director                                                    2  
+  71 │ JUNG ANDREA         Director                                                    2 ⋯
+  72 │ BELL JAMES A        Director                                                    2  
+  73 │ LOZANO MONICA C.    Director                                                    2  
+  74 │ GORE ALBERT A JR    Director                                                    2  
+  75 │ ADAMS KATHERINE L   General Counsel          Sale at price 131.79 - 134.56 pe…  2 ⋯
+                                                             4 columns and 62 rows omitted</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/eohne/YFinance.jl/blob/9095629ddf12b4d856cdbf47228d71cf000c794c/src/QuoteSummary.jl#L413-L467">source</a></section></article><h2 id="Institutional-Ownership"><a class="docs-heading-anchor" href="#Institutional-Ownership">Institutional Ownership</a><a id="Institutional-Ownership-1"></a><a class="docs-heading-anchor-permalink" href="#Institutional-Ownership" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="YFinance.get_institutional_ownership" href="#YFinance.get_institutional_ownership"><code>YFinance.get_institutional_ownership</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">get_institutional_ownership(quoteSummary::JSON3.Object)</code></pre><p>Retrievs the institutional ownership from the quote summary.</p><p><strong>Arguments</strong></p><p>Can be either a <code>JSON3.Object</code> returned from <code>get_quoteSummary(symbol::String; item=nothing,throw_error=false)</code> or a ticker symbol of type <code>AbstractString</code> If a ticker symbol is provided <code>get_quoteSummary(symbol::String)</code> is called first. </p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; get_quoteSummary(&quot;AAPL&quot;) |&gt; get_institutional_ownership
+OrderedDict{String, Vector} with 6 entries:
+  &quot;organization&quot; =&gt; [&quot;Vanguard Group, Inc. (The)&quot;, &quot;Blackrock Inc.&quot;, &quot;Berkshire Hathaway,…  
+  &quot;reportDate&quot;   =&gt; Union{Missing, DateTime}[DateTime(&quot;2022-09-30T00:00:00&quot;), DateTime(&quot;2…  
+  &quot;pctHeld&quot;      =&gt; Union{Missing, Float64}[0.08, 0.0641, 0.0562, 0.0372, 0.0221, 0.0176,…  
+  &quot;position&quot;     =&gt; Union{Missing, Int64}[1272378901, 1020245185, 894802319, 591543874, 3…  
+  &quot;value&quot;        =&gt; Union{Missing, Int64}[164913030135, 132233979050, 115975329111, 76670…  
+  &quot;pctChange&quot;    =&gt; Union{Missing, Float64}[-0.0039, -0.0082, 0.0, -0.0111, 0.0191, 0.005…
+
+julia&gt; get_institutional_ownership(&quot;AAPL&quot;)
+OrderedDict{String, Vector} with 6 entries:
+  &quot;organization&quot; =&gt; [&quot;Vanguard Group, Inc. (The)&quot;, &quot;Blackrock Inc.&quot;, &quot;Berkshire Hathaway,…  
+  &quot;reportDate&quot;   =&gt; Union{Missing, DateTime}[DateTime(&quot;2022-09-30T00:00:00&quot;), DateTime(&quot;2…  
+  &quot;pctHeld&quot;      =&gt; Union{Missing, Float64}[0.08, 0.0641, 0.0562, 0.0372, 0.0221, 0.0176,…  
+  &quot;position&quot;     =&gt; Union{Missing, Int64}[1272378901, 1020245185, 894802319, 591543874, 3…  
+  &quot;value&quot;        =&gt; Union{Missing, Int64}[164913030135, 132233979050, 115975329111, 76670…  
+  &quot;pctChange&quot;    =&gt; Union{Missing, Float64}[-0.0039, -0.0082, 0.0, -0.0111, 0.0191, 0.005…
+
+julia&gt; using DataFrames
+julia&gt; get_institutional_ownership(&quot;AAPL&quot;) |&gt; DataFrame
+10×6 DataFrame
+ Row │ organization                   reportDate           pctHeld   position    value   ⋯
+     │ String                         DateTime?            Float64?  Int64?      Int64?  ⋯
+─────┼────────────────────────────────────────────────────────────────────────────────────
+   1 │ Vanguard Group, Inc. (The)     2022-09-30T00:00:00    0.08    1272378901  1649130 ⋯
+   2 │ Blackrock Inc.                 2022-09-30T00:00:00    0.0641  1020245185  1322339  
+   3 │ Berkshire Hathaway, Inc        2022-09-30T00:00:00    0.0562   894802319  1159753  
+   4 │ State Street Corporation       2022-09-30T00:00:00    0.0372   591543874   766700  
+   5 │ FMR, LLC                       2022-09-30T00:00:00    0.0221   350900116   454801 ⋯
+   6 │ Geode Capital Management, LLC  2022-09-30T00:00:00    0.0176   279758518   362595  
+   7 │ Price (T.Rowe) Associates Inc  2022-09-30T00:00:00    0.0141   224863541   291445  
+   8 │ Morgan Stanley                 2022-09-30T00:00:00    0.0115   182728771   236834  
+   9 │ Northern Trust Corporation     2022-09-30T00:00:00    0.0111   176084862   228223 ⋯
+  10 │ Bank of America Corporation    2022-09-30T00:00:00    0.0089   142260591   184383  
+                                                                         2 columns omitted</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/eohne/YFinance.jl/blob/9095629ddf12b4d856cdbf47228d71cf000c794c/src/QuoteSummary.jl#L501-L549">source</a></section></article><h2 id="Major-Holders-Breakdown"><a class="docs-heading-anchor" href="#Major-Holders-Breakdown">Major Holders Breakdown</a><a id="Major-Holders-Breakdown-1"></a><a class="docs-heading-anchor-permalink" href="#Major-Holders-Breakdown" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="YFinance.get_major_holders_breakdown" href="#YFinance.get_major_holders_breakdown"><code>YFinance.get_major_holders_breakdown</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">get_major_holders_breakdown(quoteSummary::JSON3.Object)</code></pre><p>Retrievs the breakdown of the major holders from the quote summary.</p><p><strong>Arguments</strong></p><p>Can be either a <code>JSON3.Object</code> returned from <code>get_quoteSummary(symbol::String; item=nothing,throw_error=false)</code> or a ticker symbol of type <code>AbstractString</code> If a ticker symbol is provided <code>get_quoteSummary(symbol::String)</code> is called first. </p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; get_quoteSummary(&quot;AAPL&quot;) |&gt; get_major_holders_breakdown
+OrderedDict{String, Real} with 4 entries:  
+  &quot;insidersPercentHeld&quot;          =&gt; 0.00072
+  &quot;institutionsPercentHeld&quot;      =&gt; 0.60915
+  &quot;institutionsFloatPercentHeld&quot; =&gt; 0.60959
+  &quot;institutionsCount&quot;            =&gt; 5526  
+
+julia&gt; get_major_holders_breakdown(&quot;AAPL&quot;)
+OrderedDict{String, Real} with 4 entries:  
+  &quot;insidersPercentHeld&quot;          =&gt; 0.00072
+  &quot;institutionsPercentHeld&quot;      =&gt; 0.60915
+  &quot;institutionsFloatPercentHeld&quot; =&gt; 0.60959
+  &quot;institutionsCount&quot;            =&gt; 5526</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/eohne/YFinance.jl/blob/9095629ddf12b4d856cdbf47228d71cf000c794c/src/QuoteSummary.jl#L581-L607">source</a></section></article><h2 id="Analyst-Recommendation-Trend"><a class="docs-heading-anchor" href="#Analyst-Recommendation-Trend">Analyst Recommendation Trend</a><a id="Analyst-Recommendation-Trend-1"></a><a class="docs-heading-anchor-permalink" href="#Analyst-Recommendation-Trend" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="YFinance.get_recommendation_trend" href="#YFinance.get_recommendation_trend"><code>YFinance.get_recommendation_trend</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">get_recommendation_trend(quoteSummary::JSON3.Object)</code></pre><p>Retrievs the recommendation trend from the quote summary.</p><p><strong>Arguments</strong></p><p>Can be either a <code>JSON3.Object</code> returned from <code>get_quoteSummary(symbol::String; item=nothing,throw_error=false)</code> or a ticker symbol of type <code>AbstractString</code> If a ticker symbol is provided <code>get_quoteSummary(symbol::String)</code> is called first. </p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; get_quoteSummary(&quot;AAPL&quot;) |&gt; get_recommendation_trend
+OrderedDict{String, Vector} with 6 entries:
+  &quot;period&quot;     =&gt; [&quot;0m&quot;, &quot;-1m&quot;, &quot;-2m&quot;, &quot;-3m&quot;]
+  &quot;strongbuy&quot;  =&gt; [11, 11, 11, 13]
+  &quot;buy&quot;        =&gt; [21, 25, 26, 20]
+  &quot;hold&quot;       =&gt; [6, 6, 5, 8]
+  &quot;sell&quot;       =&gt; [0, 1, 1, 0]
+  &quot;strongsell&quot; =&gt; [0, 0, 0, 0]
+
+julia&gt; get_recommendation_trend(&quot;AAPL&quot;)
+OrderedDict{String, Vector} with 6 entries:
+  &quot;period&quot;     =&gt; [&quot;0m&quot;, &quot;-1m&quot;, &quot;-2m&quot;, &quot;-3m&quot;]
+  &quot;strongbuy&quot;  =&gt; [11, 11, 11, 13]
+  &quot;buy&quot;        =&gt; [21, 25, 26, 20]
+  &quot;hold&quot;       =&gt; [6, 6, 5, 8]
+  &quot;sell&quot;       =&gt; [0, 1, 1, 0]
+  &quot;strongsell&quot; =&gt; [0, 0, 0, 0]
+  
+julia&gt; using DataFrames
+julia&gt; get_recommendation_trend(&quot;AAPL&quot;) |&gt; DataFrame
+4×6 DataFrame
+ Row │ period  strongbuy  buy    hold   sell   strongsell 
+     │ String  Int64      Int64  Int64  Int64  Int64      
+─────┼────────────────────────────────────────────────────
+   1 │ 0m             11     21      6      0           0
+   2 │ -1m            11     25      6      1           0
+   3 │ -2m            11     26      5      1           0
+   4 │ -3m            13     20      8      0           0</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/eohne/YFinance.jl/blob/9095629ddf12b4d856cdbf47228d71cf000c794c/src/QuoteSummary.jl#L621-L662">source</a></section></article><h2 id="Up-and-Downgrade-History"><a class="docs-heading-anchor" href="#Up-and-Downgrade-History">Up- &amp; Downgrade History</a><a id="Up-and-Downgrade-History-1"></a><a class="docs-heading-anchor-permalink" href="#Up-and-Downgrade-History" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="YFinance.get_upgrade_downgrade_history" href="#YFinance.get_upgrade_downgrade_history"><code>YFinance.get_upgrade_downgrade_history</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">get_upgrade_downgrade_history(quoteSummary::JSON3.Object)</code></pre><p>Retrievs the upgrade and downgrade history from the quote summary.</p><p><strong>Arguments</strong></p><p>Can be either a <code>JSON3.Object</code> returned from <code>get_quoteSummary(symbol::String; item=nothing,throw_error=false)</code> or a ticker symbol of type <code>AbstractString</code> If a ticker symbol is provided <code>get_quoteSummary(symbol::String)</code> is called first. </p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; get_quoteSummary(&quot;AAPL&quot;) |&gt; get_upgrade_downgrade_history
+OrderedDict{String, Vector} with 5 entries:
+  &quot;firm&quot;      =&gt; [&quot;JP Morgan&quot;, &quot;UBS&quot;, &quot;Morgan Stanley&quot;, &quot;B of A Securities&quot;, &quot;Barclays&quot;, …  
+  &quot;date&quot;      =&gt; Union{Missing, DateTime}[DateTime(&quot;2022-12-20T11:47:33&quot;), DateTime(&quot;2022…  
+  &quot;toGrade&quot;   =&gt; Union{Missing, String}[&quot;Overweight&quot;, &quot;Buy&quot;, &quot;Overweight&quot;, &quot;Neutral&quot;, &quot;Eq…  
+  &quot;fromGrade&quot; =&gt; Union{Missing, String}[&quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;  …  &quot;&quot;, &quot;&quot;…  
+  &quot;action&quot;    =&gt; Union{Missing, String}[&quot;main&quot;, &quot;main&quot;, &quot;main&quot;, &quot;main&quot;, &quot;main&quot;, &quot;main&quot;, &quot;…
+
+julia&gt; get_upgrade_downgrade_history(&quot;AAPL&quot;)
+OrderedDict{String, Vector} with 5 entries:
+  &quot;firm&quot;      =&gt; [&quot;JP Morgan&quot;, &quot;UBS&quot;, &quot;Morgan Stanley&quot;, &quot;B of A Securities&quot;, &quot;Barclays&quot;, …  
+  &quot;date&quot;      =&gt; Union{Missing, DateTime}[DateTime(&quot;2022-12-20T11:47:33&quot;), DateTime(&quot;2022…  
+  &quot;toGrade&quot;   =&gt; Union{Missing, String}[&quot;Overweight&quot;, &quot;Buy&quot;, &quot;Overweight&quot;, &quot;Neutral&quot;, &quot;Eq…  
+  &quot;fromGrade&quot; =&gt; Union{Missing, String}[&quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;  …  &quot;&quot;, &quot;&quot;…  
+  &quot;action&quot;    =&gt; Union{Missing, String}[&quot;main&quot;, &quot;main&quot;, &quot;main&quot;, &quot;main&quot;, &quot;main&quot;, &quot;main&quot;, &quot;…
+  
+julia&gt; using DataFrames
+julia&gt; get_upgrade_downgrade_history(&quot;AAPL&quot;) |&gt; DataFrame
+872×5 DataFrame
+ Row │ firm               date                 toGrade       fromGrade  action  
+     │ String             DateTime?            String?       String?    String? 
+─────┼──────────────────────────────────────────────────────────────────────────
+   1 │ JP Morgan          2022-12-20T11:47:33  Overweight               main
+   2 │ UBS                2022-11-08T12:17:03  Buy                      main
+   3 │ Morgan Stanley     2022-11-08T12:14:23  Overweight               main
+   4 │ B of A Securities  2022-11-07T13:08:30  Neutral                  main
+   5 │ Barclays           2022-11-07T12:39:27  Equal-Weight             main
+   6 │ Wedbush            2022-10-28T13:19:17  Outperform               main
+   7 │ Credit Suisse      2022-10-28T11:59:30  Outperform               main
+  ⋮  │         ⋮                   ⋮                ⋮            ⋮         ⋮
+ 867 │ Oxen Group         2012-03-14T15:25:00  Buy                      init
+ 868 │ Canaccord Genuity  2012-03-14T08:21:00  Buy                      main
+ 869 │ Morgan Stanley     2012-03-14T06:13:00  Overweight               main
+ 870 │ Jefferies          2012-03-13T06:08:00  Buy                      main
+ 871 │ FBN Securities     2012-03-08T07:33:00  Outperform               main
+ 872 │ Canaccord Genuity  2012-02-09T08:17:00  Buy                      main
+                                                                859 rows omitted</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/eohne/YFinance.jl/blob/9095629ddf12b4d856cdbf47228d71cf000c794c/src/QuoteSummary.jl#L796-L846">source</a></section></article><h2 id="Summary-Detail"><a class="docs-heading-anchor" href="#Summary-Detail">Summary Detail</a><a id="Summary-Detail-1"></a><a class="docs-heading-anchor-permalink" href="#Summary-Detail" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="YFinance.get_summary_detail" href="#YFinance.get_summary_detail"><code>YFinance.get_summary_detail</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">get_summary_detail(quoteSummary::JSON3.Object)</code></pre><p>Retrievs the summaryDetail Item from the quote summary.</p><p><strong>Arguments</strong></p><p>Can be either a <code>JSON3.Object</code> returned from <code>get_quoteSummary(symbol::String; item=nothing,throw_error=false)</code> or a ticker symbol of type <code>AbstractString</code> If a ticker symbol is provided <code>get_quoteSummary(symbol::String)</code> is called first. </p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; get_quoteSummary(&quot;AAPL&quot;) |&gt; get_summary_detail
+OrderedDict{String, Any} with 41 entries:
+  &quot;priceHint&quot;                  =&gt; 2
+  &quot;previousClose&quot;              =&gt; 126.04
+  &quot;open&quot;                       =&gt; 127.99
+  &quot;dayLow&quot;                     =&gt; 127.815
+  &quot;dayHigh&quot;                    =&gt; 130.48
+  &quot;regularMarketPreviousClose&quot; =&gt; 126.04
+  &quot;regularMarketOpen&quot;          =&gt; 127.99
+  &quot;regularMarketDayLow&quot;        =&gt; 127.815
+  &quot;regularMarketDayHigh&quot;       =&gt; 130.48
+  &quot;dividendRate&quot;               =&gt; 0.92
+  &quot;dividendYield&quot;              =&gt; 0.0073
+  &quot;exDividendDate&quot;             =&gt; 1667520000
+  &quot;payoutRatio&quot;                =&gt; 0.1473
+  &quot;fiveYearAvgDividendYield&quot;   =&gt; 0.99
+  &quot;beta&quot;                       =&gt; 1.21947
+  &quot;trailingPE&quot;                 =&gt; 21.2128
+  &quot;forwardPE&quot;                  =&gt; 19.1448
+  ⋮                            =&gt; ⋮
+
+julia&gt; get_summary_detail(&quot;AAPL&quot;)
+OrderedDict{String, Any} with 41 entries:
+  &quot;priceHint&quot;                  =&gt; 2
+  &quot;previousClose&quot;              =&gt; 126.04
+  &quot;open&quot;                       =&gt; 127.99
+  &quot;dayLow&quot;                     =&gt; 127.815
+  &quot;dayHigh&quot;                    =&gt; 130.48
+  &quot;regularMarketPreviousClose&quot; =&gt; 126.04
+  &quot;regularMarketOpen&quot;          =&gt; 127.99
+  &quot;regularMarketDayLow&quot;        =&gt; 127.815
+  &quot;regularMarketDayHigh&quot;       =&gt; 130.48
+  &quot;dividendRate&quot;               =&gt; 0.92
+  &quot;dividendYield&quot;              =&gt; 0.0073
+  &quot;exDividendDate&quot;             =&gt; 1667520000
+  &quot;payoutRatio&quot;                =&gt; 0.1473
+  &quot;fiveYearAvgDividendYield&quot;   =&gt; 0.99
+  &quot;beta&quot;                       =&gt; 1.21947
+  &quot;trailingPE&quot;                 =&gt; 21.2128
+  &quot;forwardPE&quot;                  =&gt; 19.1448
+  ⋮                            =&gt; ⋮</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/eohne/YFinance.jl/blob/9095629ddf12b4d856cdbf47228d71cf000c794c/src/QuoteSummary.jl#L695-L749">source</a></section></article><h2 id="Sector-and-Industry"><a class="docs-heading-anchor" href="#Sector-and-Industry">Sector &amp; Industry</a><a id="Sector-and-Industry-1"></a><a class="docs-heading-anchor-permalink" href="#Sector-and-Industry" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="YFinance.get_sector_industry" href="#YFinance.get_sector_industry"><code>YFinance.get_sector_industry</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">get_sector_industry(quoteSummary::JSON3.Object)</code></pre><p>Retrievs the Sector and Industry from the quote summary.</p><p><strong>Arguments</strong></p><p>Can be either a <code>JSON3.Object</code> returned from <code>get_quoteSummary(symbol::String; item=nothing,throw_error=false)</code> or a ticker symbol of type <code>AbstractString</code> If a ticker symbol is provided <code>get_quoteSummary(symbol::String)</code> is called first. </p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; get_quoteSummary(&quot;AAPL&quot;) |&gt; get_sector_industry
+OrderedDict{String, String} with 2 entries:
+  &quot;sector&quot;   =&gt; &quot;Technology&quot;
+  &quot;industry&quot; =&gt; &quot;Consumer Electronics&quot;
+
+julia&gt; get_sector_industry(&quot;AAPL&quot;)
+OrderedDict{String, String} with 2 entries:
+  &quot;sector&quot;   =&gt; &quot;Technology&quot;
+  &quot;industry&quot; =&gt; &quot;Consumer Electronics&quot;</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/eohne/YFinance.jl/blob/9095629ddf12b4d856cdbf47228d71cf000c794c/src/QuoteSummary.jl#L763-L785">source</a></section></article></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../Fundamental/">« Fundamental</a><a class="docs-footer-nextpage" href="../Options/">Options »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.23 on <span class="colophon-date" title="Sunday 26 March 2023 11:55">Sunday 26 March 2023</span>. Using Julia version 1.7.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
