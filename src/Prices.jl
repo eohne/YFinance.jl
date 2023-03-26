@@ -22,6 +22,13 @@ function _clean_prices_nothing(x::Array{Union{Nothing, Int}})
     return res
 end
 
+function _clean_prices_nothing(x::Array{Float64})
+    return x
+end
+function _clean_prices_nothing(x::Array{Int})
+    return convert.(Float64, x)
+end
+
 """
     get_prices(symbol::AbstractString; range::AbstractString="1mo", interval::AbstractString="1d",startdt="", enddt="",prepost=false,autoadjust=true,timeout = 10,throw_error=false,exchange_local_time=false)
 
