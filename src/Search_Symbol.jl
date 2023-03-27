@@ -2,7 +2,7 @@
 const MARKETS = ["AMEX", "NASDAQ", "NYSE"]
 
 """
-    get_symbols(market::String)
+    get_symbols(market::T)::Vector{T} where {T<:String}
 
 Fetch all the symbols from a given `market`.
 
