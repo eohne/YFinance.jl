@@ -29,6 +29,7 @@ julia> get_symbols("NYSE")
  "ZTS"
  "ZUO"
  "ZYME"
+```
 """
 function get_symbols(market::String)::Vector{String}
   uppercase(market) in MARKETS || throw(ArgumentError("Invalid market. Supported markets \
