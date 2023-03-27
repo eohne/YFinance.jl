@@ -31,14 +31,14 @@ julia> get_symbols("NYSE")
  "ZYME"
 ```
 """
-function get_symbols(market::String)::Vector{String}
+function get_symbols(market::T)::Vector{T} where {T<:String}
   uppercase(market) in MARKETS || throw(ArgumentError("Invalid market. Supported markets \
   are $(MARKETS)"))
   url = "https://dumbstockapi.com/stock?format=tickers-only&exchange=$market"
   response = HTTP.request("GET", url)
-  Symbols_string::String = String(response.body)
-  splitted::Vector{String} = split(Symbols_string, ",")
-  pured::Vector{String} = replace.(splitted, r"\"" => "")
+  Symbols_string::T = String(response.body)
+  splitted::Vector{T} = split(Symbols_string, ",")
+  pured::Vector{T} = replace.(splitted, r"\"" => "")
   pured[1] = replace(pured[1], r"\[" => "")
   pured[lastindex(pured)] = replace(pured[lastindex(pured)], r"\]" => "")
   return pured
