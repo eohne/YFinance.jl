@@ -32,8 +32,7 @@ julia> get_symbols("NYSE")
 ```
 """
 function get_symbols(market::T)::Vector{T} where {T<:String}
-  uppercase(market) in MARKETS || throw(ArgumentError("Invalid market. Supported markets \
-  are $(MARKETS)"))
+  uppercase(market) in MARKETS || throw(ArgumentError("Invalid market. Supported markets are $(MARKETS)"))
   url = "https://dumbstockapi.com/stock?format=tickers-only&exchange=$market"
   response = HTTP.request("GET", url)
   Symbols_string::T = String(response.body)
