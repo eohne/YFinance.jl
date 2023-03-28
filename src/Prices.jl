@@ -1,13 +1,15 @@
 const _BASE_URL_ = "https://query2.finance.yahoo.com";
 
 function _clean_prices_nothing(x::Array{Union{Nothing, Float64}})
-    res = x
+    res = Array{Float64}(undef, size(x,1))
     for i in eachindex(x)
         if isnothing.(view(x,i))
             res[i]=NaN 
+        else
+            res[i] = x[i]
         end
     end
-    return res
+    return res #convert.(Float64, res)
 end
 
 function _clean_prices_nothing(x::Array{Union{Nothing, Int}})
@@ -19,7 +21,7 @@ function _clean_prices_nothing(x::Array{Union{Nothing, Int}})
             res[i] = Float64.(view(x,i))
         end
     end
-    return res
+    return res #convert.(Float64, res)
 end
 
 function _clean_prices_nothing(x::Array{Float64})
@@ -128,19 +130,6 @@ function get_prices(symbol::AbstractString; range::AbstractString="5d", interval
     @assert in(interval,validintervals) "The chosen interval is not supported choose one from:\n 1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo"
 
 
-    # Check if symbol is valid
-    old_symbol = symbol
-    symbol = get_valid_symbols(symbol)
-    if isempty(symbol)
-        if throw_error
-            error("$old_symbol is not a valid Symbol!")
-        else
-            @warn "$old_symbol is not a valid Symbol an empy OrderedCollections.OrderedDict was returned!" 
-            return OrderedCollections.OrderedDict()
-        end
-    else
-        symbol = symbol[1]
-    end
     
 
     if !isequal(startdt,"") || !isequal(enddt,"")
@@ -177,7 +166,28 @@ function get_prices(symbol::AbstractString; range::AbstractString="5d", interval
         "events" => "div,splits"
     )
     url = "$(_BASE_URL_)/v8/finance/chart/$(uppercase(symbol))"
-    res = HTTP.get(url,query=parameters,readtimeout = timeout, proxy=_PROXY_SETTINGS[:proxy],headers=_PROXY_SETTINGS[:auth])
+
+    res = try
+        HTTP.get(url,query=parameters,readtimeout = timeout, proxy=_PROXY_SETTINGS[:proxy],headers=_PROXY_SETTINGS[:auth])
+    catch e 
+        e
+    end #end try
+    if isequal(res.status,404)
+        if throw_error
+            error("$symbol is not a valid Symbol! $(JSON3.read(res.response.body).chart.error.description)")
+        else
+            @warn "$symbol is not a valid Symbol. $(JSON3.read(res.response.body).chart.error.description). An empy OrderedCollections.OrderedDict was returned!" 
+            return OrderedCollections.OrderedDict()
+        end
+        elseif isequal(res.status, 400)
+            if throw_error
+                error("$(JSON3.read(res.response.body).finance.error.description).")
+            else
+                @warn "$(JSON3.read(res.response.body).finance.error.description). An empy OrderedCollections.OrderedDict was returned!" 
+                return OrderedCollections.OrderedDict()
+            end 
+    end
+
     res = JSON3.read(res.body).chart.result[1]
 
     #check for duplicate values at the end (common error by yahoo)
