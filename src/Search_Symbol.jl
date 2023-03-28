@@ -39,7 +39,8 @@ function get_symbols(market::T)::Vector{T} where {T<:String}
   Symbols_string::T = String(response.body)
   splitted::Vector{T} = split(Symbols_string, ",")
   pured::Vector{T} = replace.(splitted, r"\"" => "")
-  pured[1] = replace(pured[1], r"\[" => "")
-  pured[lastindex(pured)] = replace(pured[lastindex(pured)], r"\]" => "")
+  f_idx, l_idx = firstindex(pured), lastindex(pured)
+  f_idx = replace(f_idx, r"\[" => "")
+  pured[l_idx] = replace(pured[l_idx], r"\]" => "")
   return pured
 end;
