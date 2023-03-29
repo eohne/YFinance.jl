@@ -1,4 +1,20 @@
-!!! info "v1.0.3"
+!!! info "Master vs v0.1.3"
+    ## Bug Fix
+    * get_prices now returns dictionaries containing price vectors of type Array{Float64} rather than Array{ Union{Nothing,Float64}} ([#7](https://github.com/eohne/YFinance.jl/issues/7)) 
+    
+    ## Improvements
+    * get_prices now runs faster than before.
+
+    ## New Functionality
+    * `get_symbols` allows the user to search for yahoo finance symbols from (partial) company/security names
+    * `get_all_symbols` exposes all tickers from the NASDAQ, AMEX, and NYSE exchanges ([#8](https://github.com/eohne/YFinance.jl/issues/8))
+
+    ## Docs
+    * Added documentation for the new functionality
+    * Added a clarification statement in the Readme.md and Docs that YFinance uses API endpoints to access data and does not suffer from decryption issues ([#6](https://github.com/eohne/YFinance.jl/issues/6))
+
+
+!!! info "v0.1.3"
     ## Bug Fix
     * get_prices would error when `autoadjust=true` for some tickers when Yahoo returns nothing for some observations in the price time series. The update now does not error in this cases and returns `NaN` for the missing datapoints. `NaN` is used instead of `Missing` because of performance improvements and the ability to integrate `YFinance.jl` with `TimeSeries.jl`. ([#5](https://github.com/eohne/YFinance.jl/issues/5)) 
        - Thank you [RaSi96](https://github.com/RaSi96) for reporting this bug and helping me sort it out!
@@ -12,7 +28,7 @@
     * Added a test case for the stock "ADANIENT.NS". The time series of the stock prices contains the `nothing` values mentioned in the `Bug Fix`. ([#5](https://github.com/eohne/YFinance.jl/issues/5))
 
 
-!!! info "v1.0.2"
+!!! info "v0.1.2"
     ## Changes
     * Return `OrderedDict` from `OrderedCollections.jl` instead of `Dict`
       - Should be non breaking as all functions that work for `Base.Dict` also work for `OrderedCollections.OrderedDict`

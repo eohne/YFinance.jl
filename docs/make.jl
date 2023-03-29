@@ -14,6 +14,7 @@ makedocs(
                     "QuoteSummary" =>"QuoteSummary.md",
                     "Options" =>"Options.md",
                     "ESG" =>"ESG.md",
+                    "Search for Symbol"=>"Search Symbols.md",
                     "Proxy" => "Proxies.md",
                     "All Functions" =>"AllFunctions.md",
                 ],

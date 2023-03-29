@@ -16,6 +16,10 @@ Please see Yahoo's terms of use to ensure that you can use the data:
  - [Yahoo Terms](https://policies.yahoo.com/us/en/yahoo/terms/index.htm)
 
 
+## \*\*\* No decryption issues \*\*\*
+The implementation of `YFinance.jl` is similar to the python package `yahooquery` in that it accesses data through API endpoints. Therefore, **`YFinance.jl` does not experience the same decryption issues** that python’s `yfinance` faces at the moment.
+
+
 ## Installation
 
 The package is registered in the [`General`](https://github.com/JuliaRegistries/General) registry and so can be installed at the REPL with `] add YFinance` or by running:

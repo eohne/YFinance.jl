@@ -56,15 +56,27 @@ using Test
 
         @test haskey(get_upgrade_downgrade_history(ta),"firm")
     end
-    @testset "Search_Symbol" begin
+
+    @testset "All Symbols" begin
         # Test case insensitivity
-        @test length(get_symbols("nySE")) == length(get_symbols("NYSE"))
+        @test length(get_all_symbols("nySE")) == length(get_all_symbols("NYSE"))
 
         # Test if the market is supported
-        @test_throws ArgumentError get_symbols("wrong")
+        @test_throws ArgumentError get_all_symbols("wrong")
 
-        @test isa(get_symbols("NASDAQ"), Vector{String})
+        @test isa(get_all_symbols("NASDAQ"), Vector{String})
 
-        @test length(get_symbols("AMEX")) > 100
+        @test length(get_all_symbols("AMEX")) > 100
+    end
+    @testset "Search_Symbol" begin        
+        ta = get_symbols("micro")
+        @test typeof(ta) <: AbstractArray
+        @test length(ta) >0 
+        @test typeof(ta[1]) <: AbstractDict
+        @test haskey(ta[1],"shortname")
+
+        ta = get_symbols("asjdflkalskjfdkjalk")
+        @test typeof(ta) <: AbstractArray
+        @test isempty(ta)
     end
 end

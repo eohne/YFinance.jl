@@ -13,6 +13,9 @@ Please see Yahoo's terms of use to ensure that you can use the data:
  - [Yahoo Terms of Service](https://legal.yahoo.com/us/en/yahoo/terms/otos/index.html)
  - [Yahoo Terms](https://policies.yahoo.com/us/en/yahoo/terms/index.htm)
 
+## \*\*\* No decryption issues \*\*\*
+The implementation of `YFinance.jl` is similar to the python package `yahooquery` in that it accesses data through API endpoints. Therefore, **`YFinance.jl` does not experience the same decryption issues** that python’s `yfinance` faces at the moment.
+
 ## What you can download
 - Price data (including intraday)
 - Fundamental data

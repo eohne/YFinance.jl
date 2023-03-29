@@ -12,7 +12,7 @@ module YFinance
     export get_calendar_events,get_earnings_estimates,get_eps,get_insider_holders,get_insider_transactions
     export get_institutional_ownership,get_major_holders_breakdown,get_recommendation_trend
     export get_summary_detail,get_sector_industry,get_upgrade_downgrade_history
-    export get_symbols
+    export get_all_symbols, get_symbols
 
     # Load Order
     include("Proxy_Auth.jl");
