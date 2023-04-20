@@ -48,6 +48,73 @@ end;
 
 
 
+# Old Function: 
+# function get_symbols(search_term::String)
+	
+# 	yfinance_search_link = "https://query2.finance.yahoo.com/v1/finance/search"
+	
+#   # Example of full query:
+#   # https://query2.finance.yahoo.com/v1/finance/search?q=microsoft&lang=en-US&region=US&quotesCount=6&newsCount=2&listsCount=2&enableFuzzyQuery=false&quotesQueryId=tss_match_phrase_query&multiQuoteQueryId=multi_quote_single_token_query&newsQueryId=news_cie_vespa&enableCb=true&enableNavLinks=true&enableEnhancedTrivialQuery=true&enableResearchReports=true&researchReportsCount=2
+# 	query = Dict("q" => search_term)
+	
+# 	response = HTTP.get(yfinance_search_link,query = query)
+	
+# 	repsonse_parsed = JSON3.read(response.body)
+
+# 	quotes = repsonse_parsed.quotes
+	
+# 	# Also provides news under response_parsed.news
+# 	return quotes
+# end
+
+
+
+"""
+This is an `YahooSearchItem`
+
+# Fields
+- symbol: The Symbol (Ticker)
+- shortname: The short name of the instrument/company
+- quoteType: The type of asset (e.g. EQUITY)
+- sector: The Sector (only if quotetype==EQUITY, otherwise "")
+- industry: The Industry (only if quotetype==EQUITY, otherwise "")
+"""
+mutable struct YahooSearchItem
+   symbol::String
+   shortname::String
+   exchange::String
+   quoteType::String
+   sector::String
+   industry::String
+end
+
+"""
+This is an `YahooSearch <: AbstractArray{YahooSearchItem, N}`
+
+Basically a custom Array of `YahooSearchItem`s
+"""
+mutable struct YahooSearch{YahooSearchItem,N} <: AbstractArray{YahooSearchItem,N}
+   arr::Array{YahooSearchItem,N}
+end
+
+function Base.size(x::YahooSearch)
+   return size(x.arr)
+end
+function Base.getindex(x::YahooSearch,i::Int)
+   return x.arr[i]
+end
+function Base.show(io::IO,x::YahooSearchItem)
+   println(io,"")
+   println(io,"Symbol:\t $(x.symbol)")
+   println(io,"Name:\t $(x.shortname)")
+   println(io,"Type:\t $(x.quoteType)")
+   println(io,"Exch.:\t $(x.exchange)")
+   if isequal(x.sector,"").==false
+       println(io,"Sec.:\t $(x.sector)")
+       println(io,"Ind.:\t $(x.industry)")
+   end
+end
+
 """
     get_symbols(search_term::String)
 
@@ -57,123 +124,77 @@ Allows searches for specific securities.
    * `search_term::String`: Typically a company/security name (e.g. microsoft)
 
 # Returns
-   * `JSON3.Array{JSON3.Object}`: Each array element is a `JSON3.Object` search results contiangint the following keys:
-     - exchange, shortname, quoteType, symbol, index, score, typeDisp, longname, exchDisp, isYahooFinance
-   * If no match was found an empty `JSON3.Array` is returned.
+   * A `YahooSearch <: AbstractArray` containing `YahooSearchItem`s containing the following fields: symbol`::String`, shortname`::String`, exchange`::String`, quoteType`::String`, sector`::String`, industry`::String`
 
 # Example 
 ```julia
 julia> get_symbols("micro")
-7-element JSON3.Array{JSON3.Object, Vector{UInt8}, SubArray{UInt64, 1, Vector{UInt64}, Tuple{UnitRange{Int64}}, true}}:
- {
-         "exchange": "CMX",
-        "shortname": "Micro Gold Futures,Jun-2023",
-        "quoteType": "FUTURE",
-           "symbol": "MGC=F",
-            "index": "quotes",
-            "score": 3179100,
-         "typeDisp": "Future",
-         "exchDisp": "New York Commodity Exchange",
-   "isYahooFinance": true
-}
- {
-         "exchange": "NMS",
-        "shortname": "Microsoft Corporation",
-        "quoteType": "EQUITY",
-           "symbol": "MSFT",
-            "index": "quotes",
-            "score": 274384,
-         "typeDisp": "Equity",
-         "longname": "Microsoft Corporation",
-         "exchDisp": "NASDAQ",
-           "sector": "Technology",
-         "industry": "Software—Infrastructure",
-   "isYahooFinance": true
-}
- {
-         "exchange": "NMS",
-        "shortname": "Micron Technology, Inc.",
-        "quoteType": "EQUITY",
-           "symbol": "MU",
-            "index": "quotes",
-            "score": 265579,
-         "typeDisp": "Equity",
-         "longname": "Micron Technology, Inc.",
-         "exchDisp": "NASDAQ",
-           "sector": "Technology",
-         "industry": "Semiconductors",
-   "isYahooFinance": true
-}
- {
-         "exchange": "NMS",
-        "shortname": "Advanced Micro Devices, Inc.",
-        "quoteType": "EQUITY",
-           "symbol": "AMD",
-            "index": "quotes",
-            "score": 252946,
-         "typeDisp": "Equity",
-         "longname": "Advanced Micro Devices, Inc.",
-         "exchDisp": "NASDAQ",
-           "sector": "Technology",
-         "industry": "Semiconductors",
-   "isYahooFinance": true
-}
- {
-         "exchange": "NMS",
-        "shortname": "MicroStrategy Incorporated",
-        "quoteType": "EQUITY",
-           "symbol": "MSTR",
-            "index": "quotes",
-            "score": 52264,
-         "typeDisp": "Equity",
-         "longname": "MicroStrategy Incorporated",
-         "exchDisp": "NASDAQ",
-           "sector": "Technology",
-         "industry": "Software—Application",
-   "isYahooFinance": true
-}
- {
-         "exchange": "NMS",
-        "shortname": "Super Micro Computer, Inc.",
-        "quoteType": "EQUITY",
-           "symbol": "SMCI",
-            "index": "quotes",
-            "score": 38924,
-         "typeDisp": "Equity",
-         "longname": "Super Micro Computer, Inc.",
-         "exchDisp": "NASDAQ",
-           "sector": "Technology",
-         "industry": "Computer Hardware",
-   "isYahooFinance": true
-}
- {
-         "exchange": "PCX",
-        "shortname": "MicroSectors FANG  Index 3X Lev",
-        "quoteType": "ETF",
-           "symbol": "FNGU",
-            "index": "quotes",
-            "score": 33432,
-         "typeDisp": "ETF",
-         "longname": "MicroSectors FANG+ Index 3X Leveraged ETN",
-         "exchDisp": "NYSEArca",
-   "isYahooFinance": true
-}
+7-element YahooSearch{YahooSearchItem, 1}:
+ 
+Symbol:  MGC=F
+Name:    Micro Gold Futures,Jun-2023
+Type:    FUTURE
+Exch.:   New York Commodity Exchange (CMX)
+
+
+Symbol:  MSFT
+Name:    Microsoft Corporation
+Type:    EQUITY
+Exch.:   NASDAQ (NMS)
+Sec.:    Technology
+Ind.:    Software—Infrastructure
+
+
+Symbol:  AMD
+Name:    Advanced Micro Devices, Inc.
+Type:    EQUITY
+Exch.:   NASDAQ (NMS)
+Sec.:    Technology
+Ind.:    Semiconductors
+
+
+Symbol:  MU
+Name:    Micron Technology, Inc.
+Type:    EQUITY
+Exch.:   NASDAQ (NMS)
+Sec.:    Technology
+Ind.:    Semiconductors
+
+
+Symbol:  MSTR
+Name:    MicroStrategy Incorporated
+Type:    EQUITY
+Exch.:   NASDAQ (NMS)
+Sec.:    Technology
+Ind.:    Software—Application
+
+
+Symbol:  SMCI
+Name:    Super Micro Computer, Inc.
+Type:    EQUITY
+Exch.:   NASDAQ (NMS)
+Sec.:    Technology
+Ind.:    Computer Hardware
+
+
+Symbol:  FNGU
+Name:    MicroSectors FANG  Index 3X Lev
+Type:    ETF
+Exch.:   NYSEArca (PCX)
 ```
 """
 function get_symbols(search_term::String)
-	
-	yfinance_search_link = "https://query2.finance.yahoo.com/v1/finance/search"
-	
-  # Example of full query:
-  # https://query2.finance.yahoo.com/v1/finance/search?q=microsoft&lang=en-US&region=US&quotesCount=6&newsCount=2&listsCount=2&enableFuzzyQuery=false&quotesQueryId=tss_match_phrase_query&multiQuoteQueryId=multi_quote_single_token_query&newsQueryId=news_cie_vespa&enableCb=true&enableNavLinks=true&enableEnhancedTrivialQuery=true&enableResearchReports=true&researchReportsCount=2
-	query = Dict("q" => search_term)
-	
-	response = HTTP.get(yfinance_search_link,query = query)
-	
-	repsonse_parsed = JSON3.read(response.body)
-
-	quotes = repsonse_parsed.quotes
-	
-	# Also provides news under response_parsed.news
-	return quotes
+  yfinance_search_link = "https://query2.finance.yahoo.com/v1/finance/search"
+  query = Dict("q" => search_term)
+  response = HTTP.get(yfinance_search_link,query = query)
+  repsonse_parsed = JSON3.read(response.body).quotes
+   quotes = YahooSearchItem[]
+   for i in repsonse_parsed
+       if haskey(i, :sector)
+           push!(quotes,YahooSearchItem(i.symbol,i.shortname,"$(i.exchDisp) ($(i.exchange))",i.quoteType,i.sector,i.industry))
+       else
+           push!(quotes,YahooSearchItem(i.symbol,i.shortname,"$(i.exchDisp) ($(i.exchange))",i.quoteType,"",""))
+       end
+   end
+  return YahooSearch(quotes)
 end

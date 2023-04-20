@@ -70,13 +70,29 @@ using Test
     end
     @testset "Search_Symbol" begin        
         ta = get_symbols("micro")
-        @test typeof(ta) <: AbstractArray
+        @test typeof(ta) <: YahooSearch
         @test length(ta) >0 
-        @test typeof(ta[1]) <: AbstractDict
-        @test haskey(ta[1],"shortname")
+        @test typeof(ta[1]) <: YahooSearchItem
+        @test typeof(ta[1].symbol) <: String
 
         ta = get_symbols("asjdflkalskjfdkjalk")
-        @test typeof(ta) <: AbstractArray
+        @test typeof(ta) <: YahooSearch
         @test isempty(ta)
+    end
+
+    @testset "News_Search" begin        
+        ta = search_news("MSFT")
+        @test typeof(ta) <: YahooNews
+        @test length(ta) >0 
+        @test typeof(ta[1]) <: NewsItem
+        @test typeof(ta[1].title) <: String
+
+        @test size(titles(ta),1) > 0 
+        @test typeof(titles(ta)[1]) <: String 
+
+        @test size(links(ta),1) > 0 
+        @test typeof(links(ta)[1]) <: String 
+        @test size(timestamps(ta),1) > 0  
+        @test typeof(timestamps(ta)[1]) <: DateTime 
     end
 end

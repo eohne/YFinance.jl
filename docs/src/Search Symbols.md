@@ -5,6 +5,8 @@ This package currently provides two ways to get tickers.
    * you simply want all tickers listed on the NASDAQ, AMEX, or NYSE use `get_all_symbols()`
 
 ````@docs
+YahooSearchItem
+YahooSearch
 get_symbols
 get_all_symbols
 ````

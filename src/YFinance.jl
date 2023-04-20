@@ -12,7 +12,11 @@ module YFinance
     export get_calendar_events,get_earnings_estimates,get_eps,get_insider_holders,get_insider_transactions
     export get_institutional_ownership,get_major_holders_breakdown,get_recommendation_trend
     export get_summary_detail,get_sector_industry,get_upgrade_downgrade_history
-    export get_all_symbols, get_symbols
+    export get_all_symbols, get_symbols, YahooSearch, YahooSearchItem
+    export NewsItem, YahooNews, titles, links, timestamps, search_news
+
+    #Re Exports from Base:
+    export size, getindex, show
 
     # Load Order
     include("Proxy_Auth.jl");
@@ -23,4 +27,5 @@ module YFinance
     include("Options.jl");
     include("ESG.jl");
     include("Search_Symbol.jl");
+    include("News_Search.jl");
 end

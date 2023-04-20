@@ -1,34 +1,20 @@
 const _BASE_URL_ = "https://query2.finance.yahoo.com";
 
-function _clean_prices_nothing(x::Array{Union{Nothing, Float64}})
+function _clean_prices_nothing(x::AbstractArray{<:Any})
     res = Array{Float64}(undef, size(x,1))
     for i in eachindex(x)
         if isnothing.(view(x,i))
-            res[i]=NaN 
+            res[i] = NaN
+        elseif isinteger.(view(x,i))
+            res[i]= Float64(x[i]) 
         else
             res[i] = x[i]
         end
     end
     return res #convert.(Float64, res)
 end
-
-function _clean_prices_nothing(x::Array{Union{Nothing, Int}})
-    res = Array{Float64}(undef, size(x,1))
-    for i in eachindex(x)
-        if isnothing.(view(x,i))
-            res[i]=NaN 
-        else
-            res[i] = Float64.(view(x,i))
-        end
-    end
-    return res #convert.(Float64, res)
-end
-
-function _clean_prices_nothing(x::Array{Float64})
+function _clean_prices_nothing(x::AbstractArray{Float64})
     return x
-end
-function _clean_prices_nothing(x::Array{Int})
-    return convert.(Float64, x)
 end
 
 """

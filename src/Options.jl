@@ -62,7 +62,7 @@ function get_Options(symbol::String;throw_error=false)
      else
          symbol = symbol[1]
      end
-
+     # Could add "date" to query to get only for certain expiration date.
     res = HTTP.get("https://query2.finance.yahoo.com/v7/finance/options/$(symbol)",query = Dict("formatted"=>"false"), proxy=_PROXY_SETTINGS[:proxy],headers=_PROXY_SETTINGS[:auth])    
     res = JSON3.read(res.body)
     puts = res.optionChain.result[1].options[1].puts
