@@ -1,5 +1,5 @@
 # Search for News
-Allows for the search of relevant news to the search term. The search term is typically a ticker/symbol but can also be a company name (or parts of a company name).
+Allows for the search of relevant news to the search term. The search term is typically a symbol (ticker) but can also be a company name (or parts of a company name).
 
 # Structs:
 ````@docs

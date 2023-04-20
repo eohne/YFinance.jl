@@ -54,7 +54,7 @@ julia> titles(x)
  "Best Dow Jones Stocks To Buy And Watch In April: Travelers Surges On Earnings"
  "Top Companies for Financial Strength"
  "VIDEO: Your Top Questions Answe" ⋯ 17 bytes ⋯ "eiling and Portfolio Management"
- "Microsoft agrees to buy \$50m Foxconn parcel in Wisconsin"
+ "Microsoft agrees to buy 50m Foxconn parcel in Wisconsin"
  "LinkedIn Reveals Top Workplace:" ⋯ 19 bytes ⋯ "etflix Rank For Happy Employees"
  "Microsoft Working With Space an" ⋯ 24 bytes ⋯ "Blockchain Data for Azure Cloud"
  ```
@@ -160,7 +160,7 @@ Returns news related to the seach string `str`.
    * lang`::String`: The search language and region. The region is automatically set according to the language. Supported languages are: "en-us", "en-ca", "en-gb", "en-au", "en-nz", "en-SG", "en-in", "de", "es", "fr", "it", "pt-br", "zh", and "zh-tw".
 
 # Returns:  
-   * `YahooNews <: AbstractArray` that contains  `NewsItem`s with fields: title`::String`, publisher::String, link::String, timestamp`::DateTime`, symbols`::Array{String,1}`
+   * `YahooNews <: AbstractArray` that contains  `NewsItem`s with fields: title`::String`, publisher`::String`, link`::String`, timestamp`::DateTime`, symbols`::Array{String,1}`
 
 # Example:
 ```julia
@@ -196,7 +196,7 @@ Publisher:       TheStreet.com
 Link:            https://finance.yahoo.com/m/ebf41ba6-6cbc-38ce-93c5-bcee152080e7/video%3A-your-top-questions.html
 Symbols:         CHPT, MSFT
 
- Title:          Microsoft agrees to buy \$50m Foxconn parcel in Wisconsin
+ Title:          Microsoft agrees to buy 50m Foxconn parcel in Wisconsin
 Timestamp:       Apr 19 16:36 PM
 Publisher:       AP Finance
 Link:            https://finance.yahoo.com/news/board-oks-microsoft-data-center-163630944.html

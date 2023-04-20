@@ -8,6 +8,7 @@
     ## New Functionality
     * `get_symbols` allows the user to search for yahoo finance symbols from (partial) company/security names
     * `get_all_symbols` exposes all tickers from the NASDAQ, AMEX, and NYSE exchanges ([#8](https://github.com/eohne/YFinance.jl/issues/8))
+    * `search_news` now allows for news searches
 
     ## Docs
     * Added documentation for the new functionality
