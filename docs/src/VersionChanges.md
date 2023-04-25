@@ -1,4 +1,4 @@
-!!! info "Master vs v0.1.3"
+!!! info "v0.1.4"
     ## Bug Fix
     * get_prices now returns dictionaries containing price vectors of type Array{Float64} rather than Array{ Union{Nothing,Float64}} ([#7](https://github.com/eohne/YFinance.jl/issues/7)) 
     
