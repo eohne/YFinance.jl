@@ -20,7 +20,8 @@ jobs:
         version:
           - '1.6'
           - '1.7'
-          - 'nightly'
+          - '1.9'
+          - '1.10'
         os:
           - ubuntu-latest
         arch:
