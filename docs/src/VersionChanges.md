@@ -1,3 +1,8 @@
+!!! info "v0.1.5"
+    ## Bug Fix
+    * Implemented Cookies and Crumbs to fix get_quoteSummary() and all functions depending on it ([#14](https://github.com/eohne/YFinance.jl/issues/14)) 
+    
+
 !!! info "v0.1.4"
     ## Bug Fix
     * get_prices now returns dictionaries containing price vectors of type Array{Float64} rather than Array{ Union{Nothing,Float64}} ([#7](https://github.com/eohne/YFinance.jl/issues/7)) 

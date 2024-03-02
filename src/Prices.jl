@@ -116,7 +116,6 @@ function get_prices(symbol::AbstractString; range::AbstractString="5d", interval
     @assert in(interval,validintervals) "The chosen interval is not supported choose one from:\n 1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo"
 
 
-    
 
     if !isequal(startdt,"") || !isequal(enddt,"")
         range = ""

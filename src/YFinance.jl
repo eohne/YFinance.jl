@@ -5,8 +5,9 @@ module YFinance
     using Dates
     using HTTP
     using JSON3
+    using Random
 
-    export _PROXY_SETTINGS, create_proxy_settings,clear_proxy_settings
+    export _PROXY_SETTINGS, create_proxy_settings,clear_proxy_settings, _set_cookies_and_crumb
     export validate_symbol,get_valid_symbols,get_prices,_QuoteSummary_Items,get_quoteSummary
     export _Fundamental_Types, _Fundamental_Intervals,get_Fundamental,get_Options,get_ESG
     export get_calendar_events,get_earnings_estimates,get_eps,get_insider_holders,get_insider_transactions
@@ -19,6 +20,8 @@ module YFinance
     export size, getindex, show
 
     # Load Order
+    include("headers.jl");
+    include("cookie_and_crumb.jl");
     include("Proxy_Auth.jl");
     include("Validity.jl");
     include("Prices.jl");

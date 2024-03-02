@@ -48,6 +48,11 @@ julia> vcat( [DataFrame(i) for i in values(data)]...)
 ```
 """
 function get_Options(symbol::String;throw_error=false)
+    _set_cookies_and_crumb()
+    if isequal(_CRUMB,"")
+        @warn "This item requires a crumb but a crumb could not be successfully retrieved!"
+        return nothing
+    end
 
      # Check if symbol is valid
      old_symbol = symbol
@@ -63,7 +68,7 @@ function get_Options(symbol::String;throw_error=false)
          symbol = symbol[1]
      end
      # Could add "date" to query to get only for certain expiration date.
-    res = HTTP.get("https://query2.finance.yahoo.com/v7/finance/options/$(symbol)",query = Dict("formatted"=>"false"), proxy=_PROXY_SETTINGS[:proxy],headers=_PROXY_SETTINGS[:auth])    
+    res = HTTP.get("https://query2.finance.yahoo.com/v7/finance/options/$(symbol)",query = Dict("formatted"=>"false","crumb"=>_CRUMB), proxy=_PROXY_SETTINGS[:proxy],headers=merge(_PROXY_SETTINGS[:auth],_HEADER),cookies=_COOKIE)    
     res = JSON3.read(res.body)
     puts = res.optionChain.result[1].options[1].puts
     calls = res.optionChain.result[1].options[1].calls

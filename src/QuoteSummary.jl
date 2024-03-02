@@ -67,7 +67,12 @@ JSON3.Object{Vector{UInt8}, SubArray{UInt64, 1, Vector{UInt64}, Tuple{UnitRange{
 ```
 """
 function get_quoteSummary(symbol::String; item=nothing,throw_error=false)
-
+    _set_cookies_and_crumb()
+    if isequal(_CRUMB,"")
+        @warn "This item requires a crumb but a crumb could not be successfully retrieved!"
+        return nothing
+    end
+    
     # Check if symbol is valid
     old_symbol = symbol
     symbol = get_valid_symbols(symbol)
@@ -89,12 +94,12 @@ function get_quoteSummary(symbol::String; item=nothing,throw_error=false)
     @assert all(in.(item, (_QuoteSummary_Items,))) "At least one item is not a valid option. To view options please call _QuoteSummary_Items"
     
     if typeof(item) <: AbstractString
-        q= Dict("formatted" => "false","modules" => item)
+        q= Dict("formatted" => "false","modules" => item,"crumb"=>_CRUMB)
     else
-        q= Dict("formatted" => "false","modules" => join(item,","))
+        q= Dict("formatted" => "false","modules" => join(item,","),"crumb"=>_CRUMB)
     end
     
-    res = HTTP.get("https://query2.finance.yahoo.com/v10/finance/quoteSummary/$(symbol)",query =q, proxy=_PROXY_SETTINGS[:proxy],headers=_PROXY_SETTINGS[:auth])    
+    res = HTTP.get("https://query2.finance.yahoo.com/v10/finance/quoteSummary/$(symbol)",query =q, proxy=_PROXY_SETTINGS[:proxy],headers=merge(_HEADER,_PROXY_SETTINGS[:auth]),cookies=_COOKIE)    
     res = JSON3.read(res.body)
     if typeof(item) <: AbstractString
         return res.quoteSummary.result[1][Symbol(item)]
