@@ -3,13 +3,17 @@ using YFinance
 using Documenter
 makedocs(
          sitename = "YFinance.jl",
-         format = Documenter.HTML(analytics = "G-LFRFQ0X1VF",
-         canonical = "https://eohne.github.io/YFinance.jl/dev/"),
+         format = Documenter.HTML(
+            analytics = "G-LFRFQ0X1VF",
+            canonical = "https://eohne.github.io/YFinance.jl/dev/",
+            description = "Fetch stock market data from Yahoo Finance in Julia. Exposes stock, commodity, futures, currency (FX), mutual fund, and ETF prices, stock fundamental, summary data , and options data."
+            ),
          modules  = [YFinance],
          pages=[
                 "Home" => "index.md",
                 "Function Documentation" =>[
                     "Prices" =>"Prices.md",
+                    "Dividends & Stock Splits" =>"div_split.md",
                     "Fundamental" =>"Fundamental.md",
                     "QuoteSummary" =>"QuoteSummary.md",
                     "Options" =>"Options.md",

@@ -15,6 +15,37 @@ using Test
         ta = get_prices("ADANIENT.NS",startdt =Dates.today()-Year(10) , enddt = Dates.today())
         @test length(ta["timestamp"]) > 100
     end
+    @testset "Dividends and Splits" begin
+        ta = get_prices("GOOGL",interval="1d",startdt="2022-01-01",enddt="2023-01-01",divsplits=true)
+        @test haskey(ta, "div")
+        @test haskey(ta, "split_ratio")
+        @test isequal(maximum(ta["split_ratio"]), 20)
+        @test isequal(length(ta["timestamp"]), length(ta["div"]))
+        @test isequal(length(ta["timestamp"]), length(ta["split_ratio"]))
+        
+        ta = get_prices("WBA",interval="1d",startdt="2022-01-01",enddt="2023-01-01",divsplits=true)
+        @test haskey(ta, "div")
+        @test length(unique(ta["div"]))>2
+    end
+    @testset "Dividends" begin
+        ta = get_dividends("WBA",startdt="2022-01-01",enddt="2023-01-01")
+        @test haskey(ta, "div")
+        @test length(ta["div"])==4
+        
+        ta = get_dividends("GOOGL",startdt="2022-01-01",enddt="2023-01-01")
+        @test haskey(ta, "div")
+        @test isempty(ta["div"])
+    end
+    @testset "Splits" begin
+        ta = get_splits("WBA",startdt="2022-01-01",enddt="2023-01-01")
+        @test haskey(ta, "timestamp")
+        @test haskey(ta, "numerator")
+        @test haskey(ta, "denominator")
+        @test isempty(ta["ratio"])
+        
+        ta = get_splits("GOOGL",startdt="2022-01-01",enddt="2023-01-01")
+        @test isequal(ta["ratio"][1],20)
+    end
     @testset "Fundamental Data" begin
         ta = get_Fundamental("AAPL","income_statement","annual",Dates.today() - Year(5),Dates.today())
         @test in("InterestExpense",keys(ta))

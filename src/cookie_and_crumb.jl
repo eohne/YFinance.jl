@@ -1,6 +1,3 @@
-using Random
-include("headers.jl");
-
 """
     _rand_header()
 

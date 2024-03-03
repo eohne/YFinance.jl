@@ -8,7 +8,8 @@ module YFinance
     using Random
 
     export _PROXY_SETTINGS, create_proxy_settings,clear_proxy_settings, _set_cookies_and_crumb
-    export validate_symbol,get_valid_symbols,get_prices,_QuoteSummary_Items,get_quoteSummary
+    export validate_symbol,get_valid_symbols,get_prices, get_dividends, get_splits
+    export _QuoteSummary_Items,get_quoteSummary
     export _Fundamental_Types, _Fundamental_Intervals,get_Fundamental,get_Options,get_ESG
     export get_calendar_events,get_earnings_estimates,get_eps,get_insider_holders,get_insider_transactions
     export get_institutional_ownership,get_major_holders_breakdown,get_recommendation_trend
