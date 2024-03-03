@@ -1,4 +1,5 @@
 # YFinance.jl
+[![Coverage Status](http://codecov.io/github/eohne/YFinance.jl/coverage.svg?branch=master)](http://codecov.io/github/eohne/YFinance.jl?branch=master)
 [![Build Status](https://github.com/eohne/YFinance.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/eohne/YFinance.jl/actions/workflows/CI.yml?query=branch%3Amaster) [![][docs-stable-img]][docs-stable-url]  
 
 
