@@ -1,7 +1,7 @@
 # YFinance.jl
 [![Coverage Status](http://codecov.io/github/eohne/YFinance.jl/coverage.svg?branch=master)](http://codecov.io/github/eohne/YFinance.jl?branch=master)
 [![Build Status](https://github.com/eohne/YFinance.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/eohne/YFinance.jl/actions/workflows/CI.yml?query=branch%3Amaster) [![][docs-stable-img]][docs-stable-url]  
-
+[![Package Downloads](https://img.shields.io/badge/dynamic/json?url=http%3A%2F%2Fjuliapkgstats.com%2Fapi%2Fv1%2Ftotal_downloads%2FYFinance&query=total_requests&label=Downloads)](http://juliapkgstats.com/pkg/YFinance)
 
 *Download price, fundamental, option, currency, futures, ETF, mutual fund, and various other data from Yahoo Finance*  
 
