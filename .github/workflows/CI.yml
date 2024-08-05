@@ -39,3 +39,5 @@ jobs:
       - uses: codecov/codecov-action@v1
         with:
           files: lcov.info
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
