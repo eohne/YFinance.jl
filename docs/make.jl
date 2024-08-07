@@ -1,5 +1,5 @@
 push!(LOAD_PATH,"../src/")
-using YFinance
+using TSFrames, TimeSeries, YFinance
 using Documenter
 makedocs(
          sitename = "YFinance.jl",
@@ -8,7 +8,11 @@ makedocs(
             canonical = "https://eohne.github.io/YFinance.jl/dev/"
             # description = "Fetch stock market data from Yahoo Finance in Julia. Exposes stock, commodity, futures, currency (FX), mutual fund, and ETF prices, stock fundamental, summary data , and options data."
             ),
-         modules  = [YFinance],
+         modules  = [YFinance,
+         isdefined(Base, :get_extension) ? Base.get_extension(YFinance, :YFinance_TimeSeries) :
+         YFinance.YFinance_TimeSeries,
+         isdefined(Base, :get_extension) ? Base.get_extension(YFinance, :YFinance_TSFrames) :
+         YFinance.YFinance_TSFrames,],
          pages=[
                 "Home" => "index.md",
                 "Function Documentation" =>[

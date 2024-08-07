@@ -13,6 +13,23 @@ DataFrame(prices)
 ```
 ## TimeArray from TimeSeries
 
+If you use Julia 1.9 or newer you can just use a sink argument in `get_prices` instead.
+```julia
+using TimeSeries, YFinance
+get_prices(TimeArray,"AAPL")
+```
+(runtime for this is about 80% faster than `yahoo(:INTC)` from MarketData.jl (median run time: 0.09s vs 0.41s) )
+
+or alternatively
+
+```julia
+using TimeSeries, YFinance
+prices = get_prices("AAPL")
+sink_prices_to(TimeArray,prices)
+```
+
+If you use an older version you can run the below code:
+
 The TimeArray takes a Vector with the timestamp, a matrix with the price data, column names, and some metadata.  
 
 Below is a simple function showing how one may convert the dictionaries containing the price information into a TimeArray - this is most likely not the fastest or most elegant way.
@@ -32,6 +49,23 @@ stock_price_to_time_array(prices)
 ```
 
 ## TSFrame from TSFrames.jl
+
+If you use Julia 1.9 or newer you can just use a sink argument in `get_prices` instead.
+```julia
+using TSFrames, YFinance
+get_prices(TSFrame,"AAPL")
+```
+or alternatively
+
+```julia
+using TSFrames, YFinance
+prices = get_prices("AAPL")
+sink_prices_to(TSFrame,prices)
+```
+
+If you use an older version you can run the below code:
+
+
 The TSFrame takes a matrix, a DateTime index, and a Vector of column names as arguments.  
 
 Below is an example of a function converting the price data to a TSFrame - this is most likely not the fastest or most elegant way.

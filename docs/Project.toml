@@ -1,2 +1,4 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+TSFrames = "9f90e835-9451-4aaa-bcb1-743a1b8d2f84"
+TimeSeries = "9e3dc215-6440-5c97-bce1-76c03772f85e"

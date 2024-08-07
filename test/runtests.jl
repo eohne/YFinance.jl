@@ -1,4 +1,7 @@
-using TimeSeries, TSFrames,YFinance, Dates
+if !isdefined(Base, :get_extension)
+    using TimeSeries, TSFrames
+end
+using YFinance, Dates
 using Test
 
 @testset "YFinance" begin 
@@ -18,8 +21,10 @@ using Test
 
         ta = get_prices("AAPL",range="max",exchange_local_time=true)
         @test length(ta["timestamp"]) > 100
-        @test typeof(sink_prices_to(TimeArray,ta)) <: TimeArray
-        @test typeof(sink_prices_to(TSFrame,ta)) <: TSFrame
+        if !isdefined(Base, :get_extension)
+            @test typeof(sink_prices_to(TimeArray,ta)) <: TimeArray
+            @test typeof(sink_prices_to(TSFrame,ta)) <: TSFrame
+        end
 
         ta = get_prices("AAPL",interval="1m",range="5d")
         @test length(ta["timestamp"]) > 100
@@ -27,12 +32,14 @@ using Test
         ta = get_prices("ADANIENT.NS",startdt =Dates.today()-Year(10) , enddt = Dates.today())
         @test length(ta["timestamp"]) > 100
 
-        ta = get_prices(TimeArray,"AAPL",interval="1m",range="5d")
-        @test typeof(ta) <:TimeArray
-        @test size(ta,2) ==5
-        ta = get_prices(TSFrame, "AAPL",interval="1m",range="5d")
-        @test typeof(ta) <:TSFrame
-        @test ncol(ta) ==6
+        if !isdefined(Base, :get_extension)
+            ta = get_prices(TimeArray,"AAPL",interval="1m",range="5d")
+            @test typeof(ta) <:TimeArray
+            @test size(ta,2) ==5
+            ta = get_prices(TSFrame, "AAPL",interval="1m",range="5d")
+            @test typeof(ta) <:TSFrame
+            @test ncol(ta) ==6
+        end
     end
     @testset "Dividends and Splits" begin
         ta = get_prices("GOOGL",interval="1d",startdt="2022-01-01",enddt="2023-01-01",divsplits=true)
