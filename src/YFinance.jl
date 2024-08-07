@@ -16,6 +16,7 @@ module YFinance
     export get_summary_detail,get_sector_industry,get_upgrade_downgrade_history
     export get_all_symbols, get_symbols, YahooSearch, YahooSearchItem
     export NewsItem, YahooNews, titles, links, timestamps, search_news
+    export sink_prices_to
 
     #Re Exports from Base:
     export size, getindex, show
