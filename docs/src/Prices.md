@@ -8,7 +8,7 @@ For performance reasons and easier integration with `TimeSeries.jl` these `nothi
 
 
 ````@docs
-get_prices(::Symbol)
+get_prices(::AbstractString)
 ````
 
 ## Optional Sink Argument (Julia 1.9+)
@@ -18,7 +18,7 @@ If you want to return a TimeArray from TimeSeries.jl execute `get_prices(TimeArr
 
 ````@docs
 get_prices(::Type{TSFrame})
-get_prices(::Type{TimeSeries})
+get_prices(::Type{TimeArray})
 ````
 
 

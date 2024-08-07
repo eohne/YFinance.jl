@@ -149,7 +149,7 @@ using Test
     end
 
     @testset "Cookies" begin
-        ta = _renew_cookies_and_crumb()
+        ta = YFinance._renew_cookies_and_crumb()
         @test typeof(ta) <: String
     end
 
