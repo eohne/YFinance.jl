@@ -17,9 +17,6 @@ TSFrames = "9f90e835-9451-4aaa-bcb1-743a1b8d2f84"
 TimeSeries = "9e3dc215-6440-5c97-bce1-76c03772f85e"
 
 [extensions]
-# name of extension to the left
-# extension dependencies required to load the extension to the right
-# use a list for multiple extension dependencies
 YFinance_TimeSeries = "TimeSeries"
 YFinance_TSFrames = "TSFrames"
 

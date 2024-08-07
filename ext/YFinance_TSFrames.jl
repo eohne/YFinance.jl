@@ -1,6 +1,6 @@
 module YFinance_TSFrames
 
-using TSFrames, YFiance
+using TSFrames, YFinance
 
 
 """
@@ -50,4 +50,3 @@ function YFinance.get_prices(::Type{TSFrame},symbol::AbstractString; range::Abst
 end
 
 end
-

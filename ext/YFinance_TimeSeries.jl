@@ -1,6 +1,6 @@
 module YFinance_TimeSeries
 
-using TimeSeries, YFiance
+using TimeSeries, YFinance
 
 
 """
@@ -43,7 +43,7 @@ You can either provide a `range` or a `startdt` and an `enddt`.
  * `divsplits::Bool` defaults to `false`. If set to true dividends and stock split data is also returned. Split data contains the numerator, denominator, and split ratio. The interval needs to be set to "1d" for this to work.
 ```
 """
-function YFinance.get_prices(::Type{TSFrame},symbol::AbstractString; range::AbstractString="5d", interval::AbstractString="1d",startdt="", enddt="",prepost=false,autoadjust=true,timeout = 10,throw_error=false,exchange_local_time=false,divsplits=false)
+function YFinance.get_prices(::Type{TimeArray},symbol::AbstractString; range::AbstractString="5d", interval::AbstractString="1d",startdt="", enddt="",prepost=false,autoadjust=true,timeout = 10,throw_error=false,exchange_local_time=false,divsplits=false)
     x = YFinance.get_prices(symbol; range=range, interval=interval,startdt=startdt, enddt=enddt,prepost=prepost,autoadjust=autoadjust,timeout = timeout,throw_error=throw_error,exchange_local_time=exchange_local_time,divsplits=divsplits)
     return YFinance.sink_prices_to(TimeArray,x)
 end
