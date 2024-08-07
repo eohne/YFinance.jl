@@ -32,7 +32,7 @@ using Test
         @test size(ta,2) ==5
         ta = get_prices(TSFrame, "AAPL",interval="1m",range="5d")
         @test typeof(ta) <:TSFrame
-        @test size(ta,2) ==6
+        @test ncol(ta) ==6
     end
     @testset "Dividends and Splits" begin
         ta = get_prices("GOOGL",interval="1d",startdt="2022-01-01",enddt="2023-01-01",divsplits=true)
@@ -45,19 +45,19 @@ using Test
     end
     @testset "Dividends" begin
         ta = get_dividends("WBA",startdt="2022-01-01",enddt="2023-01-01")
-        ta = get_dividends("TSLA",startdt="2022-01-01",enddt="2023-01-01")
         @test haskey(ta, "div")
         @test length(ta["div"])==4
-        
+        ta = get_dividends("TSLA",startdt="2022-01-01",enddt="2023-01-01")
+        @test isempty(ta["div"])
     end
     @testset "Splits" begin
         ta = get_splits("WBA",startdt="2022-01-01",enddt="2023-01-01")
-        ta = get_splits("TSLA",startdt="2022-01-01",enddt="2023-01-01")
         @test haskey(ta, "timestamp")
         @test haskey(ta, "numerator")
         @test haskey(ta, "denominator")
         @test isempty(ta["ratio"])
-        
+        ta = get_splits("TSLA",startdt="2022-01-01",enddt="2023-01-01")
+        @test !isempty(ta["ratio"])
     end
     @testset "Fundamental Data" begin
         ta = get_Fundamental("AAPL","income_statement","annual",Dates.today() - Year(5),Dates.today())
@@ -148,7 +148,7 @@ using Test
         create_proxy_settings("someproxy","username123","pw123")
         @test _PROXY_SETTINGS.proxy=="someproxy"
         @test typeof(_PROXY_SETTINGS.auth) <:Dict
-        @test _PROXY_SETTINGS.auth["Proxy-Authorization"] <: String
+        @test typeof(_PROXY_SETTINGS.auth["Proxy-Authorization"]) <: String
         @test _PROXY_SETTINGS.auth["Proxy-Authorization"]=="Basic dXNlcm5hbWUxMjM6cHcxMjM="
         clear_proxy_settings()
         @test isnothing(_PROXY_SETTINGS.proxy)
