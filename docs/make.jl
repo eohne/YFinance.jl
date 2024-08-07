@@ -1,5 +1,6 @@
 push!(LOAD_PATH,"../src/")
-using TSFrames, TimeSeries, YFinance
+using YFinance
+using TSFrames, TimeSeries
 using Documenter
 makedocs(
          sitename = "YFinance.jl",
