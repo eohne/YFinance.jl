@@ -1,7 +1,7 @@
 push!(LOAD_PATH,"../src/")
 using YFinance
 using TSFrames, TimeSeries
-using Documenter
+using Documenter, OrderedCollections
 makedocs(
          sitename = "YFinance.jl",
          format = Documenter.HTML(
