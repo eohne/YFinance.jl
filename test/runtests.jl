@@ -11,6 +11,9 @@ using Test
 
         ta = get_prices("ADANIENT.NS",startdt =Dates.today()-Year(10) , enddt = Dates.today())
         @test length(ta["timestamp"]) > 100
+
+        ta = get_prices("ADANIENT.NS",startdt ="2014-08-07" , enddt = "20204-08-07")
+        @test length(ta["timestamp"]) > 100
     end
     @testset "Dividends and Splits" begin
         ta = get_prices("GOOGL",interval="1d",startdt="2022-01-01",enddt="2023-01-01",divsplits=true)

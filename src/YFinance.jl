@@ -39,10 +39,10 @@ module YFinance
     @setup_workload begin
         @compile_workload begin
             get_prices("AAPL",interval = "1m",range="1d")
-            get_prices("AAPL",interval = "1d",startdtd=Date(2009,01,01), enddt = Date(2009,01,05))
-            get_prices("AAPL",interval = "1d",startdtd="2009-01-01", enddt = "2009-01-05")
-            get_prices("AAPL",interval = "1d",startdtd="2009-01-01", enddt = "2009-01-05",prepost=true)
-            get_prices("AAPL",interval = "1d",startdtd="2009-01-01", enddt = "2009-01-05",divsplits=true)
+            get_prices("AAPL",interval = "1d",startdt=Date(2009,01,01), enddt = Date(2009,01,05))
+            get_prices("AAPL",interval = "1d",startdt="2009-01-01", enddt = "2009-01-05")
+            get_prices("AAPL",interval = "1d",startdt="2009-01-01", enddt = "2009-01-05",prepost=true)
+            get_prices("AAPL",interval = "1d",startdt="2009-01-01", enddt = "2009-01-05",divsplits=true)
         end
     end
 end
