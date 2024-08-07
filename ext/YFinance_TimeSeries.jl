@@ -1,6 +1,6 @@
 module YFinance_TimeSeries
 
-using TimeSeries, YFinance
+using TimeSeries, OrderedCollections, YFinance
 
 
 """

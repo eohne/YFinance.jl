@@ -1,6 +1,6 @@
 module YFinance_TSFrames
 
-using TSFrames, YFinance
+using TSFrames,OrderedCollections, YFinance
 
 
 """
