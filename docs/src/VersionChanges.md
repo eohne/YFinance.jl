@@ -1,3 +1,14 @@
+!!! info "v0.1.6"
+    ## Improvements
+    * `get_prices` can now return dividends and splits ([#11](https://github.com/eohne/YFinance.jl/issues/11), [#18](https://github.com/eohne/YFinance.jl/issues/18))
+    * `get_prices` can now directly return TimeArrays (TimeSeries.jl) and TSFrame (TSFrames.jl). Julia 1.9 is required and the respective packages need to be loaded
+    * added some precompilation for `get_prices` (this will require a valid internet connection when the package is loaded first/installed)
+
+    ## New Functionality
+    * `get_splits` returns stock split information
+    * `get_dividends` returns dividend information
+    * `sink_prices_to` allows for easy conversion to TimeArrays (TimeSeries.jl) and TSFrame (TSFrames.jl). Julia 1.9 is required and the respective packages need to be loaded
+
 !!! info "v0.1.5"
     ## Bug Fix
     * Implemented Cookies and Crumbs to fix get_quoteSummary() and all functions depending on it ([#14](https://github.com/eohne/YFinance.jl/issues/14)) 
