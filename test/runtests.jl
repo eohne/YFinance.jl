@@ -1,10 +1,25 @@
-using YFinance, Dates
+using TimeSeries, TSFrames,YFinance, Dates
 using Test
 
-@testset "YFinance" begin
+@testset "YFinance" begin 
     @testset "Get Prices" begin
-        ta = get_prices("AAPL",range="max")
+        ta = get_valid_symbols(["aapl","amd","adsflajsldf"])
+        @test ta==["aapl","amd"]
+
+        ta=YFinance._date_to_unix("2000-01-01","2010-01-01")
+        @test ta==(946684800, 1262304000)
+        ta=YFinance._date_to_unix(Date(200,1,1),Date(201,1,1))
+        @test ta==(-55855785600, -55824249600)
+        ta=YFinance._date_to_unix(DateTime(200,1,1),DateTime(201,1,1))
+        @test ta==(-55855785600, -55824249600)
+
+        @test_throws ErrorException get_prices("aapl",interval="1m", range="1mo")
+        @test_throws ErrorException get_prices("aapl",interval="1m",startdt="2000-01-01", enddt="2020-10-01")
+
+        ta = get_prices("AAPL",range="max",exchange_local_time=true)
         @test length(ta["timestamp"]) > 100
+        @test typeof(sink_prices_to(TimeArray,ta)) <: TimeArray
+        @test typeof(sink_prices_to(TSFrame,ta)) <: TSFrame
 
         ta = get_prices("AAPL",interval="1m",range="5d")
         @test length(ta["timestamp"]) > 100
@@ -12,8 +27,12 @@ using Test
         ta = get_prices("ADANIENT.NS",startdt =Dates.today()-Year(10) , enddt = Dates.today())
         @test length(ta["timestamp"]) > 100
 
-        ta = get_prices("ADANIENT.NS",startdt ="2014-08-07" , enddt = "20204-08-07")
-        @test length(ta["timestamp"]) > 100
+        ta = get_prices(TimeArray,"AAPL",interval="1m",range="5d")
+        @test typeof(ta) <:TimeArray
+        @test size(ta,2) ==5
+        ta = get_prices(TSFrame, "AAPL",interval="1m",range="5d")
+        @test typeof(ta) <:TSFrame
+        @test size(ta,2) ==6
     end
     @testset "Dividends and Splits" begin
         ta = get_prices("GOOGL",interval="1d",startdt="2022-01-01",enddt="2023-01-01",divsplits=true)
@@ -26,12 +45,14 @@ using Test
     end
     @testset "Dividends" begin
         ta = get_dividends("WBA",startdt="2022-01-01",enddt="2023-01-01")
+        ta = get_dividends("TSLA",startdt="2022-01-01",enddt="2023-01-01")
         @test haskey(ta, "div")
         @test length(ta["div"])==4
         
     end
     @testset "Splits" begin
         ta = get_splits("WBA",startdt="2022-01-01",enddt="2023-01-01")
+        ta = get_splits("TSLA",startdt="2022-01-01",enddt="2023-01-01")
         @test haskey(ta, "timestamp")
         @test haskey(ta, "numerator")
         @test haskey(ta, "denominator")
@@ -97,6 +118,7 @@ using Test
         @test length(ta) >0 
         @test typeof(ta[1]) <: YahooSearchItem
         @test typeof(ta[1].symbol) <: String
+        @test isnothing(show(ta));
 
         ta = get_symbols("asjdflkalskjfdkjalk")
         @test typeof(ta) <: YahooSearch
@@ -117,5 +139,20 @@ using Test
         @test typeof(links(ta)[1]) <: String 
         @test size(timestamps(ta),1) > 0  
         @test typeof(timestamps(ta)[1]) <: DateTime 
+    end
+
+    @testset "Create Proxy" begin
+        @test isnothing(_PROXY_SETTINGS.proxy)
+        @test typeof(_PROXY_SETTINGS.auth) <:Dict
+        @test isempty(_PROXY_SETTINGS.auth) 
+        create_proxy_settings("someproxy","username123","pw123")
+        @test _PROXY_SETTINGS.proxy=="someproxy"
+        @test typeof(_PROXY_SETTINGS.auth) <:Dict
+        @test _PROXY_SETTINGS.auth["Proxy-Authorization"] <: String
+        @test _PROXY_SETTINGS.auth["Proxy-Authorization"]=="Basic dXNlcm5hbWUxMjM6cHcxMjM="
+        clear_proxy_settings()
+        @test isnothing(_PROXY_SETTINGS.proxy)
+        @test typeof(_PROXY_SETTINGS.auth) <:Dict
+        @test isempty(_PROXY_SETTINGS.auth)
     end
 end

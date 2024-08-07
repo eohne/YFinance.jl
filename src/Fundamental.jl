@@ -452,18 +452,7 @@ function get_Fundamental(symbol::AbstractString, item::AbstractString,interval::
     # Check Start and end dates. 
     if !isequal(startdt,"") || !isequal(enddt,"")
         range = ""
-        if typeof(startdt) <: Date
-            startdt = Int(round(Dates.datetime2unix(Dates.DateTime(startdt))))
-            enddt = Int(round(Dates.datetime2unix(Dates.DateTime(enddt))))
-        elseif typeof(startdt) <:DateTime
-            startdt = Int(round(Dates.datetime2unix(startdt)))
-            enddt = Int(round(Dates.datetime2unix(enddt)))
-        elseif typeof(startdt) <: AbstractString
-            startdt = Int(round(Dates.datetime2unix(Dates.DateTime(Dates.Date(startdt,Dates.DateFormat("yyyy-mm-dd"))))))
-            enddt = Int(round(Dates.datetime2unix(Dates.DateTime(Dates.Date(enddt,Dates.DateFormat("yyyy-mm-dd"))))))
-        else
-            error("Startdt and Enddt must be either a Date, a DateTime, or a string of the following format yyyy-mm-dd!")
-        end
+        startdt, enddt = _date_to_unix(startdt,enddt)
     end
     @assert in(interval, _Fundamental_Intervals) "Chosen interval is not supported. Choose one of: annual, quarterly, monthly"
     #Build Query:
