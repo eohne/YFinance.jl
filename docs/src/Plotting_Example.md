@@ -45,8 +45,9 @@ plot(get_prices(TimeArray,"AAPL",interval = "1m",range="1d")[1:25] , seriestype 
   
 # Plot Multiple Items
 For illustration I used Apple (AAPL), the S&P500 (^GSPC), and the NASDAQ (^IXIC) for this.
+To show the interoparability with TSFrames.jl we will sink to TSFrame in this example
   
-## Download Data and convert to DataFrame
+## Download Data as a TSFrame
 ```julia
 # Lets use TSFrames now for this example.
 
@@ -103,10 +104,11 @@ is_apple = get_Fundamental("AAPL","income_statement","annual","2020-01-01","2024
 is_apple.ProfitM = is_apple.NetIncome./is_apple.TotalRevenue;
 is_apple.OperIncM = is_apple.OperatingIncome./is_apple.TotalRevenue;
 is_apple.GrossProfitM = is_apple.GrossProfit./is_apple.TotalRevenue;
-select!(is_apple,:timestamp,:GrossProfitM,:OperIncM, :ProfitM)
-plot(is_apple.timestamp, is_apple[:,2],label = names(is_apple)[2], seriestype = :bar, legend=true, size=(800,500))
-plot!(is_apple.timestamp, is_apple[:,3],label = names(is_apple)[3], seriestype = :bar)
-plot!(is_apple.timestamp, is_apple[:,4],label = names(is_apple)[4], seriestype = :bar)
+
+# Plot:
+plot(is_apple.timestamp, is_apple.GrossProfitM,label = names(is_apple)[2], seriestype = :bar, legend=true)
+plot!(is_apple.timestamp, is_apple.OperIncM,label = names(is_apple)[3], seriestype = :bar)
+plot!(is_apple.timestamp, is_apple.ProfitM,label = names(is_apple)[4], seriestype = :bar)
 ```
 ![Profit Margin Over Time](assets/Income.svg)
 

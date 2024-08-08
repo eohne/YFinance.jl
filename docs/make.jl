@@ -30,7 +30,7 @@ makedocs(
                 ],
                 "Example Usage" => [
                     "Convert to DataFrames, TimeArrays, TSFrames" => "DataFramesetc.md",
-                    "Plotting Data with PlotlyJS" => "Plotting_Example.md"
+                    "Plotting Data" => "Plotting_Example.md"
                 ],
                 "Version Change Log" => "VersionChanges.md"
                ])
