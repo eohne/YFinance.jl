@@ -1,176 +1,59 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Plotting Data with PlotlyJS · YFinance.jl</title><meta name="title" content="Plotting Data with PlotlyJS · YFinance.jl"/><meta property="og:title" content="Plotting Data with PlotlyJS · YFinance.jl"/><meta property="twitter:title" content="Plotting Data with PlotlyJS · YFinance.jl"/><meta name="description" content="Documentation for YFinance.jl."/><meta property="og:description" content="Documentation for YFinance.jl."/><meta property="twitter:description" content="Documentation for YFinance.jl."/><meta property="og:url" content="https://eohne.github.io/YFinance.jl/dev/Plotting_Example/"/><meta property="twitter:url" content="https://eohne.github.io/YFinance.jl/dev/Plotting_Example/"/><link rel="canonical" href="https://eohne.github.io/YFinance.jl/dev/Plotting_Example/"/><script async src="https://www.googletagmanager.com/gtag/js?id=G-LFRFQ0X1VF"></script><script>  window.dataLayer = window.dataLayer || [];
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Plotting Data · YFinance.jl</title><meta name="title" content="Plotting Data · YFinance.jl"/><meta property="og:title" content="Plotting Data · YFinance.jl"/><meta property="twitter:title" content="Plotting Data · YFinance.jl"/><meta name="description" content="Documentation for YFinance.jl."/><meta property="og:description" content="Documentation for YFinance.jl."/><meta property="twitter:description" content="Documentation for YFinance.jl."/><meta property="og:url" content="https://eohne.github.io/YFinance.jl/dev/Plotting_Example/"/><meta property="twitter:url" content="https://eohne.github.io/YFinance.jl/dev/Plotting_Example/"/><link rel="canonical" href="https://eohne.github.io/YFinance.jl/dev/Plotting_Example/"/><script async src="https://www.googletagmanager.com/gtag/js?id=G-LFRFQ0X1VF"></script><script>  window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-LFRFQ0X1VF', {'page_path': location.pathname + location.search + location.hash});
-</script><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../">YFinance.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><span class="tocitem">Function Documentation</span><ul><li><a class="tocitem" href="../Prices/">Prices</a></li><li><a class="tocitem" href="../div_split/">Dividends &amp; Splits</a></li><li><a class="tocitem" href="../Fundamental/">Fundamental</a></li><li><a class="tocitem" href="../QuoteSummary/">QuoteSummary</a></li><li><a class="tocitem" href="../Options/">Options</a></li><li><a class="tocitem" href="../ESG/">ESG</a></li><li><a class="tocitem" href="../Search Symbols/">Search for Symbol</a></li><li><a class="tocitem" href="../News Search/">Get News</a></li><li><a class="tocitem" href="../Proxies/">Proxy</a></li><li><a class="tocitem" href="../AllFunctions/">All Functions</a></li></ul></li><li><span class="tocitem">Example Usage</span><ul><li><a class="tocitem" href="../DataFramesetc/">Convert to DataFrames, TimeArrays, TSFrames</a></li><li class="is-active"><a class="tocitem" href>Plotting Data with PlotlyJS</a><ul class="internal"><li><a class="tocitem" href="#Packages-Used"><span>Packages Used</span></a></li><li><a class="tocitem" href="#Load-the-packages:"><span>Load the packages:</span></a></li><li><a class="tocitem" href="#Retriev-price-information-for-AAPL"><span>Retriev price information for AAPL</span></a></li><li class="toplevel"><a class="tocitem" href="#OHLC-Plot-(Intraday)"><span>OHLC Plot (Intraday)</span></a></li><li><a class="tocitem" href="#Plot-Layout"><span>Plot Layout</span></a></li><li><a class="tocitem" href="#The-Plot:"><span>The Plot:</span></a></li><li class="toplevel"><a class="tocitem" href="#Plot-Multiple-Items"><span>Plot Multiple Items</span></a></li><li><a class="tocitem" href="#Download-Data-and-convert-to-DataFrame"><span>Download Data and convert to DataFrame</span></a></li><li><a class="tocitem" href="#OHLC-Plot-of-a-specific-ticker"><span>OHLC Plot of a specific ticker</span></a></li><li><a class="tocitem" href="#Comparsion-Plot-raw-prices"><span>Comparsion Plot - raw prices</span></a></li><li><a class="tocitem" href="#Comparison-Plot-Wealth-Index"><span>Comparison Plot - Wealth Index</span></a></li><li class="toplevel"><a class="tocitem" href="#ESG-Data-Bar-Chart"><span>ESG Data Bar Chart</span></a></li><li><a class="tocitem" href="#Download-ESG-Data"><span>Download ESG Data</span></a></li><li><a class="tocitem" href="#Plotting:"><span>Plotting:</span></a></li><li class="toplevel"><a class="tocitem" href="#Pie-Chart-of-the-major-Holders"><span>Pie Chart of the major Holders</span></a></li><li><a class="tocitem" href="#Downloading-the-Data"><span>Downloading the Data</span></a></li><li><a class="tocitem" href="#Creating-the-Pie-Chart"><span>Creating the Pie Chart</span></a></li></ul></li></ul></li><li><a class="tocitem" href="../VersionChanges/">Version Change Log</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Example Usage</a></li><li class="is-active"><a href>Plotting Data with PlotlyJS</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Plotting Data with PlotlyJS</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/eohne/YFinance.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/eohne/YFinance.jl/blob/master/docs/src/Plotting_Example.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Plotting-Some-Data"><a class="docs-heading-anchor" href="#Plotting-Some-Data">Plotting Some Data</a><a id="Plotting-Some-Data-1"></a><a class="docs-heading-anchor-permalink" href="#Plotting-Some-Data" title="Permalink"></a></h1><p>This section gives some examples on how to create plots for a few data items - quite a lot of data that is available is not covered here.</p><h2 id="Packages-Used"><a class="docs-heading-anchor" href="#Packages-Used">Packages Used</a><a id="Packages-Used-1"></a><a class="docs-heading-anchor-permalink" href="#Packages-Used" title="Permalink"></a></h2><ul><li><em>DataFrames.jl</em> for easier data handling</li><li><em>Dates.jl</em> because we need dates ;) </li><li><em>PlotlyJS.jl</em> for our plots</li></ul><h2 id="Load-the-packages:"><a class="docs-heading-anchor" href="#Load-the-packages:">Load the packages:</a><a id="Load-the-packages:-1"></a><a class="docs-heading-anchor-permalink" href="#Load-the-packages:" title="Permalink"></a></h2><pre><code class="language-julia hljs">using YFinance
-using DataFrames
-using Dates
-using PlotlyJS</code></pre><h2 id="Retriev-price-information-for-AAPL"><a class="docs-heading-anchor" href="#Retriev-price-information-for-AAPL">Retriev price information for AAPL</a><a id="Retriev-price-information-for-AAPL-1"></a><a class="docs-heading-anchor-permalink" href="#Retriev-price-information-for-AAPL" title="Permalink"></a></h2><p>Here we use intraday price information.</p><pre><code class="language-julia hljs">AAPL = get_prices(&quot;AAPL&quot;,interval = &quot;1m&quot;,range=&quot;1d&quot;)</code></pre><h1 id="OHLC-Plot-(Intraday)"><a class="docs-heading-anchor" href="#OHLC-Plot-(Intraday)">OHLC Plot (Intraday)</a><a id="OHLC-Plot-(Intraday)-1"></a><a class="docs-heading-anchor-permalink" href="#OHLC-Plot-(Intraday)" title="Permalink"></a></h1><h2 id="Plot-Layout"><a class="docs-heading-anchor" href="#Plot-Layout">Plot Layout</a><a id="Plot-Layout-1"></a><a class="docs-heading-anchor-permalink" href="#Plot-Layout" title="Permalink"></a></h2><p>This is not really needed just styles the plot and adds a rangeslider and rangeselector.</p><pre><code class="language-julia hljs"># Creates the Layout for our plots (not really needed unless you want to style the plots)
-function plot_layout_minute(title=&quot;&quot;) 
-    l =  Layout(
-        title_text = &quot;&lt;b&gt;$(title)&lt;/b&gt;&quot;,
-        paper_bgcolor =:white,
-        plot_bgcolor =:white,
-        yaxis = attr(
-            gridcolor=:lightgrey,
-            griddash=&quot;dot&quot;,
-            zerolinecolor=:lightgrey),
-        xaxis=attr(
-            gridcolor=:lightgrey,
-            griddash=&quot;dot&quot;,
-            zerolinecolor=:lightgrey,
-            rangeslider_visible=true,
-            rangeselector=attr(
-                buttons=[
-                    attr(count=5, label=&quot;5m&quot;, step=&quot;minute&quot;, stepmode=&quot;backward&quot;),
-                    attr(count=10, label=&quot;10m&quot;, step=&quot;minute&quot;, stepmode=&quot;backward&quot;),
-                    attr(count=15, label=&quot;15m&quot;, step=&quot;minute&quot;, stepmode=&quot;backward&quot;),
-                    attr(count=30, label=&quot;30m&quot;, step=&quot;minute&quot;, stepmode=&quot;backward&quot;),
-                    attr(count=1, label=&quot;1h&quot;, step=&quot;hour&quot;, stepmode=&quot;backward&quot;),
-                    attr(count=2, label=&quot;2h&quot;, step=&quot;hour&quot;, stepmode=&quot;backward&quot;),
-                    attr(count=5, label=&quot;5h&quot;, step=&quot;hour&quot;, stepmode=&quot;backward&quot;),
-                    attr(step=&quot;all&quot;)
-                    ])))
-    return l
-end;
+</script><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../">YFinance.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><span class="tocitem">Function Documentation</span><ul><li><a class="tocitem" href="../Prices/">Prices</a></li><li><a class="tocitem" href="../div_split/">Dividends &amp; Splits</a></li><li><a class="tocitem" href="../Fundamental/">Fundamental</a></li><li><a class="tocitem" href="../QuoteSummary/">QuoteSummary</a></li><li><a class="tocitem" href="../Options/">Options</a></li><li><a class="tocitem" href="../ESG/">ESG</a></li><li><a class="tocitem" href="../Search Symbols/">Search for Symbol</a></li><li><a class="tocitem" href="../News Search/">Get News</a></li><li><a class="tocitem" href="../Proxies/">Proxy</a></li><li><a class="tocitem" href="../AllFunctions/">All Functions</a></li></ul></li><li><span class="tocitem">Example Usage</span><ul><li><a class="tocitem" href="../DataFramesetc/">Convert to DataFrames, TimeArrays, TSFrames</a></li><li class="is-active"><a class="tocitem" href>Plotting Data</a><ul class="internal"><li><a class="tocitem" href="#Packages-Used"><span>Packages Used</span></a></li><li><a class="tocitem" href="#Load-the-packages:"><span>Load the packages:</span></a></li><li><a class="tocitem" href="#Retriev-price-information-for-AAPL"><span>Retriev price information for AAPL</span></a></li><li class="toplevel"><a class="tocitem" href="#OHLC-Plot-(Intraday)"><span>OHLC Plot (Intraday)</span></a></li><li><a class="tocitem" href="#The-Plot:"><span>The Plot:</span></a></li><li class="toplevel"><a class="tocitem" href="#Plot-Multiple-Items"><span>Plot Multiple Items</span></a></li><li><a class="tocitem" href="#Download-Data-as-a-TSFrame"><span>Download Data as a TSFrame</span></a></li><li><a class="tocitem" href="#Comparsion-Plot-raw-prices"><span>Comparsion Plot - raw prices</span></a></li><li><a class="tocitem" href="#Comparison-Plot-Wealth-Index"><span>Comparison Plot - Wealth Index</span></a></li><li class="toplevel"><a class="tocitem" href="#Get-Fundamental-Data-Example-Income-Statement"><span>Get Fundamental Data - Example Income Statement</span></a></li><li class="toplevel"><a class="tocitem" href="#ESG-Data-Bar-Chart"><span>ESG Data Bar Chart</span></a></li><li class="toplevel"><a class="tocitem" href="#Pie-Chart-of-the-major-Holders"><span>Pie Chart of the major Holders</span></a></li><li><a class="tocitem" href="#Downloading-the-Data"><span>Downloading the Data</span></a></li><li><a class="tocitem" href="#Creating-the-Pie-Chart"><span>Creating the Pie Chart</span></a></li></ul></li></ul></li><li><a class="tocitem" href="../VersionChanges/">Version Change Log</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Example Usage</a></li><li class="is-active"><a href>Plotting Data</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Plotting Data</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/eohne/YFinance.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/eohne/YFinance.jl/blob/master/docs/src/Plotting_Example.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Plotting-Some-Data"><a class="docs-heading-anchor" href="#Plotting-Some-Data">Plotting Some Data</a><a id="Plotting-Some-Data-1"></a><a class="docs-heading-anchor-permalink" href="#Plotting-Some-Data" title="Permalink"></a></h1><p>This section gives some examples on how to create plots for a few data items - quite a lot of data that is available is not covered here.</p><h2 id="Packages-Used"><a class="docs-heading-anchor" href="#Packages-Used">Packages Used</a><a id="Packages-Used-1"></a><a class="docs-heading-anchor-permalink" href="#Packages-Used" title="Permalink"></a></h2><ul><li><em>DataFrames.jl</em> for easier data handling</li><li><em>TimeSeries.jl</em> To show interoperability with TimeArray </li><li><em>TSFrames.jl</em> To show interoperability with TSFrame</li><li><em>Dates.jl</em> because we need dates </li><li><em>Plots.jl</em></li><li><em>StatsPlots.jl</em></li></ul><h2 id="Load-the-packages:"><a class="docs-heading-anchor" href="#Load-the-packages:">Load the packages:</a><a id="Load-the-packages:-1"></a><a class="docs-heading-anchor-permalink" href="#Load-the-packages:" title="Permalink"></a></h2><pre><code class="language-julia hljs">using YFinance
+using DataFrames, Dates, Plots, StatsPlots</code></pre><h2 id="Retriev-price-information-for-AAPL"><a class="docs-heading-anchor" href="#Retriev-price-information-for-AAPL">Retriev price information for AAPL</a><a id="Retriev-price-information-for-AAPL-1"></a><a class="docs-heading-anchor-permalink" href="#Retriev-price-information-for-AAPL" title="Permalink"></a></h2><p>Here we use intraday price information.</p><pre><code class="language-julia hljs">AAPL = get_prices(&quot;AAPL&quot;,interval = &quot;1m&quot;,range=&quot;1d&quot;)</code></pre><h1 id="OHLC-Plot-(Intraday)"><a class="docs-heading-anchor" href="#OHLC-Plot-(Intraday)">OHLC Plot (Intraday)</a><a id="OHLC-Plot-(Intraday)-1"></a><a class="docs-heading-anchor-permalink" href="#OHLC-Plot-(Intraday)" title="Permalink"></a></h1><p>Here we can use the TimeSeries package. One can instead also just use the data from the dictionary, or sink into a DataFrame or a TSFrame</p><h2 id="The-Plot:"><a class="docs-heading-anchor" href="#The-Plot:">The Plot:</a><a id="The-Plot:-1"></a><a class="docs-heading-anchor-permalink" href="#The-Plot:" title="Permalink"></a></h2><p>Plotting the first 25 values.</p><pre><code class="language-julia hljs">plot( sink_prices_to(TimeArray,AAPL)[1:25] , seriestype = :candlestick)
+# Alternative call:
+plot(get_prices(TimeArray,&quot;AAPL&quot;,interval = &quot;1m&quot;,range=&quot;1d&quot;)[1:25] , seriestype = :candlestick)</code></pre><p><img src="../assets/CandleMin.svg" alt="OHCL Plot"/></p><h1 id="Plot-Multiple-Items"><a class="docs-heading-anchor" href="#Plot-Multiple-Items">Plot Multiple Items</a><a id="Plot-Multiple-Items-1"></a><a class="docs-heading-anchor-permalink" href="#Plot-Multiple-Items" title="Permalink"></a></h1><p>For illustration I used Apple (AAPL), the S&amp;P500 (^GSPC), and the NASDAQ (^IXIC) for this. To show the interoparability with TSFrames.jl we will sink to TSFrame in this example</p><h2 id="Download-Data-as-a-TSFrame"><a class="docs-heading-anchor" href="#Download-Data-as-a-TSFrame">Download Data as a TSFrame</a><a id="Download-Data-as-a-TSFrame-1"></a><a class="docs-heading-anchor-permalink" href="#Download-Data-as-a-TSFrame" title="Permalink"></a></h2><pre><code class="language-julia hljs"># Lets use TSFrames now for this example.
 
-#Dictionary to map column names to strings displayed on the plot (also not needed unless for styling of the plots)
-labels=Dict(
-        :returns =&gt; &quot;Return&quot;,
-        :log_ret =&gt; &quot;Log Return&quot;,
-        :index =&gt; &quot;Wealth Index&quot;,
-        :timestamp =&gt;&quot;Date&quot;,
-        :open =&gt; &quot;Open&quot;,
-        :high =&gt; &quot;High&quot;,
-        :low =&gt; &quot;Low&quot;,
-        :close =&gt;&quot;Close&quot;,
-        :adjclose =&gt;&quot;Adjusted Close&quot;,
-        :vol =&gt;&quot;Volume&quot;,
-        :ticker =&gt; &quot;Ticker&quot;);</code></pre><h2 id="The-Plot:"><a class="docs-heading-anchor" href="#The-Plot:">The Plot:</a><a id="The-Plot:-1"></a><a class="docs-heading-anchor-permalink" href="#The-Plot:" title="Permalink"></a></h2><pre><code class="language-julia hljs">
-# Lets start with a OHLC Plot:
-# creates a OHLC plot 
-function ohlc_plot(data::OrderedDict)
-    p = Plot(candlestick(
-            x=data[&quot;timestamp&quot;],
-            open=data[&quot;open&quot;],
-            high=data[&quot;high&quot;],
-            low=data[&quot;low&quot;],
-            close=data[&quot;close&quot;],
-            increasing_line_color=&quot;turquoise&quot;,
-            decreasing_line_color=&quot;darkgray&quot;,
-            labels=labels #delete this argument for no styling of the plot
-            ),
-            plot_layout_minute(data[&quot;ticker&quot;]) # delete this argument for no styling of the plot
-            )
-    return p 
-end;
+tickers = [&quot;AAPL&quot;,&quot;^GSPC&quot;, &quot;^IXIC&quot;];
+# Broadcast and sink into a TSFrame
+prices =  get_prices.((TSFrame,),tickers,interval=&quot;1d&quot;,range=&quot;2y&quot;)
+# get rid of the ^ in the tickers
+tickers = replace.(tickers,&quot;^&quot;=&gt;&quot;&quot;);
 
-ohlc_plot(AAPL)</code></pre><p><img src="../assets/CandleMin.svg" alt="OHCL Plot"/></p><h1 id="Plot-Multiple-Items"><a class="docs-heading-anchor" href="#Plot-Multiple-Items">Plot Multiple Items</a><a id="Plot-Multiple-Items-1"></a><a class="docs-heading-anchor-permalink" href="#Plot-Multiple-Items" title="Permalink"></a></h1><p>For illustration I used Apple (AAPL), the S&amp;P500 (^GSPC), and the NASDAQ (^IXIC) for this.</p><h2 id="Download-Data-and-convert-to-DataFrame"><a class="docs-heading-anchor" href="#Download-Data-and-convert-to-DataFrame">Download Data and convert to DataFrame</a><a id="Download-Data-and-convert-to-DataFrame-1"></a><a class="docs-heading-anchor-permalink" href="#Download-Data-and-convert-to-DataFrame" title="Permalink"></a></h2><pre><code class="language-julia hljs"># Lets get multiple tickers and stack them into a dataframe!
-# Downloads data and stacks it into a dataframe
-function get_long_df(symbols::AbstractVector{&lt;:AbstractString},interval,range)
-    p = get_prices.(symbols,interval=interval,range=range);
-    p = vcat([DataFrame(i) for i in values(p)]...);
-    p.timestamp = Date.(p.timestamp);
-    return p
-end;
-
-#Download a Price
-prices =  get_long_df([&quot;AAPL&quot;,&quot;^GSPC&quot;, &quot;^IXIC&quot;],&quot;1d&quot;,&quot;2y&quot;)</code></pre><h2 id="OHLC-Plot-of-a-specific-ticker"><a class="docs-heading-anchor" href="#OHLC-Plot-of-a-specific-ticker">OHLC Plot of a specific ticker</a><a id="OHLC-Plot-of-a-specific-ticker-1"></a><a class="docs-heading-anchor-permalink" href="#OHLC-Plot-of-a-specific-ticker" title="Permalink"></a></h2><h3 id="Plot-Layout-2"><a class="docs-heading-anchor" href="#Plot-Layout-2">Plot Layout</a><a class="docs-heading-anchor-permalink" href="#Plot-Layout-2" title="Permalink"></a></h3><p>This is not really needed just styles the plot and adds a rangeslider and rangeselector.</p><pre><code class="language-julia hljs"># Lets start with a OHLC Plot:
-# creates a OHLC plot for a specific ticker
-
-function plot_layout(title=&quot;&quot;) 
-    l =  Layout(
-        title_text = &quot;&lt;b&gt;$(title)&lt;/b&gt;&quot;,
-        paper_bgcolor =:white,
-        plot_bgcolor =:white,
-        yaxis = attr(
-            gridcolor=:lightgrey,
-            griddash=&quot;dot&quot;,
-            zerolinecolor=:lightgrey),
-        xaxis=attr(
-            gridcolor=:lightgrey,
-            griddash=&quot;dot&quot;,
-            zerolinecolor=:lightgrey,
-            rangeslider_visible=true,
-            rangeselector=attr(
-                buttons=[
-                    attr(count=1, label=&quot;1m&quot;, step=&quot;month&quot;, stepmode=&quot;backward&quot;),
-                    attr(count=6, label=&quot;6m&quot;, step=&quot;month&quot;, stepmode=&quot;backward&quot;),
-                    attr(count=1, label=&quot;YTD&quot;, step=&quot;year&quot;, stepmode=&quot;todate&quot;),
-                    attr(count=1, label=&quot;1y&quot;, step=&quot;year&quot;, stepmode=&quot;backward&quot;),
-                    attr(step=&quot;all&quot;)
-                    ])))
-    return l
-end;</code></pre><h3 id="The-Plot:-2"><a class="docs-heading-anchor" href="#The-Plot:-2">The Plot:</a><a class="docs-heading-anchor-permalink" href="#The-Plot:-2" title="Permalink"></a></h3><pre><code class="language-julia hljs">function ohlc_plot(data::DataFrame,symbol::AbstractString)
-    p = Plot(candlestick(data[isequal.(data.ticker,symbol),:],
-            x=:timestamp,
-            open=:open,
-            high=:high,
-            low=:low,
-            close=:close,
-            increasing_line_color=&quot;turquoise&quot;,
-            decreasing_line_color=&quot;darkgray&quot;,labels=labels),
-            plot_layout(symbol) )
-    return p 
-end;
-
-ohlc_plot(prices,&quot;AAPL&quot;)</code></pre><p><img src="../assets/CandleDaily.svg" alt="OHCL Plot"/></p><h2 id="Comparsion-Plot-raw-prices"><a class="docs-heading-anchor" href="#Comparsion-Plot-raw-prices">Comparsion Plot - raw prices</a><a id="Comparsion-Plot-raw-prices-1"></a><a class="docs-heading-anchor-permalink" href="#Comparsion-Plot-raw-prices" title="Permalink"></a></h2><pre><code class="language-julia hljs"># Let&#39;s compare how the stocks have performed over time:
+# Get only the adjusted close and time index and join the data into one TSFrame
+prices = join(getindex.(prices,:,([:Index,:adjclose],))...)
+# we want to rename the adjclose to the tickers
+TSFrames.rename!(prices, tickers)</code></pre><h2 id="Comparsion-Plot-raw-prices"><a class="docs-heading-anchor" href="#Comparsion-Plot-raw-prices">Comparsion Plot - raw prices</a><a id="Comparsion-Plot-raw-prices-1"></a><a class="docs-heading-anchor-permalink" href="#Comparsion-Plot-raw-prices" title="Permalink"></a></h2><pre><code class="language-julia hljs"># Let&#39;s compare how the stocks have performed over time:
 # Creates a comparison plot of the price for all items
-function comparison_plot(data::DataFrame,column::Symbol=:adjclose)
-    return Plot(data, x=:timestamp,y=column,group=:ticker,labels=labels,
-    plot_layout(labels[column]))
-end;
-comparison_plot(prices)</code></pre><p><img src="../assets/CompRaw.svg" alt="Raw Comp"/></p><h2 id="Comparison-Plot-Wealth-Index"><a class="docs-heading-anchor" href="#Comparison-Plot-Wealth-Index">Comparison Plot - Wealth Index</a><a id="Comparison-Plot-Wealth-Index-1"></a><a class="docs-heading-anchor-permalink" href="#Comparison-Plot-Wealth-Index" title="Permalink"></a></h2><p>For better comparison we first calculate returns and afterwards a wealth index then plot that.</p><pre><code class="language-julia hljs">
-# Calculate Return
-function get_return(x::AbstractVector{&lt;:Number})
-    res = x[2:end]./x[1:(end-1)]
-    return vcat(missing,res.-1)
-end;
+plot(prices)</code></pre><p><img src="../assets/CompRaw.svg" alt="Raw Comp"/></p><h2 id="Comparison-Plot-Wealth-Index"><a class="docs-heading-anchor" href="#Comparison-Plot-Wealth-Index">Comparison Plot - Wealth Index</a><a id="Comparison-Plot-Wealth-Index-1"></a><a class="docs-heading-anchor-permalink" href="#Comparison-Plot-Wealth-Index" title="Permalink"></a></h2><p>For better comparison we first calculate returns and afterwards a wealth index then plot that.</p><pre><code class="language-julia hljs"># First caluclate log returns.
+prices = diff(log.(prices))
 
-# Calculate Wealth Index
-function wealthIndex(x::AbstractVector,base=100)
-    res = vcat(1,x[2:end])
-    res = log.(res.+1)
-    res = exp.(cumsum(res)) .- 1
-    return res.*base
-end;
+# next add a zero to the first missing value so the index starts at 1.
+for t in tickers
+    getproperty(prices, Symbol(t*&quot;_log&quot;))[begin] = 0.0
+end
 
-# groupby ticker and calculate returns and the wealth index
-transform!(groupby(prices,:ticker),
-    :adjclose =&gt; get_return =&gt; :ret)
-transform!(groupby(prices,:ticker),
-    :ret =&gt; wealthIndex =&gt; :index)
+# we now need to cumulate these to get a wealth index.
+for t in tickers
+    getproperty(prices, Symbol(t*&quot;_log&quot;))[begin:end] = cumsum(getproperty(prices, Symbol(t*&quot;_log&quot;))[begin:end])
+end
 
-# Now lets plot the price index instead of the adjclose 
-comparison_plot(prices,:index)</code></pre><p><img src="../assets/CompWI.svg" alt="Wealth Index Comp"/></p><h1 id="ESG-Data-Bar-Chart"><a class="docs-heading-anchor" href="#ESG-Data-Bar-Chart">ESG Data Bar Chart</a><a id="ESG-Data-Bar-Chart-1"></a><a class="docs-heading-anchor-permalink" href="#ESG-Data-Bar-Chart" title="Permalink"></a></h1><p>Bar Chart comparing ESG scores between AAPL and its peers</p><h2 id="Download-ESG-Data"><a class="docs-heading-anchor" href="#Download-ESG-Data">Download ESG Data</a><a id="Download-ESG-Data-1"></a><a class="docs-heading-anchor-permalink" href="#Download-ESG-Data" title="Permalink"></a></h2><p>Download ESG data and convert to a DataFrame and reshape to long format for easier plotting</p><pre><code class="language-julia hljs">esg = get_ESG(&quot;AAPL&quot;)
+# Take the exponent again to go back to &quot;normal returns&quot;
+prices = exp.(prices)
+TSFrames.rename!(prices,tickers) # rename back to the old names without &quot;_log&quot; attached.
+plot(prices)</code></pre><p><img src="../assets/CompWI.svg" alt="Wealth Index Comp"/></p><h1 id="Get-Fundamental-Data-Example-Income-Statement"><a class="docs-heading-anchor" href="#Get-Fundamental-Data-Example-Income-Statement">Get Fundamental Data - Example Income Statement</a><a id="Get-Fundamental-Data-Example-Income-Statement-1"></a><a class="docs-heading-anchor-permalink" href="#Get-Fundamental-Data-Example-Income-Statement" title="Permalink"></a></h1><pre><code class="language-julia hljs"># Download and store in a DataFrame
+is_apple = get_Fundamental(&quot;AAPL&quot;,&quot;income_statement&quot;,&quot;annual&quot;,&quot;2020-01-01&quot;,&quot;2024-12-31&quot;) |&gt; DataFrame
+# Calculate Profit Margin etc at different levels
+is_apple.ProfitM = is_apple.NetIncome./is_apple.TotalRevenue;
+is_apple.OperIncM = is_apple.OperatingIncome./is_apple.TotalRevenue;
+is_apple.GrossProfitM = is_apple.GrossProfit./is_apple.TotalRevenue;
+
+# Plot:
+plot(is_apple.timestamp, is_apple.GrossProfitM,label = names(is_apple)[2], seriestype = :bar, legend=true)
+plot!(is_apple.timestamp, is_apple.OperIncM,label = names(is_apple)[3], seriestype = :bar)
+plot!(is_apple.timestamp, is_apple.ProfitM,label = names(is_apple)[4], seriestype = :bar)</code></pre><p><img src="../assets/Income.svg" alt="Profit Margin Over Time"/></p><h1 id="ESG-Data-Bar-Chart"><a class="docs-heading-anchor" href="#ESG-Data-Bar-Chart">ESG Data Bar Chart</a><a id="ESG-Data-Bar-Chart-1"></a><a class="docs-heading-anchor-permalink" href="#ESG-Data-Bar-Chart" title="Permalink"></a></h1><p>Bar Chart comparing ESG scores between AAPL and its peers</p><p>Download ESG data and convert to a DataFrame and reshape to long format for easier plotting</p><pre><code class="language-julia hljs">esg = get_ESG(&quot;AAPL&quot;)
 esg = vcat([DataFrame(i) for i in values(esg)]...) #convert to DataFrame
 subset!(esg, :timestamp =&gt; x -&gt; isequal.(x,maximum(x))) # take only the newest values
-esg = DataFrames.stack(esg,[:esgScore,:environmentScore,:governanceScore,:socialScore]) #reshape into long format</code></pre><h2 id="Plotting:"><a class="docs-heading-anchor" href="#Plotting:">Plotting:</a><a id="Plotting:-1"></a><a class="docs-heading-anchor-permalink" href="#Plotting:" title="Permalink"></a></h2><pre><code class="language-julia hljs">function create_barplot()
-    esg[!,&quot;colors&quot;]= ifelse.(isequal.(esg.symbol,&quot;AAPL&quot;),&quot;darkorange&quot;,&quot;steelblue&quot;)
-
-    traces = bar(esg,x = :variable, y = :value,group=:symbol,names=:symbol,marker_color=:colors)
-
-    layout = Layout(barmode=&quot;group&quot;,
-        legend=attr(
-            x=1,
-            y=1.02,
-            yanchor=&quot;bottom&quot;,
-            xanchor=&quot;right&quot;,
-            orientation=&quot;h&quot;),
-            paper_bgcolor =:white,
-            plot_bgcolor =:white
-            )
-    return Plot(traces, layout)
-end
-create_barplot()</code></pre><p><img src="../assets/ESGPlot.svg" alt="ESG Bar Chart"/></p><h1 id="Pie-Chart-of-the-major-Holders"><a class="docs-heading-anchor" href="#Pie-Chart-of-the-major-Holders">Pie Chart of the major Holders</a><a id="Pie-Chart-of-the-major-Holders-1"></a><a class="docs-heading-anchor-permalink" href="#Pie-Chart-of-the-major-Holders" title="Permalink"></a></h1><h2 id="Downloading-the-Data"><a class="docs-heading-anchor" href="#Downloading-the-Data">Downloading the Data</a><a id="Downloading-the-Data-1"></a><a class="docs-heading-anchor-permalink" href="#Downloading-the-Data" title="Permalink"></a></h2><pre><code class="language-julia hljs">major_holders  = get_major_holders_breakdown(&quot;AAPL&quot;)</code></pre><h2 id="Creating-the-Pie-Chart"><a class="docs-heading-anchor" href="#Creating-the-Pie-Chart">Creating the Pie Chart</a><a id="Creating-the-Pie-Chart-1"></a><a class="docs-heading-anchor-permalink" href="#Creating-the-Pie-Chart" title="Permalink"></a></h2><pre><code class="language-julia hljs">function create_pie() 
-    colors = [&quot;darkorange&quot;,&quot;steelblue&quot;,&quot;teal&quot;] # Set Colors
-    rest = (1-major_holders[&quot;insidersPercentHeld&quot;] - major_holders[&quot;institutionsPercentHeld&quot;])
-    values = [major_holders[&quot;insidersPercentHeld&quot;], major_holders[&quot;institutionsPercentHeld&quot;],rest].*100
-    plot(
-        pie(values = values,
-        labels = [&quot;Insiders&quot;,&quot;Institutions&quot;,&quot;Rest&quot;],
-        marker_colors = colors),
-        Layout(title_text = &quot;&lt;b&gt;Major Holders&lt;/b&gt;&quot;))
-end;
-create_pie()</code></pre><p><img src="../assets/Holders.svg" alt="Major Holders Pie Chart"/></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../DataFramesetc/">« Convert to DataFrames, TimeArrays, TSFrames</a><a class="docs-footer-nextpage" href="../VersionChanges/">Version Change Log »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.5.0 on <span class="colophon-date" title="Wednesday 7 August 2024 17:33">Wednesday 7 August 2024</span>. Using Julia version 1.9.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+esg = DataFrames.stack(esg,[:esgScore,:environmentScore,:governanceScore,:socialScore]) #reshape into long format
+using StatsPlots
+groupedbar(esg.variable, esg.value, group = esg.symbol, ylabel = &quot;Scores&quot;)</code></pre><p><img src="../assets/ESGPlot.svg" alt="ESG Bar Chart"/></p><h1 id="Pie-Chart-of-the-major-Holders"><a class="docs-heading-anchor" href="#Pie-Chart-of-the-major-Holders">Pie Chart of the major Holders</a><a id="Pie-Chart-of-the-major-Holders-1"></a><a class="docs-heading-anchor-permalink" href="#Pie-Chart-of-the-major-Holders" title="Permalink"></a></h1><h2 id="Downloading-the-Data"><a class="docs-heading-anchor" href="#Downloading-the-Data">Downloading the Data</a><a id="Downloading-the-Data-1"></a><a class="docs-heading-anchor-permalink" href="#Downloading-the-Data" title="Permalink"></a></h2><pre><code class="language-julia hljs">major_holders  = get_major_holders_breakdown(&quot;AAPL&quot;) |&gt; DataFrame</code></pre><h2 id="Creating-the-Pie-Chart"><a class="docs-heading-anchor" href="#Creating-the-Pie-Chart">Creating the Pie Chart</a><a id="Creating-the-Pie-Chart-1"></a><a class="docs-heading-anchor-permalink" href="#Creating-the-Pie-Chart" title="Permalink"></a></h2><pre><code class="language-julia hljs">#select the relevant fields:
+select!(major_holders, r&quot;insiders|institutionsP&quot;);
+# Calculate the left over part
+major_holders.Rest .= 1-sum(major_holders[1,1:2]) 
+# reshape to long
+major_holders=stack(major_holders); 
+pie(major_holders.variable,major_holders.value)</code></pre><p><img src="../assets/Holders.svg" alt="Major Holders Pie Chart"/></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../DataFramesetc/">« Convert to DataFrames, TimeArrays, TSFrames</a><a class="docs-footer-nextpage" href="../VersionChanges/">Version Change Log »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.5.0 on <span class="colophon-date" title="Thursday 8 August 2024 12:55">Thursday 8 August 2024</span>. Using Julia version 1.9.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
