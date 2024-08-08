@@ -80,52 +80,52 @@ DataFrame(get_prices("BTC-USD",range="1d",interval="5m",exchange_local_time=true
 
 ## Sink to TimeArray  
 
-TSLA daily stock price between 2020-01-01 and 2020-05-30 without adjustments for dividends and splits  
+Rolls-Royce daily stock price between 2020-01-01 and 2020-05-30
 
 ```julia
 using TimeSeries
-get_prices(TimeArray,"TSLA",startdt="2020-01-01",enddt="2020-05-30")
+get_prices(TimeArray,"RR.L",startdt="2020-01-01",enddt="2020-05-30")
 ```  
 
 ```julia
-103×6 TimeArray{Float64, 2, DateTime, Matrix{Float64}} 2020-01-02T14:30:00 to 2020-05-29T13:30:00
+103×6 TimeArray{Float64, 2, DateTime, Matrix{Float64}} 2020-01-02T08:00:00 to 2020-05-29T07:00:00
 ┌─────────────────────┬─────────┬─────────┬─────────┬─────────┬──────────┬───────────┐
 │                     │ open    │ high    │ low     │ close   │ adjclose │ vol       │
 ├─────────────────────┼─────────┼─────────┼─────────┼─────────┼──────────┼───────────┤
-│ 2020-01-02T14:30:00 │    28.3 │ 28.7133 │  28.114 │  28.684 │   28.684 │ 1.42982e8 │
-│ 2020-01-03T14:30:00 │ 29.3667 │ 30.2667 │  29.128 │  29.534 │   29.534 │ 2.66678e8 │
-│ 2020-01-06T14:30:00 │ 29.3647 │  30.104 │ 29.3333 │ 30.1027 │  30.1027 │ 1.51995e8 │
-│ 2020-01-07T14:30:00 │   30.76 │  31.442 │  30.224 │ 31.2707 │  31.2707 │ 2.68232e8 │
+│ 2020-01-02T08:00:00 │ 236.374 │ 238.845 │ 232.874 │ 233.766 │  233.766 │ 1.12197e7 │
+│ 2020-01-03T08:00:00 │ 232.668 │ 233.629 │  229.03 │ 232.599 │  232.599 │  1.2363e7 │
+│ 2020-01-06T08:00:00 │ 231.295 │ 233.766 │ 228.932 │ 232.325 │  232.325 │ 1.13855e7 │
+│ 2020-01-07T08:00:00 │ 234.041 │  234.26 │ 227.658 │ 229.305 │  229.305 │ 9.56679e6 │
 │          ⋮          │    ⋮    │    ⋮    │    ⋮    │    ⋮    │    ⋮     │     ⋮     │
-│ 2020-05-27T13:30:00 │  54.724 │ 55.1807 │ 52.3333 │  54.682 │   54.682 │ 1.73242e8 │
-│ 2020-05-28T13:30:00 │  54.234 │ 54.9833 │  53.446 │ 53.7207 │  53.7207 │ 1.08834e8 │
-│ 2020-05-29T13:30:00 │ 53.9167 │ 55.6667 │  53.614 │ 55.6667 │  55.6667 │ 1.76468e8 │
+│ 2020-05-27T07:00:00 │   110.5 │ 126.904 │  110.06 │ 118.771 │  118.771 │  7.7212e7 │
+│ 2020-05-28T07:00:00 │ 109.814 │ 114.035 │ 104.049 │ 109.471 │  109.471 │ 1.33343e8 │
+│ 2020-05-29T07:00:00 │ 103.294 │ 103.946 │ 93.2044 │ 93.2044 │  93.2044 │ 1.60135e8 │
 └─────────────────────┴─────────┴─────────┴─────────┴─────────┴──────────┴───────────┘
                                                                        96 rows omitted
 ```
 
 ## Sink to TSFrame  
-S&P500 (^GSPC) daily price since start of data  
+EURO-USD (EURUSD=X) daily price since start of data  
 
 ```julia
 using TSFrames
-tsf = get_prices(TSFrame,"^GSPC",startdt=Date(1900,1,1),enddt=today())
+tsf = get_prices(TSFrame,"EURUSD=X",startdt=Date(1900,1,1),enddt=today())
 ```  
 
 ```julia
-24266×7 TSFrame with DateTime Index
- Index                open     high     low      close    adjclose  vol        ticker 
- DateTime             Float64  Float64  Float64  Float64  Float64   Float64    String
+5399×7 TSFrame with DateTime Index
+ Index                open     high     low      close    adjclose  vol      ticker   
+ DateTime             Float64  Float64  Float64  Float64  Float64   Float64  String
 ──────────────────────────────────────────────────────────────────────────────────────
- 1927-12-30T14:30:00    17.66    17.66    17.66    17.66     17.66  0.0        ^GSPC
- 1928-01-03T14:30:00    17.76    17.76    17.76    17.76     17.76  0.0        ^GSPC
- 1928-01-04T14:30:00    17.72    17.72    17.72    17.72     17.72  0.0        ^GSPC
- 1928-01-05T14:30:00    17.55    17.55    17.55    17.55     17.55  0.0        ^GSPC
-          ⋮              ⋮        ⋮        ⋮        ⋮        ⋮          ⋮        ⋮
- 2024-08-05T13:30:00  5151.14  5250.89  5119.26  5186.33   5186.33  5.33325e9  ^GSPC
- 2024-08-06T13:30:00  5206.42  5312.34  5193.56  5240.03   5240.03  4.69019e9  ^GSPC
- 2024-08-07T13:30:00  5293.13  5330.64  5195.54  5199.5    5199.5   4.55826e9  ^GSPC
-                                                                    24259 rows omitted
+ 2003-12-01T00:00:00  1.2034   1.20401  1.1944   1.1965    1.1965       0.0  EURUSD=X
+ 2003-12-02T00:00:00  1.1961   1.2109   1.1946   1.2089    1.2089       0.0  EURUSD=X
+ 2003-12-03T00:00:00  1.209    1.213    1.2077   1.2123    1.2123       0.0  EURUSD=X
+ 2003-12-04T00:00:00  1.212    1.2144   1.2044   1.20809   1.20809      0.0  EURUSD=X
+          ⋮              ⋮        ⋮        ⋮        ⋮        ⋮         ⋮        ⋮
+ 2024-08-05T23:00:00  1.0951   1.09631  1.09046  1.0951    1.0951       0.0  EURUSD=X
+ 2024-08-06T23:00:00  1.09262  1.09364  1.09069  1.09262   1.09262      0.0  EURUSD=X
+ 2024-08-08T12:41:04  1.09266  1.09481  1.09039  1.09039   1.09039      0.0  EURUSD=X
+                                                                     5392 rows omitted
 ```
 
 ### Plot this:
@@ -133,7 +133,7 @@ tsf = get_prices(TSFrame,"^GSPC",startdt=Date(1900,1,1),enddt=today())
 using Plots
 plot(tsf[:,[:Index,:adjclose]])
 ```  
-![S&P500](docs/src/assets/snp500.svg)
+![EURUSD](docs/src/assets/snp500.svg)
 
 [docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
 [docs-stable-url]: https://eohne.github.io/YFinance.jl/stable/
@@ -141,3 +141,90 @@ plot(tsf[:,[:Index,:adjclose]])
 [docs-dev-img]: https://img.shields.io/badge/docs-dev-blue.svg
 [docs-dev-url]: https://eohne.github.io/YFinance.jl/dev/
 
+## Other Data:
+
+### ESG
+```julia
+get_ESG("NFLX")["score"] |> DataFrame |> dropmissing
+```
+```julia
+79×6 DataFrame
+ Row │ symbol  timestamp            esgScore  governanceScore  environmentScore  socialScore 
+     │ String  DateTime             Real      Real             Real              Real
+─────┼───────────────────────────────────────────────────────────────────────────────────────
+   1 │ NFLX    2014-09-01T00:00:00     43               57                37           39
+   2 │ NFLX    2014-10-01T00:00:00     43               57                37           39
+   3 │ NFLX    2014-11-01T00:00:00     43               57                37           39
+   4 │ NFLX    2014-12-01T00:00:00     43               57                37           39
+  ⋮  │   ⋮              ⋮              ⋮             ⋮                ⋮               ⋮
+  77 │ NFLX    2022-05-01T00:00:00     15.78             8.87              0.09         6.83
+  78 │ NFLX    2022-08-01T00:00:00     16.25             9.34              0.09         6.83
+  79 │ NFLX    2023-09-01T00:00:00     16.41             9.01              0.09         7.31
+                                                                              72 rows omitted
+```
+
+### Get Valuations of NFLX
+```julia
+get_Fundamental("NFLX", "valuation","annual",today()-Year(3) , today()) |> DataFrame
+```  
+
+```julia
+3×10 DataFrame
+ Row │ timestamp            PegRatio  ForwardPeRatio  MarketCap     PeRatio  EnterprisesValueRevenueRatio  PbRatio  EnterprisesValueEBITDARatio  PsRatio  EnterpriseValue 
+     │ DateTime             Any       Any             Any           Any      Any                           Any      Any                          Any      Any
+─────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ 2021-12-31T00:00:00  1.4751    46.5116         267461134181  54.3228  9.6192                        17.4644  14.914                       9.57841  275427617181
+   2 │ 2022-12-31T00:00:00  2.1982    27.027          131227643270  26.3993  4.4166                        6.39726  6.7377                       4.238    139002027270
+   3 │ 2023-12-31T00:00:00  1.951     30.6748         213097477242  48.5908  6.7047                        9.53074  10.686                       6.71235  219530399242
+```
+
+### Get Income Statement:
+```julia
+is=get_Fundamental("AMD", "income_statement","annual",today()-Year(1) , today()) |> DataFrame 
+stack(is, Not(:timestamp))
+```  
+```julia
+49×3 DataFrame
+ Row │ timestamp            variable                           value       
+     │ DateTime             String                             Any
+─────┼─────────────────────────────────────────────────────────────────────
+   1 │ 2023-12-31T00:00:00  InterestExpenseNonOperating        106000000
+   2 │ 2023-12-31T00:00:00  CostOfRevenue                      12220000000
+   3 │ 2023-12-31T00:00:00  TotalRevenue                       22680000000
+   4 │ 2023-12-31T00:00:00  EarningsFromEquityInterestNetOfT…  16000000
+  ⋮  │          ⋮                           ⋮                       ⋮
+  47 │ 2023-12-31T00:00:00  NormalizedIncome                   854000000
+  48 │ 2023-12-31T00:00:00  EBIT                               598000000
+  49 │ 2023-12-31T00:00:00  TotalUnusualItems                  0
+                                                            42 rows omitted
+```
+
+### Options
+
+```julia
+op = get_Options("AMD")
+```  
+```julia
+OrderedCollections.OrderedDict{String, OrderedCollections.OrderedDict{String, Vector{Any}}} with 2 entries:
+  "calls" => OrderedDict("contractSymbol"=>["AMD240809C00075000", "AMD240809C00080000", "AMD240809C00085000", "AMD240809C0…
+  "puts"  => OrderedDict("contractSymbol"=>["AMD240809P00075000", "AMD240809P00080000", "AMD240809P00085000", "AMD240809P0…
+```
+
+```julia
+DataFrame(op["calls"])
+```
+```julia
+65×16 DataFrame
+ Row │ contractSymbol      strike  currency  lastPrice  change  percentChange  volume  openInterest  bid  ask  contractSi ⋯
+     │ Any                 Any     Any       Any        Any     Any            Any     Any           Any  Any  Any        ⋯
+─────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ AMD240809C00075000  75      USD       59.65      0       0              1       26            0    0    REGULAR    ⋯
+   2 │ AMD240809C00080000  80      USD       52.61      0       0              1       11            0    0    REGULAR     
+   3 │ AMD240809C00085000  85      USD       49.69      0       0              2       0             0    0    REGULAR     
+   4 │ AMD240809C00090000  90      USD       44.54      0       0              3       12            0    0    REGULAR     
+  ⋮  │         ⋮             ⋮        ⋮          ⋮        ⋮           ⋮          ⋮          ⋮         ⋮    ⋮        ⋮     ⋱
+  63 │ AMD240809C00285000  285     USD       0.01       0       0              15      16            0    0    REGULAR    ⋯
+  64 │ AMD240809C00290000  290     USD       0.08       0       0              7       10            0    0    REGULAR     
+  65 │ AMD240809C00295000  295     USD       0.01       0       0              1       19            0    0    REGULAR     
+                                                                                              6 columns and 58 rows omitted
+```
