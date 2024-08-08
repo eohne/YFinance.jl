@@ -133,7 +133,7 @@ tsf = get_prices(TSFrame,"^GSPC",startdt=Date(1900,1,1),enddt=today())
 using Plots
 plot(tsf[:,[:Index,:adjclose]])
 ```  
-![S&P500](docs/src/assets/CompWI.svg)
+![S&P500](docs/src/assets/snp500.svg)
 
 [docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
 [docs-stable-url]: https://eohne.github.io/YFinance.jl/stable/
