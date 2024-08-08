@@ -41,7 +41,6 @@ If you use Julia 1.9 or newer you can just use a sink argument in `get_prices` i
 using TimeSeries, YFinance
 get_prices(TimeArray,"AAPL")
 ```
-(runtime for this is about 80% faster than `yahoo(:INTC)` from MarketData.jl)
 
 or alternatively
 
