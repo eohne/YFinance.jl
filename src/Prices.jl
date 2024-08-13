@@ -174,12 +174,24 @@ function get_prices(symbol::AbstractString; range::AbstractString="5d", interval
             return OrderedCollections.OrderedDict()
         end
         elseif isequal(res.status, 400)
-            if throw_error
-                error("$(JSON3.read(res.response.body).finance.error.description).")
+            yahoo_error = JSON3.read(res.response.body)
+            if haskey(yahoo_error,:finance)
+                if throw_error
+                    error("$(yahoo_error.finance.error.description).")
+                else
+                    @warn "$(yahoo_error.finance.error.description). An empy OrderedCollections.OrderedDict was returned!" 
+                    return OrderedCollections.OrderedDict()
+                end 
             else
-                @warn "$(JSON3.read(res.response.body).finance.error.description). An empy OrderedCollections.OrderedDict was returned!" 
-                return OrderedCollections.OrderedDict()
-            end 
+                error_dates = unix2datetime.(parse.(Float64, [ match.match for match in eachmatch(r"(-)?[0-9]{1,}", yahoo_error.chart.error.description)]))
+                yahoo_error ="Data doesn't exist for startDate = $(error_dates[1]), endDate = $(error_dates[2])" 
+                if throw_error
+                    error("$yahoo_error for $symbol")
+                else
+                    @warn "$yahoo_error for $symbol. An empy OrderedCollections.OrderedDict was returned!" 
+                    return OrderedCollections.OrderedDict()
+                end
+            end
     end
 
     res = JSON3.read(res.body).chart.result[1]
@@ -396,18 +408,36 @@ function get_splits(symbol::AbstractString;startdt="", enddt="",timeout = 10,thr
                 ) 
         end
         elseif isequal(res.status, 400)
-            if throw_error
-                error("$(JSON3.read(res.response.body).finance.error.description).")
+            yahoo_error = JSON3.read(res.response.body)
+            if haskey(yahoo_error,:finance)
+                if throw_error
+                    error("$(yahoo_error.finance.error.description).")
+                else
+                    @warn "$(yahoo_error.finance.error.description). An empy OrderedCollections.OrderedDict was returned!" 
+                    return OrderedDict(
+                        "ticker" => symbol,
+                        "timestamp" => DateTime[],
+                        "numerator" => Int[],
+                        "denominator" => Int[],
+                        "ratio" => String[]
+                        )
+                end 
             else
-                @warn "$(JSON3.read(res.response.body).finance.error.description). An empy OrderedCollections.OrderedDict was returned!" 
-                return  d = OrderedDict(
-                    "ticker" => symbol,
-                    "timestamp" => DateTime[],
-                    "numerator" => Int[],
-                    "denominator" => Int[],
-                    "ratio" => String[]
-                    ) 
-            end 
+                error_dates = unix2datetime.(parse.(Float64, [ match.match for match in eachmatch(r"(-)?[0-9]{1,}", yahoo_error.chart.error.description)]))
+                yahoo_error ="Data doesn't exist for startDate = $(error_dates[1]), endDate = $(error_dates[2])" 
+                if throw_error
+                    error("$yahoo_error for $symbol")
+                else
+                    @warn "$yahoo_error for $symbol. An empy OrderedCollections.OrderedDict was returned!" 
+                    return OrderedDict(
+                        "ticker" => symbol,
+                        "timestamp" => DateTime[],
+                        "numerator" => Int[],
+                        "denominator" => Int[],
+                        "ratio" => String[]
+                        )
+                end
+            end
     end
 
     res = JSON3.read(res.body).chart.result[1]
@@ -557,15 +587,30 @@ function get_dividends(symbol::AbstractString;startdt="", enddt="",timeout = 10,
                 "dividend" => Float64[]) 
         end
         elseif isequal(res.status, 400)
-            if throw_error
-                error("$(JSON3.read(res.response.body).finance.error.description).")
+            yahoo_error = JSON3.read(res.response.body)
+            if haskey(yahoo_error,:finance)
+                if throw_error
+                    error("$(yahoo_error.finance.error.description).")
+                else
+                    @warn "$(yahoo_error.finance.error.description). An empy OrderedCollections.OrderedDict was returned!" 
+                    return OrderedDict(
+                        "ticker" => symbol,
+                        "timestamp" => DateTime[],
+                        "dividend" => Float64[])
+                end 
             else
-                @warn "$(JSON3.read(res.response.body).finance.error.description). An empy OrderedCollections.OrderedDict was returned!" 
-                return  d = OrderedDict(
-                    "ticker" => symbol,
-                    "timestamp" => DateTime[],
-                    "dividend" => Float64[])
-            end 
+                error_dates = unix2datetime.(parse.(Float64, [ match.match for match in eachmatch(r"(-)?[0-9]{1,}", yahoo_error.chart.error.description)]))
+                yahoo_error ="Data doesn't exist for startDate = $(error_dates[1]), endDate = $(error_dates[2])" 
+                if throw_error
+                    error("$yahoo_error for $symbol")
+                else
+                    @warn "$yahoo_error for $symbol. An empy OrderedCollections.OrderedDict was returned!" 
+                    return OrderedDict(
+                        "ticker" => symbol,
+                        "timestamp" => DateTime[],
+                        "dividend" => Float64[])
+                end
+            end
     end
 
     res = JSON3.read(res.body).chart.result[1]

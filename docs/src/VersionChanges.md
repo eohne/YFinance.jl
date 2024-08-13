@@ -1,3 +1,7 @@
+!!! info "v0.1.7"
+    ## Bug Fix
+    * `get_prices`, `get_splits`, `get_dividends` now error more nicely when there is no data for the selected date range. ([#19](https://github.com/eohne/YFinance.jl/issues/19))
+
 !!! info "v0.1.6"
     ## Improvements
     * `get_prices` can now return dividends and splits ([#11](https://github.com/eohne/YFinance.jl/issues/11), [#18](https://github.com/eohne/YFinance.jl/issues/18))

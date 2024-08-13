@@ -16,6 +16,9 @@ using Test
         ta=YFinance._date_to_unix(DateTime(200,1,1),DateTime(201,1,1))
         @test ta==(-55855785600, -55824249600)
 
+        @test_throws ErrorException get_prices("aapl",startdt=Date(1800), enddt=Date(1900),throw_error=true)
+        ta= get_prices("aapl",startdt=Date(1800), enddt=Date(1900),throw_error=false)
+        @test isempty(ta)
         @test_throws ErrorException get_prices("aapl",interval="1m", range="1mo")
         @test_throws ErrorException get_prices("aapl",interval="1m",startdt="2000-01-01", enddt="2020-10-01")
 
