@@ -203,51 +203,6 @@ function get_prices(symbol::AbstractString; range::AbstractString="5d", interval
         time_offset = 0
     end
 
-    # Addition of Dividends and StockSplits:
-    if divsplits & !isequal(interval,"1d")
-        @warn "Dividends and splits will not be returned. Please set the interval to 1d!"
-    end
-    if haskey(res,:events)
-        if divsplits && isequal(interval,"1d")
-            # Dividends:    
-                div_t = DateTime[]
-                div_v = Float64[]
-                if haskey(res.events,:dividends)
-                    for v in values(res.events.dividends)
-                        push!(div_t, unix2datetime(v.date.+ time_offset))
-                        push!(div_v, v.amount)
-                    end
-                else
-                    nothing
-                end
-            #end dividnend 
-            #Splits 
-                split_t = DateTime[]
-                split_n = Int[]
-                split_d = Int[]
-                split_r = String[] 
-                if haskey(res.events,:splits)
-                    for v in values(res.events.splits)
-                        push!(split_t,unix2datetime(v.date.+ time_offset))
-                        push!(split_n, v.numerator)
-                        push!(split_d, v.denominator)
-                    end
-                    split_r = split_n ./ split_d
-                else
-                    split_r = 1.
-                end
-            # End Splits
-        end
-    else
-        div_t = DateTime[]
-        div_v = Float64[]
-        split_t = DateTime[]
-        split_n = Int[]
-        split_d = Int[]
-        split_r = String[]
-    end
-    #end
-
 
     #check for duplicate values at the end (common error by yahoo)
     if length(res.timestamp) - length(unique(res.timestamp)) ==1
@@ -286,18 +241,46 @@ function get_prices(symbol::AbstractString; range::AbstractString="5d", interval
         end
     end
 
-    if divsplits && isequal(interval, "1d")
-        dividends = zeros(length(d["open"]))
-        dividends[in.(d["timestamp"],(div_t,))] = div_v
-        denominator = ones(length(d["open"]))
-        denominator[in.(d["timestamp"],(split_t,))] = split_d
-        numerator = ones(length(d["open"]))
-        numerator[in.(d["timestamp"],(split_t,))] = split_n
-        ratio = numerator./denominator
-    d["div"] = dividends
-    d["split_numerator"] = numerator
-    d["split_denominator"] = denominator
-    d["split_ratio"] = ratio
+     # Addition of Dividends and StockSplits:
+     if divsplits & !isequal(interval,"1d")
+        @warn "Dividends and splits will not be returned. Please set the interval to 1d!"
+    end
+
+    if haskey(res,:events)
+        if divsplits && isequal(interval,"1d")
+            # Dividends:    
+            d["div"] = zeros(Float64, size(d["timestamp"],1))
+            d["split_numerator"] = ones(Float64, size(d["timestamp"],1))
+            d["split_denominator"] = ones(Float64, size(d["timestamp"],1))
+            first_timestamp = minimum(d["timestamp"])
+                if haskey(res.events,:dividends)
+                    for v in values(res.events.dividends)
+                        div_date = unix2datetime(v.date.+ time_offset)
+                        if div_date < first_timestamp
+                            continue
+                        else
+                            d["div"][isequal.(div_date,d["timestamp"])] .= v.amount
+                        end
+                    end
+                else
+                    nothing
+                end
+            #end dividnend 
+            #Splits 
+                if haskey(res.events,:splits)
+                    for v in values(res.events.splits)
+                        split_date = unix2datetime(v.date.+ time_offset)
+                        if split_date < first_timestamp
+                            continue
+                        else
+                            d["split_numerator"][isequal.(split_date,d["timestamp"])] .= v.numerator
+                            d["split_denominator"][isequal.(split_date,d["timestamp"])] .= v.denominator
+                        end
+                    end
+                end
+                d["split_ratio"] = d["split_numerator"]./d["split_denominator"]
+            # End Splits
+        end
     end
     return d
 end

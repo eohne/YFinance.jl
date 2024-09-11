@@ -1,3 +1,7 @@
+!!! info "v0.1.8"
+    ## Bug Fix
+    * `get_prices` fixes indexing error when divsplits=true ([#22](https://github.com/eohne/YFinance.jl/issues/22))
+
 !!! info "v0.1.7"
     ## Bug Fix
     * `get_prices`, `get_splits`, `get_dividends` now error more nicely when there is no data for the selected date range. ([#19](https://github.com/eohne/YFinance.jl/issues/19))
