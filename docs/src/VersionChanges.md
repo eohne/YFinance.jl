@@ -1,3 +1,8 @@
+!!! info "v0.1.9"
+    ## Bug Fix
+    * Getting rid of precompilation. Precompilation hangs and also doesn't work if a proxy is required ([#23](https://github.com/eohne/YFinance.jl/issues/23))
+
+
 !!! info "v0.1.8"
     ## Bug Fix
     * `get_prices` fixes indexing error when divsplits=true ([#22](https://github.com/eohne/YFinance.jl/issues/22))

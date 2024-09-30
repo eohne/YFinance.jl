@@ -3,3 +3,5 @@
 examples.jl
 /ToDo
 /.vscode
+Project with_precompile.toml
+src/YFinance with precompile.jl

@@ -6,7 +6,6 @@ module YFinance
     using HTTP
     using JSON3
     using Random
-    using PrecompileTools: @setup_workload, @compile_workload
 
     export _PROXY_SETTINGS, create_proxy_settings,clear_proxy_settings, _set_cookies_and_crumb
     export validate_symbol,get_valid_symbols,get_prices, get_dividends, get_splits
@@ -34,15 +33,4 @@ module YFinance
     include("ESG.jl");
     include("Search_Symbol.jl");
     include("News_Search.jl");
-
-
-    @setup_workload begin
-        @compile_workload begin
-            get_prices("AAPL",interval = "1m",range="1d");
-            get_prices("AAPL",interval = "1d",startdt=Date(2009,01,01), enddt = Date(2009,01,05));
-            get_prices("AAPL",interval = "1d",startdt="2009-01-01", enddt = "2009-01-05");
-            get_prices("AAPL",interval = "1d",startdt="2009-01-01", enddt = "2009-01-05",prepost=true);
-            get_prices("AAPL",interval = "1d",startdt="2009-01-01", enddt = "2009-01-05",divsplits=true);
-        end
-    end
 end
