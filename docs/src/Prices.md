@@ -15,8 +15,8 @@ If you want to return a TimeArray from TimeSeries.jl execute `get_prices(TimeArr
 You can also covert from the OrderedDict to these by using the following function:
 
 ```@docs
-sink_prices_to(::Type{TimeArray},::OrderedDict{String,Any})
-sink_prices_to(::Type{TSFrame},::OrderedDict{String,Any})
+sink_prices_to(::Type{TimeArray}, x::OrderedDict{String, Union{String,Vector{DateTime},Vector{Float64}}})
+sink_prices_to(::Type{TSFrame}, x::OrderedDict{String, Union{String,Vector{DateTime},Vector{Float64}}})
 ```
 ## get_prices
 

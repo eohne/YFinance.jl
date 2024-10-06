@@ -5,22 +5,6 @@ _date_to_unix(dt::Date) = Int(floor(datetime2unix(DateTime(dt))))
 _date_to_unix(dt::DateTime) = Int(floor(datetime2unix(dt)))
 _date_to_unix(dt::AbstractString) = _date_to_unix(Date(dt, dateformat"yyyy-mm-dd"))
 
-function _clean_prices_nothing(x::Any)
-    output = Vector{Float64}(undef, length(x))
-    map!(output, x) do val
-        if isnothing(val)
-            return NaN
-        elseif val isa Integer
-            return Float64(val)
-        else
-            return val
-        end
-    end
-    
-    return output
-end
-
-
 function _clean_prices_nothing(x::AbstractVector)
     output = Vector{Float64}(undef, length(x))
     map!(output, x) do val

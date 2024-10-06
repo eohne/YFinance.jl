@@ -34,7 +34,7 @@ The package is registered in the [`General`](https://github.com/JuliaRegistries/
 ## Precompilation  
 
 ### Version 0.1.8 
-Precompilation of the `get_prices` function. This has caused precompilation hangs for Julia 1.10 and 1.11 - package typically still precompiles but takes long and gives warnings. One user at least has reported errors. Note precompilation also does not work if you require to set a proxy to access the internet. 
+Precompilation of the `get_prices` function. This has caused precompilation hangs for Julia 1.10 and 1.11 - package typically still precompiles but takes long and gives warnings. Note precompilation also does not work if you require to set a proxy to access the internet. 
 
 To Install this version enter the package mode by entering `]` in the REPL and run the following command:
 ```julia
@@ -43,6 +43,13 @@ To Install this version enter the package mode by entering `]` in the REPL and r
 
 ### Version 0.1.9 
 Does not precompile.  
+To Install this version enter the package mode by entering `]` in the REPL and run the following command:
+```julia
+  (@v1.10) pkg> add YFinance @v0.1.9
+```
+
+### Version 0.1.10 
+Precompiles only the response processing part of the `get_prices` and not the HTTP request. Most of the compilation time lies unfortunately with the request itself.  
 To Install this version enter the package mode by entering `]` in the REPL and run the following command:
 ```julia
   (@v1.10) pkg> add YFinance

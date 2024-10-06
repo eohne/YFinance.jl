@@ -7,6 +7,7 @@
       - specified intervals are now observed
     * Significant code refactoring for improved maintainability and readability of the `get_prices` function
     * An `OrderedDict{String, Union{String,Vector{DateTime},Vector{Float64}}}` is now returned by get_prices rather than `OrderedDict{String,Any}`
+    * Added precompilation for the response processing part of the `get_prices` function only
 
 
 !!! info "v0.1.9"
