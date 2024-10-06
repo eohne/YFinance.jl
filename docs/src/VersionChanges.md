@@ -1,3 +1,14 @@
+!!! info "v0.1.10"
+    ## Improvements
+    * `get_prices` now supports retrieving minute data for periods longer than 7 days by sending multiple requests of length equal to 7 days and stitching the responses together (minute data still needs to be within the last 30 days - this is a limit set by Yahoo)
+    * `get_prices` now allows `startdt` and `enddt` to be of different types (e.g., `startdt="2024-01-01", enddt=today()` is now valid)
+    * The `range` argument in `get_prices` has been reworked to convert to `startdt` and `enddt`. Previously, this parameter was simply passed to the Yahoo API. The new way prings multiple improvements:
+      - more flexible range inputs
+      - specified intervals are now observed
+    * Significant code refactoring for improved maintainability and readability of the `get_prices` function
+    * An `OrderedDict{String, Union{String,Vector{DateTime},Vector{Float64}}}` is now returned by get_prices rather than `OrderedDict{String,Any}`
+
+
 !!! info "v0.1.9"
     ## Bug Fix
     * Getting rid of precompilation. Precompilation hangs and also doesn't work if a proxy is required ([#23](https://github.com/eohne/YFinance.jl/issues/23))

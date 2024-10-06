@@ -452,7 +452,7 @@ function get_Fundamental(symbol::AbstractString, item::AbstractString,interval::
     # Check Start and end dates. 
     if !isequal(startdt,"") || !isequal(enddt,"")
         range = ""
-        startdt, enddt = _date_to_unix(startdt,enddt)
+        startdt, enddt = _date_to_unix(startdt), _date_to_unix(enddt)
     end
     @assert in(interval, _Fundamental_Intervals) "Chosen interval is not supported. Choose one of: annual, quarterly, monthly"
     #Build Query:

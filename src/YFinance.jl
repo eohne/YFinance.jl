@@ -6,6 +6,7 @@ module YFinance
     using HTTP
     using JSON3
     using Random
+    using PrecompileTools: @setup_workload, @compile_workload
 
     export _PROXY_SETTINGS, create_proxy_settings,clear_proxy_settings, _set_cookies_and_crumb
     export validate_symbol,get_valid_symbols,get_prices, get_dividends, get_splits
@@ -33,4 +34,28 @@ module YFinance
     include("ESG.jl");
     include("Search_Symbol.jl");
     include("News_Search.jl");
+
+    @setup_workload begin
+        include("..\\precom_data\\precom_data.jl");
+        @compile_workload begin
+            _date_to_unix(Date(2000));
+            _date_to_unix(DateTime(2000));
+            _date_to_unix("2000-01-01");
+
+            _clean_prices_nothing(_clean_prc_float);
+            _clean_prices_nothing(_clean_prc_int);
+            _clean_prices_nothing(_clean_prc_int_nothing);
+            _clean_prices_nothing(_clean_prc_float_nothing);
+
+            _process_response(price_test_resp, "AAPL", "1d", false, false,false);
+            _process_response(price_test_resp, "AAPL", "1d", true, false,false);
+            _process_response(price_test_resp, "AAPL", "1d", false, true,false);
+            _process_response(price_test_resp, "AAPL", "1d", false, false,true);
+            _process_response(price_test_resp, "AAPL", "1d", true,true,false);
+            _process_response(price_test_resp, "AAPL", "1d", false,true,true);
+            _process_response(price_test_resp, "AAPL", "1d", true, true,true);
+        end
+    end
+
+
 end

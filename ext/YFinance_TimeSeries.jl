@@ -2,50 +2,52 @@ module YFinance_TimeSeries
 
 using TimeSeries, OrderedCollections, YFinance
 
-
 """
-    sink_prices_to(::Type{TimeArray},x::OrderedDict{String,Any})
+    sink_prices_to(::Type{TimeArray}, x::OrderedDict{String, Union{String,Vector{DateTime},Vector{Float64}}})
 
-Converts an exisitng OrderedDict output from get_prices to a TSFrame
+Converts an existing OrderedDict output from get_prices to a TimeArray
 """
-function YFinance.sink_prices_to(::Type{TimeArray},x::OrderedDict{String,Any})
-    ks = [keys(x)...][2:end] # only get the keys that are not ticker
-    nt = NamedTuple( Symbol(k) => x[k] for k in ks) # convert the dictionary to a named tuple
-    ta = TimeArray(nt, timestamp = :timestamp,meta = x["ticker"]) # create the timeseries array
+function YFinance.sink_prices_to(::Type{TimeArray}, x::OrderedDict{String, Union{String,Vector{DateTime},Vector{Float64}}})
+    ks = setdiff(keys(x), ["ticker"])  # get all keys except "ticker"
+    nt = NamedTuple(Symbol(k) => x[k] for k in ks)  # convert the dictionary to a named tuple
+    ta = TimeArray(nt, timestamp = :timestamp, meta = x["ticker"])  # create the TimeArray
     return ta
 end
 
-
 """
-    get_prices(::Type{TimeArray},symbol::AbstractString; range::AbstractString="1mo", interval::AbstractString="1d",startdt="", enddt="",prepost=false,autoadjust=true,timeout = 10,throw_error=false,exchange_local_time=false,divsplits=false)
+    get_prices(::Type{TimeArray}, symbol::String; kwargs...)
 
-Retrievs prices from Yahoo Finance and stores them in a TimeArray
+Retrieves prices from Yahoo Finance and stores them in a TimeArray
 
 ## Arguments
 
- * ::Type{TimeArray} 
+ * `::Type{TimeArray}`: Specifies that the output should be a TimeArray
 
- * `Smybol` is a ticker (e.g. AAPL for Apple Computers, or ^GSPC for the S&P500)
+ * `symbol`: A ticker (e.g., AAPL for Apple Inc., or ^GSPC for the S&P 500)
 
-You can either provide a `range` or a `startdt` and an `enddt`.
- * `range` takes the following values: "1d","5d","1mo","3mo","6mo","1y","2y","5y","10y","ytd","max". Note: when range is selected rather than `startdt` or `enddt` the specified interval may not be observed by Yahoo! Therefore, it is recommended to use `startdt` and `enddt` instead. To get max simply set `startdt = "1900-01-01"`
+ * `kwargs...`: Additional keyword arguments passed to YFinance.get_prices
 
- * `startdt` and `enddt` take the following types: `::Date`,`::DateTime`, or a `String` of the following form `yyyy-mm-dd`
+    These can include:
+    - `range`: A string specifying the time range (e.g., "1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "ytd", "max")
+    - `interval`: The data interval (e.g., "1m", "2m", "5m", "15m", "30m", "60m", "90m", "1h", "1d", "5d", "1wk", "1mo", "3mo")
+    - `startdt` and `enddt`: Start and end dates (Date, DateTime, or String in "yyyy-mm-dd" format)
+    - `prepost`: Boolean for including pre and post market data
+    - `autoadjust`: Boolean for adjusting prices
+    - `timeout`: HTTP request timeout in seconds
+    - `throw_error`: Boolean for error handling behavior
+    - `exchange_local_time`: Boolean for timestamp localization
+    - `divsplits`: Boolean for including dividends and stock split data
+    - `wait`: Float for specifying wait time between API calls
 
- * `prepost` is a boolean indicating whether pre and post periods should be included. Defaults to `false`
+For detailed information on these parameters, refer to the YFinance.get_prices documentation.
 
- * `autoadjust` defaults to `true`. It adjusts open, high, low, close prices, and volume by multiplying by the ratio between the close and the adjusted close prices - only available for intervals of 1d and up. 
+## Returns
 
- *  `throw_error::Bool` defaults to `false`. If set to true the function errors when the ticker is not valid. Else a warning is given and an empty `OrderedCollections.OrderedDict` is returned.
-
- * `exchange_local _time::Bool` defaults to `false`. If set to true the timestamp corresponds to the exchange local time else to GMT.
-
- * `divsplits::Bool` defaults to `false`. If set to true dividends and stock split data is also returned. Split data contains the numerator, denominator, and split ratio. The interval needs to be set to "1d" for this to work.
-```
+A TimeArray containing the requested price data
 """
-function YFinance.get_prices(::Type{TimeArray},symbol::AbstractString; range::AbstractString="5d", interval::AbstractString="1d",startdt="", enddt="",prepost=false,autoadjust=true,timeout = 10,throw_error=false,exchange_local_time=false,divsplits=false)
-    x = YFinance.get_prices(symbol; range=range, interval=interval,startdt=startdt, enddt=enddt,prepost=prepost,autoadjust=autoadjust,timeout = timeout,throw_error=throw_error,exchange_local_time=exchange_local_time,divsplits=divsplits)
-    return YFinance.sink_prices_to(TimeArray,x)
+function YFinance.get_prices(::Type{TimeArray}, symbol::String; kwargs...)
+    x = YFinance.get_prices(symbol; kwargs...)
+    return YFinance.sink_prices_to(TimeArray, x)
 end
 
-end
+end # module

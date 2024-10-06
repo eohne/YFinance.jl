@@ -9,18 +9,17 @@ using Test
         ta = get_valid_symbols(["aapl","amd","adsflajsldf"])
         @test ta==["aapl","amd"]
 
-        ta=YFinance._date_to_unix("2000-01-01","2010-01-01")
-        @test ta==(946684800, 1262304000)
-        ta=YFinance._date_to_unix(Date(200,1,1),Date(201,1,1))
-        @test ta==(-55855785600, -55824249600)
-        ta=YFinance._date_to_unix(DateTime(200,1,1),DateTime(201,1,1))
-        @test ta==(-55855785600, -55824249600)
+        ta=YFinance._date_to_unix("2000-01-01")
+        @test ta==946684800
+        ta=YFinance._date_to_unix(Date(200,1,1))
+        @test ta==-55855785600
+        ta=YFinance._date_to_unix(DateTime(200,1,1))
+        @test ta==-55855785600
 
         @test_throws ErrorException get_prices("aapl",startdt=Date(1800), enddt=Date(1900),throw_error=true)
         ta= get_prices("aapl",startdt=Date(1800), enddt=Date(1900),throw_error=false)
         @test isempty(ta)
-        @test_throws ErrorException get_prices("aapl",interval="1m", range="1mo")
-        @test_throws ErrorException get_prices("aapl",interval="1m",startdt="2000-01-01", enddt="2020-10-01")
+        @test_throws ErrorException get_prices("aapl",interval="1m", range="2mo",throw_error=true)
 
         ta = get_prices("AAPL",range="max",exchange_local_time=true)
         @test length(ta["timestamp"]) > 100
@@ -36,10 +35,10 @@ using Test
         @test length(ta["timestamp"]) > 100
 
         if isdefined(Base, :get_extension)
-            ta = get_prices(TimeArray,"AAPL",interval="1m",range="5d")
+            ta = get_prices(TimeArray,"AAPL",interval="1m",range="2d")
             @test typeof(ta) <:TimeArray
             @test size(ta,2) ==5
-            ta = get_prices(TSFrame, "AAPL",interval="1m",range="5d")
+            ta = get_prices(TSFrame, "AAPL",interval="1m",range="2d")
             @test typeof(ta) <:TSFrame
             @test ncol(ta) ==6
         end
