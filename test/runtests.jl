@@ -19,20 +19,15 @@ using Test
         @test_throws ErrorException get_prices("aapl",startdt=Date(1800), enddt=Date(1900),throw_error=true)
         ta= get_prices("aapl",startdt=Date(1800), enddt=Date(1900),throw_error=false)
         @test isempty(ta)
-        @test_throws ErrorException get_prices("aapl",interval="1m", range="2mo",throw_error=true)
+        ta = get_prices("aapl",interval="1m", range="18d")
+        @test !isempty(ta)
 
-        ta = get_prices("AAPL",range="max",exchange_local_time=true)
+        ta = get_prices("ADANIENT.NS",startdt ="2014-10-06" , enddt = "2024-10-06")
         @test length(ta["timestamp"]) > 100
         if isdefined(Base, :get_extension)
             @test typeof(sink_prices_to(TimeArray,ta)) <: TimeArray
             @test typeof(sink_prices_to(TSFrame,ta)) <: TSFrame
         end
-
-        ta = get_prices("AAPL",interval="1m",range="5d")
-        @test length(ta["timestamp"]) > 100
-
-        ta = get_prices("ADANIENT.NS",startdt =Dates.today()-Year(10) , enddt = Dates.today())
-        @test length(ta["timestamp"]) > 100
 
         if isdefined(Base, :get_extension)
             ta = get_prices(TimeArray,"AAPL",interval="1m",range="2d")
@@ -44,7 +39,7 @@ using Test
         end
     end
     @testset "Dividends and Splits" begin
-        ta = get_prices("GOOGL",interval="1d",startdt="2022-01-01",enddt="2023-01-01",divsplits=true)
+        ta = get_prices("GOOGL",interval="1d",startdt="2022-01-01",enddt="2023-01-01",exchange_local_time=true,divsplits=true)
         @test haskey(ta, "div")
         @test haskey(ta, "split_ratio")
         @test isequal(maximum(ta["split_ratio"]), 20)

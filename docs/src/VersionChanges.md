@@ -1,12 +1,12 @@
 !!! info "v0.1.10"
     ## Improvements
-    * `get_prices` now supports retrieving minute data for periods longer than 7 days by sending multiple requests of length equal to 7 days and stitching the responses together (minute data still needs to be within the last 30 days - this is a limit set by Yahoo)
+    * `get_prices` now supports the retrieval of minute level data for periods longer than 7 days. This is facilitated by making multiple requests and stitching the responses together (minute data still needs to be within the last 30 days - this is a limit set by Yahoo)
     * `get_prices` now allows `startdt` and `enddt` to be of different types (e.g., `startdt="2024-01-01", enddt=today()` is now valid)
-    * The `range` argument in `get_prices` has been reworked to convert to `startdt` and `enddt`. Previously, this parameter was simply passed to the Yahoo API. The new way prings multiple improvements:
+    * The `range` argument in `get_prices` has been reworked to convert to `startdt` and `enddt`. Previously, this parameter was simply passed to the Yahoo API. The new way brings multiple improvements:
       - more flexible range inputs
       - specified intervals are now observed
     * Significant code refactoring for improved maintainability and readability of the `get_prices` function
-    * An `OrderedDict{String, Union{String,Vector{DateTime},Vector{Float64}}}` is now returned by get_prices rather than `OrderedDict{String,Any}`
+    * `get_prices` now returns a `OrderedDict{String, Union{String,Vector{DateTime},Vector{Float64}}}` rather than `OrderedDict{String,Any}`
     * Added precompilation for the response processing part of the `get_prices` function only
 
 
