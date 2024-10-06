@@ -23,7 +23,7 @@ _clean_prices_nothing(x::AbstractVector{Float64}) = x
 
 
 """
-    get_prices(symbol::String; range::String="1mo", interval::String="1d", startdt::Union{Date,DateTime,AbstractString}="", enddt::Union{Date,DateTime,AbstractString}="", prepost::Bool=false, autoadjust::Bool=true, timeout::Int=10, throw_error::Bool=false, exchange_local_time::Bool=false, divsplits::Bool=false, wait::Float64=0.0)
+    get_prices(symbol::String; range::String="5d", interval::String="1d", startdt::Union{Date,DateTime,AbstractString}="", enddt::Union{Date,DateTime,AbstractString}="", prepost::Bool=false, autoadjust::Bool=true, timeout::Int=10, throw_error::Bool=false, exchange_local_time::Bool=false, divsplits::Bool=false, wait::Float64=0.0)
 
 Retrieves prices from Yahoo Finance.
 
@@ -333,7 +333,7 @@ end
 function get_prices(symbol::String; 
                     startdt::Union{Date,DateTime,AbstractString}="", 
                     enddt::Union{Date,DateTime,AbstractString}="", 
-                    range::String="1mo", 
+                    range::String="5d", 
                     interval::String="1d", 
                     kwargs...)
     if startdt == "" && enddt == ""
