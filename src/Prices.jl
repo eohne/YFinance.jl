@@ -243,7 +243,8 @@ function _process_response(response_body, symbol, interval, autoadjust, exchange
     res = JSON3.read(response_body).chart.result[1]
     time_offset = exchange_local_time ? res.meta.gmtoffset : 0
 
-    timestamps = res.timestamp
+    haskey(res, "timestamp") ? timestamps = res.timestamp : error("No historical data for this timeperiod of $symbo")
+    
     idx = length(timestamps) - length(unique(timestamps)) == 1 ? (1:length(timestamps)-1) : eachindex(timestamps)
 
     d = OrderedDict{String, Union{String,Vector{DateTime},Vector{Float64}}}(
