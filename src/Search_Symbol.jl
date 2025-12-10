@@ -1,4 +1,4 @@
-const MARKETS = ["AMEX", "NASDAQ", "NYSE"] # Supported markets
+const MARKETS = ["AMEX", "NASDAQ", "NYSE", "SZSE"] # Supported markets, Add Shenzhen Stock Exchange
 
 """
     get_all_symbols(market::T)::Vector{T} where {T<:String}
