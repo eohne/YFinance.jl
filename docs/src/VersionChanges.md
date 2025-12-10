@@ -1,3 +1,8 @@
+!!! info "v0.1.11"
+    ## Compat
+    * Increase compat for TimeSeries.jl to include 0.25 ([#34](https://github.com/eohne/YFinance.jl/issues/34))
+
+
 !!! info "v0.1.10"
     ## Improvements
     * `get_prices` now supports the retrieval of minute level data for periods longer than 7 days. This is facilitated by making multiple requests and stitching the responses together (minute data still needs to be within the last 30 days - this is a limit set by Yahoo)
