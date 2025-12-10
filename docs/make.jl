@@ -22,7 +22,6 @@ makedocs(
                     "Fundamental" =>"Fundamental.md",
                     "QuoteSummary" =>"QuoteSummary.md",
                     "Options" =>"Options.md",
-                    # "ESG" =>"ESG.md",
                     "Search for Symbol"=>"Search Symbols.md",
                     "Get News" => "News Search.md",
                     "Proxy" => "Proxies.md",

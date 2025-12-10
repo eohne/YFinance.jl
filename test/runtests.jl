@@ -15,13 +15,13 @@ using Test
         @test ta==-55855785600
         ta=YFinance._date_to_unix(DateTime(200,1,1))
         @test ta==-55855785600
-
+        sleep(1)
         @test_throws ErrorException get_prices("aapl",startdt=Date(1800), enddt=Date(1900),throw_error=true)
         ta= get_prices("aapl",startdt=Date(1800), enddt=Date(1900),throw_error=false)
         @test isempty(ta)
         ta = get_prices("aapl",interval="1m", range="18d")
         @test !isempty(ta)
-
+        sleep(1)
         ta = get_prices("ADANIENT.NS",startdt ="2014-10-06" , enddt = "2024-10-06")
         @test length(ta["timestamp"]) > 100
         if isdefined(Base, :get_extension)
@@ -39,6 +39,7 @@ using Test
         end
     end
     @testset "Dividends and Splits" begin
+        sleep(1)
         ta = get_prices("GOOGL",interval="1d",startdt="2022-01-01",enddt="2023-01-01",exchange_local_time=true,divsplits=true)
         @test haskey(ta, "div")
         @test haskey(ta, "split_ratio")
@@ -48,6 +49,7 @@ using Test
         
     end
     @testset "Dividends" begin
+        sleep(1)
         ta = get_dividends("F",startdt="2022-01-01",enddt="2023-01-01")
         @test haskey(ta, "div")
         @test length(ta["div"])==4
@@ -55,6 +57,7 @@ using Test
         @test isempty(ta["div"])
     end
     @testset "Splits" begin
+        sleep(1)
         ta = get_splits("F",startdt="2022-01-01",enddt="2023-01-01")
         @test haskey(ta, "timestamp")
         @test haskey(ta, "numerator")
@@ -64,11 +67,13 @@ using Test
         @test !isempty(ta["ratio"])
     end
     @testset "Fundamental Data" begin
+        sleep(1)
         ta = get_Fundamental("AAPL","income_statement","annual",Dates.today() - Year(5),Dates.today())
         @test in("InterestExpense",keys(ta))
         @test length(ta["InterestExpense"]) >= 3
     end
     @testset "Get Options" begin
+        sleep(1)
         ta = get_Options("AAPL")
         @test in("calls", keys(ta))
         @test length(ta["calls"]["strike"]) > 1
@@ -80,6 +85,7 @@ using Test
     #     @test length(ta["score"]["timestamp"]) > 0
     # end
     @testset "Get QuoteSummary Items" begin
+        sleep(1)
         ta = get_quoteSummary("AAPL")
         @test in(:price,keys(ta))
 
@@ -108,6 +114,7 @@ using Test
 
     @testset "All Symbols" begin
         # Test case insensitivity
+        sleep(1)
         @test length(get_all_symbols("nySE")) == length(get_all_symbols("NYSE"))
 
         # Test if the market is supported
