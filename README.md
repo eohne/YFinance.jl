@@ -167,26 +167,6 @@ plot(tsf[:,[:Index,:adjclose]])
 
 ## Other Data:
 
-### ESG
-```julia
-get_ESG("NFLX")["score"] |> DataFrame |> dropmissing
-```
-```julia
-79×6 DataFrame
- Row │ symbol  timestamp            esgScore  governanceScore  environmentScore  socialScore 
-     │ String  DateTime             Real      Real             Real              Real
-─────┼───────────────────────────────────────────────────────────────────────────────────────
-   1 │ NFLX    2014-09-01T00:00:00     43               57                37           39
-   2 │ NFLX    2014-10-01T00:00:00     43               57                37           39
-   3 │ NFLX    2014-11-01T00:00:00     43               57                37           39
-   4 │ NFLX    2014-12-01T00:00:00     43               57                37           39
-  ⋮  │   ⋮              ⋮              ⋮             ⋮                ⋮               ⋮
-  77 │ NFLX    2022-05-01T00:00:00     15.78             8.87              0.09         6.83
-  78 │ NFLX    2022-08-01T00:00:00     16.25             9.34              0.09         6.83
-  79 │ NFLX    2023-09-01T00:00:00     16.41             9.01              0.09         7.31
-                                                                              72 rows omitted
-```
-
 ### Get Valuations of NFLX
 ```julia
 get_Fundamental("NFLX", "valuation","annual",today()-Year(3) , today()) |> DataFrame

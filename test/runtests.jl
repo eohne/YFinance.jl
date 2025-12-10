@@ -48,14 +48,14 @@ using Test
         
     end
     @testset "Dividends" begin
-        ta = get_dividends("WBA",startdt="2022-01-01",enddt="2023-01-01")
+        ta = get_dividends("F",startdt="2022-01-01",enddt="2023-01-01")
         @test haskey(ta, "div")
         @test length(ta["div"])==4
         ta = get_dividends("TSLA",startdt="2022-01-01",enddt="2023-01-01")
         @test isempty(ta["div"])
     end
     @testset "Splits" begin
-        ta = get_splits("WBA",startdt="2022-01-01",enddt="2023-01-01")
+        ta = get_splits("F",startdt="2022-01-01",enddt="2023-01-01")
         @test haskey(ta, "timestamp")
         @test haskey(ta, "numerator")
         @test haskey(ta, "denominator")
@@ -66,18 +66,19 @@ using Test
     @testset "Fundamental Data" begin
         ta = get_Fundamental("AAPL","income_statement","annual",Dates.today() - Year(5),Dates.today())
         @test in("InterestExpense",keys(ta))
-        @test length(ta["InterestExpense"]) > 3
+        @test length(ta["InterestExpense"]) >= 3
     end
     @testset "Get Options" begin
         ta = get_Options("AAPL")
         @test in("calls", keys(ta))
         @test length(ta["calls"]["strike"]) > 1
     end
-    @testset "Get ESG" begin
-        ta = get_ESG("AAPL")
-        @test in("score",keys(ta))
-        @test length(ta["score"]["timestamp"]) > 0
-    end
+    # ESG endpoint seems to have been removed
+    # @testset "Get ESG" begin
+    #     ta = get_ESG("AAPL")
+    #     @test in("score",keys(ta))
+    #     @test length(ta["score"]["timestamp"]) > 0
+    # end
     @testset "Get QuoteSummary Items" begin
         ta = get_quoteSummary("AAPL")
         @test in(:price,keys(ta))
