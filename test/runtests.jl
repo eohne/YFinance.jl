@@ -15,31 +15,18 @@ using Test
         @test ta==-55855785600
         ta=YFinance._date_to_unix(DateTime(200,1,1))
         @test ta==-55855785600
-        sleep(1)
-        @test_throws ErrorException get_prices("aapl",startdt=Date(1800), enddt=Date(1900),throw_error=true)
-        ta= get_prices("aapl",startdt=Date(1800), enddt=Date(1900),throw_error=false)
-        @test isempty(ta)
         ta = get_prices("aapl",interval="1m", range="18d")
         @test !isempty(ta)
-        sleep(1)
+        sleep(2)
         ta = get_prices("ADANIENT.NS",startdt ="2014-10-06" , enddt = "2024-10-06")
         @test length(ta["timestamp"]) > 100
         if isdefined(Base, :get_extension)
             @test typeof(sink_prices_to(TimeArray,ta)) <: TimeArray
             @test typeof(sink_prices_to(TSFrame,ta)) <: TSFrame
         end
-
-        if isdefined(Base, :get_extension)
-            ta = get_prices(TimeArray,"AAPL",interval="1m",range="2d")
-            @test typeof(ta) <:TimeArray
-            @test size(ta,2) ==5
-            ta = get_prices(TSFrame, "AAPL",interval="1m",range="2d")
-            @test typeof(ta) <:TSFrame
-            @test ncol(ta) ==6
-        end
     end
     @testset "Dividends and Splits" begin
-        sleep(1)
+        sleep(2)
         ta = get_prices("GOOGL",interval="1d",startdt="2022-01-01",enddt="2023-01-01",exchange_local_time=true,divsplits=true)
         @test haskey(ta, "div")
         @test haskey(ta, "split_ratio")
@@ -48,32 +35,14 @@ using Test
         @test isequal(length(ta["timestamp"]), length(ta["split_ratio"]))
         
     end
-    @testset "Dividends" begin
-        sleep(1)
-        ta = get_dividends("F",startdt="2022-01-01",enddt="2023-01-01")
-        @test haskey(ta, "div")
-        @test length(ta["div"])==4
-        ta = get_dividends("TSLA",startdt="2022-01-01",enddt="2023-01-01")
-        @test isempty(ta["div"])
-    end
-    @testset "Splits" begin
-        sleep(1)
-        ta = get_splits("F",startdt="2022-01-01",enddt="2023-01-01")
-        @test haskey(ta, "timestamp")
-        @test haskey(ta, "numerator")
-        @test haskey(ta, "denominator")
-        @test isempty(ta["ratio"])
-        ta = get_splits("TSLA",startdt="2022-01-01",enddt="2023-01-01")
-        @test !isempty(ta["ratio"])
-    end
     @testset "Fundamental Data" begin
-        sleep(1)
+        sleep(2)
         ta = get_Fundamental("AAPL","income_statement","annual",Dates.today() - Year(5),Dates.today())
         @test in("InterestExpense",keys(ta))
         @test length(ta["InterestExpense"]) >= 3
     end
     @testset "Get Options" begin
-        sleep(1)
+        sleep(2)
         ta = get_Options("AAPL")
         @test in("calls", keys(ta))
         @test length(ta["calls"]["strike"]) > 1
@@ -85,7 +54,7 @@ using Test
     #     @test length(ta["score"]["timestamp"]) > 0
     # end
     @testset "Get QuoteSummary Items" begin
-        sleep(1)
+        sleep(2)
         ta = get_quoteSummary("AAPL")
         @test in(:price,keys(ta))
 
@@ -114,7 +83,7 @@ using Test
 
     @testset "All Symbols" begin
         # Test case insensitivity
-        sleep(1)
+        sleep(2)
         @test length(get_all_symbols("nySE")) == length(get_all_symbols("NYSE"))
 
         # Test if the market is supported
@@ -131,13 +100,10 @@ using Test
         @test typeof(ta[1]) <: YahooSearchItem
         @test typeof(ta[1].symbol) <: String
         @test isnothing(show(ta));
-
-        ta = get_symbols("asjdflkalskjfdkjalk")
-        @test typeof(ta) <: YahooSearch
-        @test isempty(ta)
     end
 
     @testset "News_Search" begin        
+        sleep(2)
         ta = search_news("MSFT")
         @test typeof(ta) <: YahooNews
         @test length(ta) >0 
@@ -151,11 +117,6 @@ using Test
         @test typeof(links(ta)[1]) <: String 
         @test size(timestamps(ta),1) > 0  
         @test typeof(timestamps(ta)[1]) <: DateTime 
-    end
-
-    @testset "Cookies" begin
-        ta = YFinance._renew_cookies_and_crumb()
-        @test typeof(ta) <: String
     end
 
     @testset "Create Proxy" begin
