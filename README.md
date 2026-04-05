@@ -2,26 +2,27 @@
 [![codecov](https://codecov.io/github/eohne/YFinance.jl/graph/badge.svg?token=MYY3JY9HBH)](https://codecov.io/github/eohne/YFinance.jl)
 [![Build Status](https://github.com/eohne/YFinance.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/eohne/YFinance.jl/actions/workflows/CI.yml?query=branch%3Amaster)
 [![Package Downloads](https://img.shields.io/badge/dynamic/json?url=http%3A%2F%2Fjuliapkgstats.com%2Fapi%2Fv1%2Ftotal_downloads%2FYFinance&query=total_requests&label=Downloads)](http://juliapkgstats.com/pkg/YFinance)
-[![][docs-stable-img]][docs-stable-url]  
-[![][docs-dev-img]][docs-dev-url]  
+[![][docs-stable-img]][docs-stable-url]
+[![][docs-dev-img]][docs-dev-url]
 
-*Download price, fundamental, option, currency, futures, ETF, mutual fund, and various other data from Yahoo Finance*  
+Julia interface to Yahoo Finance, inspired by Python's yfinance.
 
-
-## \*\*\* LEGAL DISCLAIMER \*\*\*
-**Yahoo!, Y!Finance, and Yahoo! finance are registered trademarks of
-Yahoo, Inc.**
-
-YFinance.jl is not endorsed or in anyway affiliated with Yahoo, Inc. The data retreived can only be used for personal use. 
-Please see Yahoo's terms of use to ensure that you can use the data:
- - [Yahoo Developer API Terms of Use](https://policies.yahoo.com/us/en/yahoo/terms/product-atos/apiforydn/index.htm)
- - [Yahoo Terms of Service](https://legal.yahoo.com/us/en/yahoo/terms/otos/index.html)
- - [Yahoo Terms](https://policies.yahoo.com/us/en/yahoo/terms/index.htm)
+- Historical and intraday prices
+- Fundamentals and quote summary data
+- Options chains
+- FX, futures, ETFs, and mutual funds
+- Easy conversion to DataFrames, TimeArray, and TSFrame
 
 
-## \*\*\* No decryption issues \*\*\*
-The implementation of `YFinance.jl` is similar to the python package `yahooquery` in that it accesses data through API endpoints. Therefore, **`YFinance.jl` does not experience the same decryption issues** that python’s `yfinance` faces at the moment.
 
+## Quick start
+
+```julia
+using YFinance, DataFrames
+
+prices = get_prices("AAPL", range="1mo", interval="1d")
+DataFrame(prices)
+```
 
 ## Installation
 
@@ -31,35 +32,22 @@ The package is registered in the [`General`](https://github.com/JuliaRegistries/
     Pkg.add("YFinance")
 ```
 
-## Precompilation  
 
-### Version 0.1.8 
-Precompilation of the `get_prices` function. This has caused precompilation hangs for Julia 1.10 and 1.11 - package typically still precompiles but takes long and gives warnings. Note precompilation also does not work if you require to set a proxy to access the internet. 
+## \*\*\* LEGAL DISCLAIMER \*\*\*
+**Yahoo!, Y!Finance, and Yahoo! finance are registered trademarks of
+Yahoo, Inc.**
 
-To Install this version enter the package mode by entering `]` in the REPL and run the following command:
-```julia
-(@v1.10) pkg> add YFinance @v0.1.8
-```
+YFinance.jl is not endorsed or in any way affiliated with Yahoo, Inc. The data retrieved can only be used for personal use. 
+Please see Yahoo's terms of use to ensure that you can use the data:
+ - [Yahoo Developer API Terms of Use](https://policies.yahoo.com/us/en/yahoo/terms/product-atos/apiforydn/index.htm)
+ - [Yahoo Terms of Service](https://legal.yahoo.com/us/en/yahoo/terms/otos/index.html)
+ - [Yahoo Terms](https://policies.yahoo.com/us/en/yahoo/terms/index.htm)
 
-### Version 0.1.9 
-Does not precompile.  
-To Install this version enter the package mode by entering `]` in the REPL and run the following command:
-```julia
-  (@v1.10) pkg> add YFinance @v0.1.9
-```
-
-### Version 0.1.10 
-Precompiles only the response processing part of the `get_prices` and not the HTTP request. Most of the compilation time lies unfortunately with the request itself.  
-To Install this version enter the package mode by entering `]` in the REPL and run the following command:
-```julia
-  (@v1.10) pkg> add YFinance
-```
-
-# Examples:
+## Examples:
 
 There are more examples in the Docs.
 
-## Get Prices:  
+### Get Prices:  
 Apple monthly stock price over the past 5 years, with dividend and stock split information in local user time.  
 
 ```julia
@@ -80,7 +68,7 @@ OrderedCollections.OrderedDict{String, Any} with 8 entries:
 ```  
 
 
-## Convert to DataFrame  
+### Convert to DataFrame  
 Bitcoin USD, 5 minute data points for an entire day.  
 
 ```julia
@@ -102,7 +90,7 @@ DataFrame(get_prices("BTC-USD",range="1d",interval="5m",exchange_local_time=true
                                                                    140 rows omitted
 ```
 
-## Sink to TimeArray  
+### Sink to TimeArray  
 
 Rolls-Royce daily stock price between 2020-01-01 and 2020-05-30
 
@@ -128,7 +116,7 @@ get_prices(TimeArray,"RR.L",startdt="2020-01-01",enddt="2020-05-30")
                                                                        96 rows omitted
 ```
 
-## Sink to TSFrame  
+### Sink to TSFrame  
 EURO-USD (EURUSD=X) daily price since start of data  
 
 ```julia
@@ -232,4 +220,4 @@ DataFrame(op["calls"])
   65 │ AMD240809C00295000  295     USD       0.01       0       0              1       19            0    0    REGULAR     
                                                                                               6 columns and 58 rows omitted
 ```
-## \*\*\* This is only a small subset of functions and data items for a full set please see the documentation. \*\*\*
+## \*\*\* This is only a small subset of functions and data items for the full set, see the documentation. \*\*\*
