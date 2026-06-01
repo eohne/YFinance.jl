@@ -10,6 +10,8 @@ The call and put options OrderedCollections.OrderedDict can readily be transform
 
  *  throw_error`::Bool` defaults to `false`. If set to true the function errors when the ticker is not valid. Else a warning is given and an empty OrderedCollections.OrderedDict is returned.
 
+ *  experitation_date`::Union{Date,Nothing}` defaults to `nothing`. If set to a date the API request is made for a particular date.
+
 # Examples  
 ```julia-repl
 julia> get_Options("AAPL")
@@ -47,7 +49,7 @@ julia> vcat( [DataFrame(i) for i in values(data)]...)
                                                             9 columns and 136 rows omitted
 ```
 """
-function get_Options(symbol::String;throw_error=false)
+function get_Options(symbol::String; throw_error=false, expiration_date::Union{Date,Nothing}=nothing)
     _set_cookies_and_crumb()
     if isequal(_CRUMB,"")
         @warn "This item requires a crumb but a crumb could not be successfully retrieved!"
@@ -67,8 +69,14 @@ function get_Options(symbol::String;throw_error=false)
      else
          symbol = symbol[1]
      end
-     # Could add "date" to query to get only for certain expiration date.
-    res = HTTP.get("https://query2.finance.yahoo.com/v7/finance/options/$(symbol)",query = Dict("formatted"=>"false","crumb"=>_CRUMB), proxy=_PROXY_SETTINGS[:proxy],headers=merge(_PROXY_SETTINGS[:auth],_HEADER),cookies=_COOKIE)    
+
+    # Construct API request
+    query_params = Dict("formatted" => "false", "crumb" => _CRUMB)
+    if !isnothing(expiration_date)
+        query_params["date"] = string(_date_to_unix(expiration_date))
+    end
+
+    res = HTTP.get("https://query2.finance.yahoo.com/v7/finance/options/$(symbol)", query=query_params, proxy=_PROXY_SETTINGS[:proxy], headers=merge(_PROXY_SETTINGS[:auth], _HEADER), cookies=_COOKIE)    
     res = JSON3.read(res.body)
     puts = res.optionChain.result[1].options[1].puts
     calls = res.optionChain.result[1].options[1].calls
