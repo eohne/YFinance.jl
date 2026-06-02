@@ -1,3 +1,6 @@
+!!! info "v0.1.13"
+    ## Compat
+    * get_Option allows choosing an expiration_date ([#35](https://github.com/eohne/YFinance.jl/issues/35))
 !!! info "v0.1.11"
     ## Compat
     * Increase compat for TimeSeries.jl to include 0.25 ([#34](https://github.com/eohne/YFinance.jl/issues/34))
