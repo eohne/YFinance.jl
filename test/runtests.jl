@@ -47,6 +47,18 @@ using Test
         @test in("calls", keys(ta))
         @test length(ta["calls"]["strike"]) > 1
     end
+    @testset "Get Options by expiration date" begin
+        sleep(2)
+        # Find a future date that is not a holiday
+        d = today() + Day(1)
+        ta = get_Options("AAPL", expiration_date=d)
+        while isempty(ta["calls"]["expiration"]) && d < today() + Month(1)
+            sleep(2)
+            d += Day(1)
+            ta = get_Options("AAPL", expiration_date=d)
+        end
+        @test d in ta["calls"]["expiration"]
+    end
     # ESG endpoint seems to have been removed
     # @testset "Get ESG" begin
     #     ta = get_ESG("AAPL")
