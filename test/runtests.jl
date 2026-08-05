@@ -104,6 +104,35 @@ using Test
         @test isa(get_all_symbols("NASDAQ"), Vector{String})
 
         @test length(get_all_symbols("AMEX")) > 100
+
+        @test length(get_all_symbols("NYSE")) > 1000
+
+        # Every supported market returns a non-empty, duplicate-free list
+        for m in YFinance.MARKETS
+            sleep(1)
+            syms = get_all_symbols(m)
+            @test !isempty(syms)
+            @test length(unique(syms)) == length(syms)
+            @test !any(isempty, syms)
+        end
+
+        # The `yahoo` keyword only rewrites symbols, it never adds/drops rows
+        sleep(1)
+        @test length(get_all_symbols("NYSE"; yahoo=false)) == length(get_all_symbols("NYSE"))
+
+        # Raw symbols carry the exchange's reserved markers, Yahoo symbols do not
+        raw = get_all_symbols("NYSE"; yahoo=false)
+        @test any(s -> occursin('.', s), raw)
+        @test !any(s -> any(c -> c in ('.', '=', '+', '^'), s), get_all_symbols("NYSE"))
+
+        # Symbol translation to Yahoo's convention
+        @test YFinance._to_yahoo("BRK.A") == "BRK-A"      # share class
+        @test YFinance._to_yahoo("ABR-D") == "ABR-PD"     # preferred
+        @test YFinance._to_yahoo("AAC=") == "AAC-UN"      # unit
+        @test YFinance._to_yahoo("ACHR+") == "ACHR-WT"    # warrant
+        @test YFinance._to_yahoo("JACS^") == "JACS-RI"    # right
+        @test YFinance._to_yahoo("NE+A") == "NE-WTA"      # warrant with a series
+        @test YFinance._to_yahoo("AAPL") == "AAPL"        # untouched
     end
     @testset "Search_Symbol" begin        
         ta = get_symbols("micro")

@@ -1,3 +1,14 @@
+!!! info "v0.1.14"
+    ## Bug Fix
+    * `get_all_symbols` no longer uses dumbstockapi.com, which has gone offline. It now reads the official Nasdaq Trader symbol directory (`nasdaqtrader.com/dynamic/SymDir`) instead.
+
+    ## Improvements
+    * `get_all_symbols` now returns symbols in Yahoo Finance's convention, so they can be passed directly to `get_prices` and the other data functions. Share classes (`BRK.A` → `BRK-A`), preferreds (`ABR-D` → `ABR-PD`), units (`AAC=` → `AAC-UN`), warrants (`ACHR+` → `ACHR-WT`), and rights (`JACS^` → `JACS-RI`) are all translated. Pass the new `yahoo=false` keyword to get the raw exchange symbols.
+    * `get_all_symbols` gained two markets: `ARCA` (NYSE Arca) and `BATS` (Cboe BZX).
+
+    ## Breaking
+    * `get_all_symbols` no longer supports the `SZSE` market. The Nasdaq Trader directory is US-only, and there is no comparable free and stable feed for Shenzhen. `SZSE` was listed in `MARKETS` but was never documented or tested.
+
 !!! info "v0.1.13"
     ## Compat
     * get_Option allows choosing an expiration_date ([#35](https://github.com/eohne/YFinance.jl/issues/35))

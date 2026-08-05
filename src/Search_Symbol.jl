@@ -1,18 +1,50 @@
-const MARKETS = ["AMEX", "NASDAQ", "NYSE", "SZSE"] # Supported markets, Add Shenzhen Stock Exchange
+const MARKETS = ["AMEX", "ARCA", "BATS", "NASDAQ", "NYSE"] # Supported markets
+
+const _SYMDIR = "https://www.nasdaqtrader.com/dynamic/SymDir/"
+# Exchange codes used in the "Exchange" column of otherlisted.txt
+const _EXCH_CODE = Dict("AMEX" => "A", "NYSE" => "N", "ARCA" => "P", "BATS" => "Z")
+
+# Nasdaq's "NASDAQ Symbol" column uses reserved characters to mark the security
+# type, so the mapping to Yahoo's convention is unambiguous. The marker splits the
+# base symbol from an optional series suffix, which trails Yahoo's type code
+# (e.g. the Noble Tranche 2 warrant NE+A becomes NE-WTA).
+const _TYPE_CODE = (('=', "-UN"),    # units:     AAC=   -> AAC-UN
+                    ('+', "-WT"),    # warrants:  ACHR+  -> ACHR-WT,  NE+A -> NE-WTA
+                    ('^', "-RI"),    # rights:    AIIA^  -> AIIA-RI
+                    ('-', "-P"))     # preferred: ABR-D  -> ABR-PD
+
+function _to_yahoo(sym::AbstractString)::String
+  for (marker, code) in _TYPE_CODE
+    i = findfirst(marker, sym)
+    i === nothing && continue
+    return sym[1:prevind(sym, i)] * code * sym[nextind(sym, i):end]
+  end
+  return replace(sym, '.' => '-')                         # classes:   BRK.A  -> BRK-A
+end
 
 """
-    get_all_symbols(market::T)::Vector{T} where {T<:String}
+    get_all_symbols(market::AbstractString; yahoo::Bool=true)::Vector{String}
 
 Fetch all the symbols from a given `market`.
 
 # Arguments
-- `market::String`: The market to fetch the symbols from.
+- `market::AbstractString`: The market to fetch the symbols from (case insensitive).
 Currently supported markets are:
-  - `AMEX`
+  - `AMEX` (NYSE American)
+  - `ARCA` (NYSE Arca)
+  - `BATS` (Cboe BZX)
   - `NASDAQ`
-  - `NYSE`  
+  - `NYSE`
 
-Uses dumbstockapi.com
+# Keyword Arguments
+- `yahoo::Bool`: If `true` (the default) symbols are translated to Yahoo Finance's
+  convention (e.g. `BRK.A` becomes `BRK-A`, the preferred share `ABR-D` becomes
+  `ABR-PD`, the warrant `ACHR+` becomes `ACHR-WT`, the right `JACS^` becomes
+  `JACS-RI`, the unit `AAC=` becomes `AAC-UN`). Set to `false` to get the raw
+  exchange symbols instead.
+
+Uses the official Nasdaq Trader symbol directory
+(`nasdaqtrader.com/dynamic/SymDir`).
 
 # Returns
 - `Vector{String}`: A vector of strings containing the symbols.
@@ -20,29 +52,45 @@ Uses dumbstockapi.com
 # Example
 ```julia
 julia> get_all_symbols("NYSE")
-3127-element Vector{String}:
+2925-element Vector{String}:
  "A"
  "AA"
- "AAC"
- "AAN"
+ "AAC-UN"
+ "AADX"
  ⋮
  "ZTR"
  "ZTS"
- "ZUO"
- "ZYME"
+ "ZVIA"
+ "ZWS"
 ```
 """
-function get_all_symbols(market::T)::Vector{T} where {T<:String}
-  uppercase(market) in MARKETS || throw(ArgumentError("Invalid market. Supported markets are $(MARKETS)"))
-  url = "https://dumbstockapi.com/stock?format=tickers-only&exchange=$market"
-  response = HTTP.request("GET", url)
-  Symbols_string::T = String(response.body)
-  splitted::Vector{T} = split(Symbols_string, ",")
-  pured::Vector{T} = replace.(splitted, r"\"" => "")
-  f_idx, l_idx = firstindex(pured), lastindex(pured)
-  pured[f_idx] = replace(pured[f_idx], r"\[" => "")
-  pured[l_idx] = replace(pured[l_idx], r"\]" => "")
-  return pured
+function get_all_symbols(market::AbstractString; yahoo::Bool=true)::Vector{String}
+  m = uppercase(String(market))
+  m in MARKETS || throw(ArgumentError("Invalid market. Supported markets are $(MARKETS)"))
+
+  file = m == "NASDAQ" ? "nasdaqlisted.txt" : "otherlisted.txt"
+  resp = HTTP.get(_SYMDIR * file;
+                  retry=true, retries=3,
+                  connect_timeout=10, readtimeout=30)
+
+  lines = split(String(resp.body), '\n'; keepempty=false)
+  header = split(strip(lines[1]), '|')
+
+  symcol = something(findfirst(==("NASDAQ Symbol"), header),
+                     findfirst(==("Symbol"), header))
+  testcol = findfirst(==("Test Issue"), header)
+  exchcol = findfirst(==("Exchange"), header)  # nothing for nasdaqlisted.txt
+
+  out = String[]
+  for ln in @view lines[2:end]
+    startswith(ln, "File Creation Time") && continue     # trailing footer line
+    f = split(strip(ln), '|')
+    length(f) == length(header) || continue
+    testcol !== nothing && f[testcol] == "Y" && continue
+    exchcol !== nothing && f[exchcol] != _EXCH_CODE[m] && continue
+    push!(out, yahoo ? _to_yahoo(f[symcol]) : String(f[symcol]))
+  end
+  return out
 end;
 
 

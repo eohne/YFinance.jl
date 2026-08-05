@@ -2,7 +2,19 @@
 
 This package currently provides two ways to get tickers.
    * you know the company/security name but are unsure about the ticker use `get_symbols()`
-   * you simply want all tickers listed on the NASDAQ, AMEX, or NYSE use `get_all_symbols()`
+   * you simply want all tickers listed on the NASDAQ, NYSE, AMEX, ARCA, or BATS use `get_all_symbols()`
+
+`get_all_symbols` reads the official [Nasdaq Trader symbol directory](https://www.nasdaqtrader.com/trader.aspx?id=symboldirdefs) and returns the symbols already translated to Yahoo Finance's convention, so they can be passed straight to `get_prices`:
+
+| Security type | Exchange symbol | Yahoo symbol |
+|---|---|---|
+| Share class    | `BRK.A` | `BRK-A`   |
+| Preferred      | `ABR-D` | `ABR-PD`  |
+| Unit           | `AAC=`  | `AAC-UN`  |
+| Warrant        | `ACHR+` | `ACHR-WT` |
+| Right          | `JACS^` | `JACS-RI` |
+
+Pass `yahoo=false` to get the raw exchange symbols instead.
 
 ## Structs 
 The Items returned by `get_symbols`
