@@ -4,7 +4,17 @@ end
 using YFinance, Dates
 using Test
 
-@testset "YFinance" begin 
+# Fetch the crumb once, patiently, before any testset needs it. Every crumb-dependent
+# function reuses it for the rest of the session, so this stops a single rate limit
+# from taking down three testsets in a row. If it cannot be had even then, carry on
+# rather than abort: the testsets that do not need a crumb should still run.
+try
+    _set_cookies_and_crumb(retries=4)
+catch e
+    @warn "Could not retrieve a crumb up front. Crumb-dependent testsets are likely to fail." exception=e
+end
+
+@testset "YFinance" begin
     @testset "Get Prices" begin
         ta = get_valid_symbols(["aapl","amd","adsflajsldf"])
         @test ta==["aapl","amd"]

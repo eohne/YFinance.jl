@@ -16,6 +16,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
+      # Yahoo rate limits per IP. Running the matrix in parallel means both jobs
+      # spend the same budget at the same time and the slower one gets 429s.
+      max-parallel: 1
       matrix:
         version:
           - '1.9'
