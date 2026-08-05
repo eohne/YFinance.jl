@@ -1,10 +1,16 @@
 !!! info "v0.1.14"
     ## Bug Fix
     * `get_all_symbols` no longer uses dumbstockapi.com, which has gone offline. It now reads the official Nasdaq Trader symbol directory (`nasdaqtrader.com/dynamic/SymDir`) instead.
+    * `validate_symbol` no longer reports a perfectly valid ticker as invalid when Yahoo declines to answer. Only a `404` is now treated as "not a valid symbol"; any other status - most commonly `429` when rate limited - emits a warning instead of quietly masquerading as a definitive answer.
+    * `get_Options` no longer throws a `BoundsError` for a valid symbol that has no options chain at all (e.g. `ADANIENT.NS`). It now returns the same empty `calls`/`puts` structure that a date without contracts already returned.
+    * `get_Fundamental` no longer blames the ticker when the symbol check itself is rate limited. It falls back to the usual "no data" behaviour rather than claiming the symbol is invalid.
 
     ## Improvements
     * `get_all_symbols` now returns symbols in Yahoo Finance's convention, so they can be passed directly to `get_prices` and the other data functions. Share classes (`BRK.A` → `BRK-A`), preferreds (`ABR-D` → `ABR-PD`), units (`AAC=` → `AAC-UN`), warrants (`ACHR+` → `ACHR-WT`), and rights (`JACS^` → `JACS-RI`) are all translated. Pass the new `yahoo=false` keyword to get the raw exchange symbols.
     * `get_all_symbols` gained two markets: `ARCA` (NYSE Arca) and `BATS` (Cboe BZX).
+    * `get_quoteSummary`, `get_Options` and `get_Fundamental` now make **one** request instead of two. Each of them used to fire an extra `validate_symbol` request before the real one, purely so an unknown ticker could be reported nicely. An invalid symbol is now recognised from the response itself. This halves the number of API calls these functions make and makes them roughly twice as fast, which also makes hitting Yahoo's rate limit far less likely.
+    * `get_Fundamental` is the one exception: Yahoo's fundamentals endpoint answers an unknown ticker and a valid ticker with no data in the requested window identically, so the symbol still has to be checked separately - but now only when the response comes back empty, never on the normal path. All three functions keep their exact inputs, return values, return types and `throw_error` behaviour.
+    * Fixed a number of typos in docstrings, warnings and error messages.
 
     ## Breaking
     * `get_all_symbols` no longer supports the `SZSE` market. The Nasdaq Trader directory is US-only, and there is no comparable free and stable feed for Shenzhen. `SZSE` was listed in `MARKETS` but was never documented or tested.

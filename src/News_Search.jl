@@ -236,9 +236,9 @@ function search_news(str::String;lang="en-us")
 	yfinance_search_link = "https://query2.finance.yahoo.com/v1/finance/search"
 	query = Dict("q" => str, "lang"=>lang_opt[lang][1],"region"=>lang_opt[lang][2])
 	response = HTTP.get(yfinance_search_link,query = query)
-	repsonse_parsed = JSON3.read(response.body).news
+	response_parsed = JSON3.read(response.body).news
     news = NewsItem[]
-    for i in repsonse_parsed
+    for i in response_parsed
         if haskey(i, :relatedTickers)
             push!(news,NewsItem(i.title,i.publisher,i.link,unix2datetime(i.providerPublishTime),i.relatedTickers))
         else

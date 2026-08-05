@@ -21,7 +21,7 @@ end;
 """
     get_crumb()
 
-Passess the request header and the cookies to "https://query2.finance.yahoo.com/v1/test/getcrumb" and retrieves the crumb. 
+Passes the request header and the cookies to "https://query2.finance.yahoo.com/v1/test/getcrumb" and retrieves the crumb. 
 If the global _HEADER or _COOKIE variables are not defined they are created.
 """
 function get_crumb()

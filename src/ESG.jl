@@ -1,12 +1,12 @@
 """
     get_ESG(symbol::String)
 
-Retrievs ESG Scores from Yahoo Finance stored in a OrderedCollections.OrderedDict with two items. One, `score`, contains the companies ESG scores and individal Overall, Environment, Social and  Goverance Scores as well as a timestamp of type `DateTime`.
+Retrieves ESG Scores from Yahoo Finance stored in a OrderedCollections.OrderedDict with two items. One, `score`, contains the companies ESG scores and individual Overall, Environment, Social and  Governance Scores as well as a timestamp of type `DateTime`.
 The other,  `peer_score`, contains the peer group's scores. The subdictionaries can be transformed to `DataFrames`
 
 # Arguments
 
- * smybol`::String` is a ticker (e.g. AAPL for Apple Computers, or ^GSPC for the S&P500)  
+ * symbol`::String` is a ticker (e.g. AAPL for Apple Computers, or ^GSPC for the S&P500)  
 
  *  throw_error`::Bool` defaults to `false`. If set to true the function errors when the ticker is not valid. Else a warning is given and an empty OrderedCollections.OrderedDict is returned.
 
@@ -41,7 +41,7 @@ function get_ESG(symbol::String;throw_error=false)
          if throw_error
              error("$old_symbol is not a valid Symbol!")
          else
-             @warn "$old_symbol is not a valid Symbol an empy OrderedCollections.OrderedDict was returned!" 
+             @warn "$old_symbol is not a valid Symbol. An empty OrderedCollections.OrderedDict was returned!" 
              return OrderedCollections.OrderedDict()
          end
      else

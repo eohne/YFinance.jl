@@ -393,11 +393,11 @@ _Fundamental_Intervals = [
 """
     get_Fundamental(symbol::AbstractString, item::AbstractString,interval::AbstractString, startdt, enddt)
 
-Retrievs financial statement information from Yahoo Finance stored in a OrderedCollections.OrderedDict.
+Retrieves financial statement information from Yahoo Finance stored in a OrderedCollections.OrderedDict.
 
 # Arguments
 
- * `smybol::String` is a ticker (e.g. AAPL for Apple Computers, or ^GSPC for the S&P500)  
+ * `symbol::String` is a ticker (e.g. AAPL for Apple Computers, or ^GSPC for the S&P500)  
 
  * `item::String` can either be an entire financial statement or a subitem. Entire financial statements:`"income_statement", "valuation", "cash_flow", "balance_sheet"`. To see valid sub items grouped by financial statement type in a `OrderedCollections.OrderedDict` call `_Fundamental_Types`  
 
@@ -435,21 +435,7 @@ julia> get_Fundamental("AAPL", "InterestExpense","quarterly","2000-01-01","2022-
 """
 function get_Fundamental(symbol::AbstractString, item::AbstractString,interval::AbstractString, startdt, enddt;throw_error=false)
 
-     # Check if symbol is valid
-     old_symbol = symbol
-     symbol = get_valid_symbols(symbol)
-     if isempty(symbol)
-         if throw_error
-             error("$old_symbol is not a valid Symbol!")
-         else
-             @warn "$old_symbol is not a valid Symbol an empy OrderedDict was returned!" 
-             return OrderedCollections.OrderedDict()
-         end
-     else
-         symbol = symbol[1]
-     end
-
-    # Check Start and end dates. 
+    # Check Start and end dates.
     if !isequal(startdt,"") || !isequal(enddt,"")
         range = ""
         startdt, enddt = _date_to_unix(startdt), _date_to_unix(enddt)
@@ -474,6 +460,33 @@ function get_Fundamental(symbol::AbstractString, item::AbstractString,interval::
     url = "https://query2.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/$(symbol)"
     res = HTTP.get(url,query = q, proxy=_PROXY_SETTINGS[:proxy],headers=_PROXY_SETTINGS[:auth])
     res = JSON3.read(res.body).timeseries.result
+
+    # Unlike the chart endpoint, fundamentals-timeseries answers 200 with a meta-only
+    # result BOTH for an unknown ticker and for a valid ticker that simply has no data
+    # in the requested window - the two responses are identical. So the symbol can only
+    # be checked against another endpoint, and that is worth a request solely once we
+    # have come back empty. On the normal path this costs nothing.
+    if isempty(res) || !any(r -> haskey(r, :timestamp), res)
+        # Only a definitive 404 proves the ticker is unknown. If that request cannot
+        # answer either - rate limited, offline - fall through rather than blame the
+        # symbol, and never let it throw out of a `throw_error=false` call.
+        unknown_symbol = try
+            _symbol_status(symbol) == 404
+        catch
+            false
+        end
+        if unknown_symbol
+            if throw_error
+                error("$symbol is not a valid Symbol!")
+            else
+                @warn "$symbol is not a valid Symbol. An empty OrderedDict was returned!"
+                return OrderedCollections.OrderedDict()
+            end
+        end
+        # Valid symbol with no data in this window: fall through, so the branches below
+        # behave exactly as they always have.
+    end
+
     if entire_statement
         result = OrderedCollections.OrderedDict{String,Any}()
         for i in eachindex(res)

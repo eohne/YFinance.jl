@@ -1,16 +1,16 @@
 """
     get_Options(symbol::String)
 
-Retrievs options data from Yahoo Finance stored in a OrderedCollections.OrderedDict with two items. One contains Call options the other Put options. These subitems are OrderedCollections.OrderedDict themselves.
+Retrieves options data from Yahoo Finance stored in a OrderedCollections.OrderedDict with two items. One contains Call options the other Put options. These subitems are OrderedCollections.OrderedDict themselves.
 The call and put options OrderedCollections.OrderedDict can readily be transformed to a DataFrame.
 
 # Arguments
 
- * smybol`::String` is a ticker (e.g. AAPL for Apple Computers, or ^GSPC for the S&P500)  
+ * symbol`::String` is a ticker (e.g. AAPL for Apple Computers, or ^GSPC for the S&P500)  
 
  *  throw_error`::Bool` defaults to `false`. If set to true the function errors when the ticker is not valid. Else a warning is given and an empty OrderedCollections.OrderedDict is returned.
 
- *  experitation_date`::Union{Date,Nothing}` defaults to `nothing`. If set to a date the API request is made for a particular date.
+ *  expiration_date`::Union{Date,Nothing}` defaults to `nothing`. If set to a date the API request is made for a particular date.
 
 # Examples  
 ```julia-repl
@@ -56,20 +56,6 @@ function get_Options(symbol::String; throw_error=false, expiration_date::Union{D
         return nothing
     end
 
-     # Check if symbol is valid
-     old_symbol = symbol
-     symbol = get_valid_symbols(symbol)
-     if isempty(symbol)
-         if throw_error
-             error("$old_symbol is not a valid Symbol!")
-         else
-             @warn "$old_symbol is not a valid Symbol an empy OrderedCollections.OrderedDict was returned!" 
-             return OrderedCollections.OrderedDict()
-         end
-     else
-         symbol = symbol[1]
-     end
-
     # Construct API request
     query_params = Dict("formatted" => "false", "crumb" => _CRUMB)
     if !isnothing(expiration_date)
@@ -78,8 +64,25 @@ function get_Options(symbol::String; throw_error=false, expiration_date::Union{D
 
     res = HTTP.get("https://query2.finance.yahoo.com/v7/finance/options/$(symbol)", query=query_params, proxy=_PROXY_SETTINGS[:proxy], headers=merge(_PROXY_SETTINGS[:auth], _HEADER), cookies=_COOKIE)    
     res = JSON3.read(res.body)
-    puts = res.optionChain.result[1].options[1].puts
-    calls = res.optionChain.result[1].options[1].calls
+    chain = res.optionChain.result
+
+    # This endpoint answers an unknown ticker with 200 and an empty `result`, so the
+    # response identifies an invalid symbol on its own - no separate check needed.
+    if isempty(chain)
+        if throw_error
+            error("$symbol is not a valid Symbol!")
+        else
+            @warn "$symbol is not a valid Symbol. An empty OrderedCollections.OrderedDict was returned!"
+            return OrderedCollections.OrderedDict()
+        end
+    end
+
+    # A valid symbol with no chain at all, or no contracts on the requested
+    # expiration date, comes back with `result[1]` present but `options` empty.
+    opts = chain[1].options
+    contracts = isempty(opts) ? nothing : opts[1]
+    puts  = (contracts !== nothing && haskey(contracts, :puts))  ? contracts.puts  : ()
+    calls = (contracts !== nothing && haskey(contracts, :calls)) ? contracts.calls : ()
     res_p = OrderedCollections.OrderedDict(
         "contractSymbol"=> [],
         "strike"=> [],

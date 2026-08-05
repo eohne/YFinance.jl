@@ -107,9 +107,9 @@ end;
 	
 # 	response = HTTP.get(yfinance_search_link,query = query)
 	
-# 	repsonse_parsed = JSON3.read(response.body)
+# 	response_parsed = JSON3.read(response.body)
 
-# 	quotes = repsonse_parsed.quotes
+# 	quotes = response_parsed.quotes
 	
 # 	# Also provides news under response_parsed.news
 # 	return quotes
@@ -235,9 +235,9 @@ function get_symbols(search_term::String)
   yfinance_search_link = "https://query2.finance.yahoo.com/v1/finance/search"
   query = Dict("q" => search_term)
   response = HTTP.get(yfinance_search_link,query = query)
-  repsonse_parsed = JSON3.read(response.body).quotes
+  response_parsed = JSON3.read(response.body).quotes
    quotes = YahooSearchItem[]
-   for i in repsonse_parsed
+   for i in response_parsed
        if haskey(i, :sector)
            push!(quotes,YahooSearchItem(i.symbol,i.shortname,"$(i.exchDisp) ($(i.exchange))",i.quoteType,i.sector,i.industry))
        else

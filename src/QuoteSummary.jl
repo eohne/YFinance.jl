@@ -38,11 +38,11 @@ const _QuoteSummary_Items = [
 """
     get_quoteSummary(symbol::String; item=nothing)
 
-Retrievs general information from Yahoo Finance stored in a JSON3 object.
+Retrieves general information from Yahoo Finance stored in a JSON3 object.
 
 ## Arguments
 
- * smybol`::String` is a ticker (e.g. AAPL for Apple Computers, or ^GSPC for the S&P500)  
+ * symbol`::String` is a ticker (e.g. AAPL for Apple Computers, or ^GSPC for the S&P500)  
 
  * item can either be a string or multiple items as a `Vector` of `Strings`. To see valid items call `_QuoteSummary_Items` (not all items are available for all types of securities)  
 
@@ -73,20 +73,6 @@ function get_quoteSummary(symbol::String; item=nothing,throw_error=false)
         return nothing
     end
     
-    # Check if symbol is valid
-    old_symbol = symbol
-    symbol = get_valid_symbols(symbol)
-    if isempty(symbol)
-        if throw_error
-            error("$old_symbol is not a valid Symbol!")
-        else
-            @warn "$old_symbol is not a valid Symbol an empy OrderedCollections.OrderedDict was returned!" 
-            return JSON3.Object()
-        end
-    else
-        symbol = symbol[1]
-    end
-
     if isequal(item,nothing)
         item = _QuoteSummary_Items
     end
@@ -99,7 +85,21 @@ function get_quoteSummary(symbol::String; item=nothing,throw_error=false)
         q= Dict("formatted" => "false","modules" => join(item,","),"crumb"=>_CRUMB)
     end
     
-    res = HTTP.get("https://query2.finance.yahoo.com/v10/finance/quoteSummary/$(symbol)",query =q, proxy=_PROXY_SETTINGS[:proxy],headers=merge(_HEADER,_PROXY_SETTINGS[:auth]),cookies=_COOKIE)    
+    # This endpoint answers an unknown ticker with a clean 404, so the response
+    # itself tells us the symbol is invalid - no separate validation request needed.
+    res = try
+        HTTP.get("https://query2.finance.yahoo.com/v10/finance/quoteSummary/$(symbol)",query =q, proxy=_PROXY_SETTINGS[:proxy],headers=merge(_HEADER,_PROXY_SETTINGS[:auth]),cookies=_COOKIE)
+    catch e
+        if e isa HTTP.StatusError && e.status == 404
+            if throw_error
+                error("$symbol is not a valid Symbol!")
+            else
+                @warn "$symbol is not a valid Symbol. An empty JSON3.Object was returned!"
+                return JSON3.Object()
+            end
+        end
+        rethrow()
+    end
     res = JSON3.read(res.body)
     if typeof(item) <: AbstractString
         return res.quoteSummary.result[1][Symbol(item)]
@@ -153,7 +153,7 @@ _quote_type(quoteSummary::JSON3.Object) = quoteSummary.quoteType.quoteType
 """
     get_calendar_events(quoteSummary::JSON3.Object)
 
-Retrievs calendar events from the quote summary.
+Retrieves calendar events from the quote summary.
 
 ## Arguments
 
@@ -202,7 +202,7 @@ get_calendar_events(symbol::AbstractString) =  get_quoteSummary(symbol) |> get_c
 """
     get_earnings_estimates(quoteSummary::JSON3.Object)
 
-Retrievs the earnings estimates from the quote summary.
+Retrieves the earnings estimates from the quote summary.
 
 ## Arguments
 
@@ -265,7 +265,7 @@ get_earnings_estimates(symbol::AbstractString) =  get_quoteSummary(symbol) |> ge
 """
     get_eps(quoteSummary::JSON3.Object)
 
-Retrievs the earnings per share from the quote summary.
+Retrieves the earnings per share from the quote summary.
 
 ## Arguments
 
@@ -328,7 +328,7 @@ get_eps(symbol::AbstractString) =  get_quoteSummary(symbol) |> get_eps
 """
     get_insider_holders(quoteSummary::JSON3.Object)
 
-Retrievs the insiders holdings from the quote summary.
+Retrieves the insiders holdings from the quote summary.
 
 ## Arguments
 
@@ -418,7 +418,7 @@ get_insider_holders(symbol::AbstractString) =  get_quoteSummary(symbol) |> get_i
 """
     get_insider_transactions(quoteSummary::JSON3.Object)
 
-Retrievs the insider transactions from the quote summary.
+Retrieves the insider transactions from the quote summary.
 
 ## Arguments
 
@@ -506,7 +506,7 @@ get_insider_transactions(symbol::AbstractString) =  get_quoteSummary(symbol) |> 
 """
     get_institutional_ownership(quoteSummary::JSON3.Object)
 
-Retrievs the institutional ownership from the quote summary.
+Retrieves the institutional ownership from the quote summary.
 
 ## Arguments
 
@@ -586,7 +586,7 @@ get_institutional_ownership(symbol::AbstractString) =  get_quoteSummary(symbol) 
 """
     get_major_holders_breakdown(quoteSummary::JSON3.Object)
 
-Retrievs the breakdown of the major holders from the quote summary.
+Retrieves the breakdown of the major holders from the quote summary.
 
 ## Arguments
 
@@ -626,7 +626,7 @@ get_major_holders_breakdown(symbol::AbstractString) =  get_quoteSummary(symbol) 
 """
     get_recommendation_trend(quoteSummary::JSON3.Object)
 
-Retrievs the recommendation trend from the quote summary.
+Retrieves the recommendation trend from the quote summary.
 
 ## Arguments
 
@@ -700,7 +700,7 @@ get_recommendation_trend(symbol::AbstractString) =  get_quoteSummary(symbol) |> 
 """
     get_summary_detail(quoteSummary::JSON3.Object)
 
-Retrievs the summaryDetail Item from the quote summary.
+Retrieves the summaryDetail Item from the quote summary.
 
 ## Arguments
 
@@ -768,7 +768,7 @@ get_summary_detail(symbol::AbstractString) =  get_quoteSummary(symbol) |> get_su
 """
     get_sector_industry(quoteSummary::JSON3.Object)
 
-Retrievs the Sector and Industry from the quote summary.
+Retrieves the Sector and Industry from the quote summary.
 
 ## Arguments
 
@@ -801,7 +801,7 @@ get_sector_industry(symbol::AbstractString) =  get_quoteSummary(symbol) |> get_s
 """
     get_upgrade_downgrade_history(quoteSummary::JSON3.Object)
 
-Retrievs the upgrade and downgrade history from the quote summary.
+Retrieves the upgrade and downgrade history from the quote summary.
 
 ## Arguments
 
