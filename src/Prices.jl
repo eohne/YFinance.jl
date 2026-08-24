@@ -176,7 +176,7 @@ function get_prices(symbol::String, startdt::Int, enddt::Int;
         res = HTTP.get(url, query=parameters, readtimeout=timeout, proxy=_PROXY_SETTINGS[:proxy], headers=_PROXY_SETTINGS[:auth])
         return _process_response(res.body, symbol, interval, autoadjust, exchange_local_time, divsplits)
     catch e
-        msg = if e isa HTTP.ExceptionRequest.StatusError
+        msg = if e isa HTTP.StatusError
             if e.status == 404
                 "$symbol is not a valid Symbol."
             else
@@ -446,7 +446,7 @@ function get_splits(symbol::String;
         res = HTTP.get(url, query=parameters, readtimeout=timeout, proxy=_PROXY_SETTINGS[:proxy], headers=_PROXY_SETTINGS[:auth])
         return _process_splits_response(res.body, symbol, exchange_local_time)
     catch e
-        msg = if e isa HTTP.ExceptionRequest.StatusError
+        msg = if e isa HTTP.StatusError
             if e.status == 404
                 "$(symbol) is not a valid Symbol."
             else
@@ -607,7 +607,7 @@ function get_dividends(symbol::String;
         res = HTTP.get(url, query=parameters, readtimeout=timeout, proxy=_PROXY_SETTINGS[:proxy], headers=_PROXY_SETTINGS[:auth])
         return _process_dividends_response(res.body, symbol, exchange_local_time)
     catch e
-        msg = if e isa HTTP.ExceptionRequest.StatusError
+        msg = if e isa HTTP.StatusError
             if e.status == 404
                 "$(symbol) is not a valid Symbol."
             else
